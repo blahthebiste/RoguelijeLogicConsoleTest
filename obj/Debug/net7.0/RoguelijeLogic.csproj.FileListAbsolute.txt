@@ -1,0 +1,15 @@
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.csproj.AssemblyReference.cache
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.AssemblyInfoInputs.cache
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.AssemblyInfo.cs
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.csproj.CoreCompileInputs.cache
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\bin\Debug\net7.0\RoguelijeLogic.exe
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\bin\Debug\net7.0\RoguelijeLogic.deps.json
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\bin\Debug\net7.0\RoguelijeLogic.runtimeconfig.json
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\bin\Debug\net7.0\RoguelijeLogic.dll
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\bin\Debug\net7.0\RoguelijeLogic.pdb
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.dll
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\refint\RoguelijeLogic.dll
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.pdb
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\RoguelijeLogic.genruntimeconfig.cache
+C:\Users\Eliezer Miron\Desktop\RoguelijeLogic\obj\Debug\net7.0\ref\RoguelijeLogic.dll
