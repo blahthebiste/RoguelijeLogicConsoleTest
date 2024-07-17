@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\RoguelijeLogic.csproj",
+      "projectUniqueName": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\RoguelijeLogicConsoleTest\\RoguelijeLogic.csproj",
       "projectName": "RoguelijeLogic",
-      "projectPath": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\RoguelijeLogic.csproj",
+      "projectPath": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\RoguelijeLogicConsoleTest\\RoguelijeLogic.csproj",
       "packagesPath": "C:\\Users\\Eliezer Miron\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\obj\\",
+      "outputPath": "C:\\Users\\Eliezer Miron\\Desktop\\RoguelijeLogic\\RoguelijeLogicConsoleTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Eliezer Miron\\AppData\\Roaming\\NuGet\\NuGet.Config"

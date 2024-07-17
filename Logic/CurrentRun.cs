@@ -27,12 +27,17 @@ public static class CurrentRun {
         MasterDeck = new List<ActionCard>(); // Populate the default starter deck (2 of each? Or 3?)
         MasterDeck.Add(new BasicAttack());
         MasterDeck.Add(new BasicAttack());
+        MasterDeck.Add(new BasicAttack());
+        MasterDeck.Add(new BasicDefend());
         MasterDeck.Add(new BasicDefend());
         MasterDeck.Add(new BasicDefend());
         MasterDeck.Add(new BasicSkill());
         MasterDeck.Add(new BasicSkill());
+        MasterDeck.Add(new BasicSkill());
         MasterDeck.Add(new BasicSpell());
         MasterDeck.Add(new BasicSpell());
+        MasterDeck.Add(new BasicSpell());
+        MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         Inventory = new List<Item>(); // Starts empty(?).
