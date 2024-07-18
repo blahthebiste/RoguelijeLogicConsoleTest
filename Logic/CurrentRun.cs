@@ -5,6 +5,7 @@ public static class CurrentRun {
     public static int Money;
     public static int LevelCap;
     public static int PartySize;
+    public static int MinimumDeckSize;
     public static int DrawPerTurn;
     public static List<PlayerCharacter> Party; // List of all characters currently in the party.
     public static List<PlayerCharacter> Bench; // List of all characters NOT currently in the party.
@@ -13,6 +14,7 @@ public static class CurrentRun {
     public static Zones CurrentZone;
     public static int ZoneProgress; // The number of combat encounters that have been completed in this zone.
     public static List<Zone> CompletedZones;
+    public static bool InARun;
     //==============================END DATA==============================
     
     //==============================CONSTRUCTORS==============================
@@ -21,6 +23,7 @@ public static class CurrentRun {
         Money = 0; // Subject to change
         LevelCap = 1; // Player cannot level anyone up until they acquire a Chaos Tome.
         PartySize = 3; // Also increases later via Chaos Tomes.
+        MinimumDeckSize = 15; // Can be changed during a run through events
         DrawPerTurn = 4; // Also increases later via Chaos Tomes.
         Party = new List<PlayerCharacter>(); // Decided shortly, but not yet
         Bench = new List<PlayerCharacter>(); // Starts empty.
@@ -44,6 +47,7 @@ public static class CurrentRun {
         CurrentZone = Zones.Hub; // Party is selected in the Hub world.
         ZoneProgress = 0;
         CompletedZones = new List<Zone>(); // Starts empty
+        InARun = false;
     }
     //==============================END CONSTRUCTORS==============================
     

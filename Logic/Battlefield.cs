@@ -3,6 +3,8 @@ public static class Battlefield {
      public static List<Entity> EnemySide = new List<Entity>();
      public static List<Entity> PlayerSide = new List<Entity>();
      public static int turnNumber = 0;
+     public static int playerBlock = 0;
+     public static int enemyBlock = 0;
     
     public static void LoadCombat(string combatID) {
         EnemySide = new List<Entity>();
@@ -36,6 +38,15 @@ public static class Battlefield {
         }
         else {
             return true;
+        }
+    }
+
+    public static void addBlock(int blockAmount, bool toPlayerTeam){
+        if(toPlayerTeam) {
+            playerBlock += blockAmount;
+        }
+        else {
+            enemyBlock += blockAmount;
         }
     }
     

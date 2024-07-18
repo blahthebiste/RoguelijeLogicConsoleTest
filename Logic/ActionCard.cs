@@ -36,19 +36,19 @@ public class ActionCard {
     }
     
     // Use the action
-    public void use(Entity hoveredEntity, Action hoveredAction) {
-        if(!entityCanBeUsed(hoveredEntity)) return;
+    public virtual void use(Entity hoveredEntity, Action hoveredAction) {
+        if(!canBeUsedOn(hoveredEntity)) return;
         else {
             Action? actionToUse = autoSelectAction(hoveredEntity);
             if(actionToUse == null) {
                 // Need to select specific action, there are multiple (or 0) options.
-                if(actionCanBeUsed(hoveredAction)) hoveredAction.use(this.modifier);
+                if(actionCanBeUsed(hoveredAction)) hoveredAction.use(hoveredEntity, this.modifier);
                 else {
                     return; // Hovered action is not usable, do nothing.
                 }
             }
             else {
-                actionToUse.use(this.modifier); // Good, use the action.
+                actionToUse.use(hoveredEntity, this.modifier); // Good, use the action.
             }
         }
     }
@@ -61,7 +61,7 @@ public class ActionCard {
     }
     
     // Whether this card can be played on that entity.
-    public bool entityCanBeUsed(Entity hoveredEntity) {
+    public bool canBeUsedOn(Entity hoveredEntity) {
         if(hoveredEntity.exhausted) return false;
         if(!hoveredEntity.playerControlled) return false;
         return true;
