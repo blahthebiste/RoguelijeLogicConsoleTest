@@ -41,16 +41,19 @@ public class Entity {
         }
     }
 
-    public virtual void recieveStatusEffect(StatusEffect effect) {
-        
-        StatusEffect? matchingEffect = EffectList.OfType<effect.GetType()>().FirstOrDefault(effect.GetType(), null);
-        if(matchingEffect == null) {
-            this.EffectList.Add(effect);
+    public virtual void recieveStatusEffect(StatusEffect newEffect) {
+        string newEffectName = newEffect.name;
+        Console.WriteLine("New effect is '"+newEffectName+"'.");
+        foreach(StatusEffect existingEffect in EffectList) {
+            string existingEffectName = existingEffect.name;
+            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            if(existingEffectName == newEffectName) {
+                // If the entity already has the effect, just add to it
+                existingEffect.amount += newEffect.amount;
+                return;
+            }
         }
-        else {
-            int indexOfMatchingEffect = EffectList.IndexOf(matchingEffect);
-            // If the entity already has the effect, just add to it
-            this.EffectList[indexOfMatchingEffect].amount += indexOfMatchingEffect.amount;
-        }
+        // Entity does not have this effect, add it
+        this.EffectList.Add(newEffect);
     }
 }

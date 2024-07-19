@@ -78,22 +78,39 @@ void printStartingPartyMessage() {
 }
  
 void printStarterCharacterInfo(string characterName) {
-    switch(characterName)
+    PlayerCharacter newStarterCharacter;
+    switch(characterName.ToLower().Trim())
     {
         case "fighter":
-            Console.WriteLine(CharacterData.Fighter.Name.ToString());
-            Console.WriteLine(CharacterData.Fighter.Description.ToString());
-            Console.WriteLine(CharacterData.Fighter.HP.ToString());
-            foreach(Action action in CharacterData.Fighter.ActionList) {
+            newStarterCharacter = new Fighter();
+            Console.WriteLine(newStarterCharacter.name+" - "+DataRegistry.CharacterData.Fighter.Description);
+            Console.WriteLine("HP: "+newStarterCharacter.maxHP);
+            Console.WriteLine("Actions:");
+            foreach(Action action in newStarterCharacter.ActionList) {
                 Console.WriteLine(action.ToString());
             }
+            Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
             break;
         default:
+            newStarterCharacter = new PlayerCharacter();
             break;
     }
-    
-    
-    printStartingPartyMessage();
+    Console.WriteLine("Add this character to your party?");
+    Console.WriteLine("\tYes\t\tBack");
+    while(true) {
+        Console.Write("\n> ");
+        cmd = Console.ReadLine();
+        if(cmd == null) continue;
+        if(cmd.ToLower().Trim() == "yes") {
+            CurrentRun.Party.Add(newStarterCharacter);
+            printStartingPartyMessage();
+            return;
+        }
+        if(cmd.ToLower().Trim() == "back") {
+            printStartingPartyMessage();
+            return;
+        }
+    }
 }
 
 void getRunInfo() {
