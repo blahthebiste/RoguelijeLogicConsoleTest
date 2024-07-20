@@ -11,7 +11,7 @@ public static class CurrentRun {
     public static List<PlayerCharacter> Bench; // List of all characters NOT currently in the party.
     public static List<ActionCard> MasterDeck; // The current deck that the player starts each combat with.
     public static List<Item> Inventory; // All unequipped items, unused modifiers, unused legend books, and unused ascension books.
-    public static Zones CurrentZone;
+    public static Zone CurrentZone;
     public static int ZoneProgress; // The number of combat encounters that have been completed in this zone.
     public static List<Zone> CompletedZones;
     public static bool InARun;
@@ -44,7 +44,7 @@ public static class CurrentRun {
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         Inventory = new List<Item>(); // Starts empty(?).
-        CurrentZone = Zones.HUB; // Party is selected in the Hub world.
+        CurrentZone = DataRegistry.GenerateZone(ZoneID.HUB); // Party is selected in the Hub world.
         ZoneProgress = 0;
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
@@ -168,8 +168,8 @@ public static class CurrentRun {
     //==============================END REWARDS FUNCTIONS==============================
     
     //==============================ZONE FUNCTIONS==============================
-    public static void SetZone(Zones newZone) {
-        CurrentZone = newZone;
+    public static void SetZone(ZoneID newZoneID) {
+        CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
     }
     

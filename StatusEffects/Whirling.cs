@@ -5,4 +5,11 @@ public class Whirling : StatusEffect {
         this.name = "Whirling";
         this.description = "Next attack also hits adjacent targets.";
     }
+
+    public Whirling(int amount, Entity owner) {
+        this.amount = amount;
+        this.name = "Whirling";
+        this.description = "Next attack also hits adjacent targets.";
+        this.owner = owner;
+    }
 }

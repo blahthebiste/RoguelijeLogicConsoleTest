@@ -1,6 +1,6 @@
 public class Zone {
 
-    public Zone(int zoneID) {
+    public Zone(ZoneID zoneID) {
 
         
     }

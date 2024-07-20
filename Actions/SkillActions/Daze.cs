@@ -22,8 +22,12 @@ public class Daze : Action {
     }
 
     public override void use(Entity? target, Modifier? modifier) {
+        if(target == null) {
+            Console.WriteLine("Invalid target!");
+            return;
+        }
         // Apply the Stun status effect
-        target.recieveStatusEffect(new Stun(magicNumber));
+        owner.recieveStatusEffect(new Stun(magicNumber, target));
         Battlefield.BeenDazed.Add(target);
     }
 }

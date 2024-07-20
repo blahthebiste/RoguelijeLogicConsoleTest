@@ -2,7 +2,7 @@ public class Restore : Action {
 
     public Restore() {
         this.name = "Restore";
-        this.description = "Restore 6 HP. 6 uses.";
+        this.description = "Restore 6 HP.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 6;
         this.hasLimitedUses = true;
@@ -17,7 +17,7 @@ public class Restore : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
-        target.recieveHealing(magicNumber);
+        owner.recieveHealing(magicNumber);
         base.use(target, modifier);
     }
 }

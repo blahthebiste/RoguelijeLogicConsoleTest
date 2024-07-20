@@ -39,7 +39,7 @@ public class Enemy : Entity {
             nextTarget = Battlefield.EnemySide[newTargetPosition];
         }
         // Check if the next action can target them
-        if(this.ActionList[nextActionIndex].CanTarget(this, nextTarget)) {
+        if(this.ActionList[nextActionIndex].CanTarget(nextTarget)) {
             this.nextTargetPosition = newTargetPosition;
         }
         else {

@@ -5,9 +5,15 @@ public class Stun : StatusEffect {
         this.name = "Stun";
         this.description = "Cannot take actions other than Rest actions for that many turns.";
     }
+    public Stun(int amount, Entity owner) {
+        this.amount = amount;
+        this.name = "Stun";
+        this.description = "Cannot take actions other than Rest actions for that many turns.";
+        this.owner = owner;
+    }
 
     // Decrement every turn
     public override void endOfTurn() {
-        owner.recieveStatusEffect(new Stun(-1));
+        if(owner != null) owner.recieveStatusEffect(new Stun(-1, owner));
     }
 }

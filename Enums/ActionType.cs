@@ -1,5 +1,6 @@
 public enum ActionType
 {
+    NONE,
     ATTACK,
     DEFEND,
     SKILL,

@@ -4,6 +4,7 @@ public class Whirl : Action {
         this.name = "Whirl";
         this.description = "Next attack also hits adjacent targets.";
         this.actionType = ActionType.SKILL;
+        this.magicNumber = 1;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -14,6 +15,6 @@ public class Whirl : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
-        source.recieveStatusEffect(new Whirling(1));
+        owner.recieveStatusEffect(new Whirling(magicNumber, owner));
     }
 }

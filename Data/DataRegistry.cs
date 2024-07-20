@@ -25,6 +25,11 @@ public static class DataRegistry {
         // TODO
     }
 
+    public static Zone GenerateZone(ZoneID zoneID) {
+        // TODO
+        return new Zone(zoneID);
+    }
+
     public static class Messages {
         public static List<string> startScreenMessage = new List<string>(){
             "============================================================",

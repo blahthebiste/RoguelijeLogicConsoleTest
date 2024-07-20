@@ -17,7 +17,7 @@ public class Harden : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
-        source.recieveStatusEffect(new Toughness(magicNumber));
+        owner.recieveStatusEffect(new Toughness(magicNumber, owner));
         base.use(target, modifier);
     }
 }

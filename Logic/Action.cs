@@ -32,8 +32,8 @@ public class Action {
 			return false;
 		}
 		// Iterate through effect list. If stunned, cannot use non-rest actions
-		foreach(Effect effect in owner.EffectList) {
-			if(effect is Stun && this.actionType != actionType.REST) {
+		foreach(StatusEffect effect in owner.EffectList) {
+			if(effect is Stun && this.actionType != ActionType.REST) {
 				return false;
 			}
 		}
@@ -42,7 +42,7 @@ public class Action {
     
     // The meat and potatoes of the action.
     // Each action should override this. Modifier often null.
-    public virtual void use(Entity source, Entity? target, Modifier? modifier) {
+    public virtual void use(Entity? target, Modifier? modifier) {
 		if(hasLimitedUses) {
 			uses--;
 		}
@@ -65,7 +65,7 @@ public class Action {
 
 	// Can this action target that entity?
 	// Should be overridden, but the base version has useful basic targeting guidelines.
-	public virtual bool CanTarget(Entity source, Entity target) {
+	public virtual bool CanTarget(Entity target) {
 		switch(this.targetting)
 		{
 			case TargetCategory.NONE:
@@ -74,13 +74,13 @@ public class Action {
 			case TargetCategory.EVERYONE:
 				return false;
 			case TargetCategory.SELF:
-				return target == source;
+				return target == owner;
 			case TargetCategory.SINGLE_ENEMY:
 				// If they are on different teams, they can target with this action
-				return (source.playerControlled != target.playerControlled);
+				return (owner.playerControlled != target.playerControlled);
 			case TargetCategory.SINGLE_ALLY:
 				// If they are on the same team, they can target with this action
-				return (source.playerControlled == target.playerControlled);
+				return (owner.playerControlled == target.playerControlled);
 			case TargetCategory.SINGLE_ANY:
 				// Always valid
 				return true;

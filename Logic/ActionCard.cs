@@ -42,13 +42,13 @@ public class ActionCard {
             Action? actionToUse = autoSelectAction(hoveredEntity);
             if(actionToUse == null) {
                 // Need to select specific action, there are multiple (or 0) options.
-                if(actionCanBeUsed(hoveredAction)) hoveredAction.use(hoveredEntity, null, this.modifier);
+                if(actionCanBeUsed(hoveredAction)) hoveredAction.use(hoveredEntity, this.modifier);
                 else {
                     return; // Hovered action is not usable, do nothing.
                 }
             }
             else {
-                actionToUse.use(hoveredEntity, null, this.modifier); // Good, use the action.
+                actionToUse.use(hoveredEntity, this.modifier); // Good, use the action.
             }
         }
     }
