@@ -1,10 +1,11 @@
-public class Rest : Action {
+public class Recover : Action {
 
-    public Rest() {
-        this.name = "Rest";
-        this.description = "Recover 3 HP.";
+    public Recover() {
+        this.name = "Recover";
+        this.description = "Recover 5 HP. Draw 3 cards.";
         this.actionType = ActionType.REST;
-        this.healing = 3;
+        this.healing = 5;
+        this.magicNumber = 3;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -16,5 +17,7 @@ public class Rest : Action {
     public override void use(Entity? target, Modifier? modifier) {
         // Restore HP.
         owner.recieveHealing(healing);
+        // Draw cards.
+        CardManager.drawCard(3);
     }
 }

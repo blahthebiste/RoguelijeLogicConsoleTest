@@ -91,11 +91,21 @@ void printStarterCharacterInfo(string characterName) {
             }
             Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
             break;
+        case "defender":
+            newStarterCharacter = new Defender();
+            Console.WriteLine(newStarterCharacter.name+" - "+DataRegistry.CharacterData.Defender.Description);
+            Console.WriteLine("HP: "+newStarterCharacter.maxHP);
+            Console.WriteLine("Actions:");
+            foreach(Action action in newStarterCharacter.ActionList) {
+                Console.WriteLine(action.ToString());
+            }
+            Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
+            break;
         default:
             newStarterCharacter = new PlayerCharacter();
             break;
     }
-    Console.WriteLine("Add this character to your party?");
+    Console.WriteLine("\nAdd this character to your party?");
     Console.WriteLine("\tYes\t\tBack");
     while(true) {
         Console.Write("\n> ");
@@ -103,6 +113,7 @@ void printStarterCharacterInfo(string characterName) {
         if(cmd == null) continue;
         if(cmd.ToLower().Trim() == "yes") {
             CurrentRun.Party.Add(newStarterCharacter);
+            Console.WriteLine("Added "+newStarterCharacter.name+" to party.");
             printStartingPartyMessage();
             return;
         }

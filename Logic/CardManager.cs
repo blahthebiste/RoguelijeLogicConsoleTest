@@ -1,13 +1,13 @@
 
 
 // Responsible for managing player hand, draw pile, discard pile, and master deck during combat.
-public class CardManager {
-	List<ActionCard> DrawPile = new List<ActionCard>();
-	List<ActionCard> DiscardPile = new List<ActionCard>();
-	List<ActionCard> Hand = new List<ActionCard>();
+public static class CardManager {
+	public static List<ActionCard> DrawPile = new List<ActionCard>();
+	public static List<ActionCard> DiscardPile = new List<ActionCard>();
+	public static List<ActionCard> Hand = new List<ActionCard>();
 	
 		
-	public List<ActionCard> copyMasterDeck() {
+	public static List<ActionCard> copyMasterDeck() {
 		List<ActionCard> copiedDeck = new List<ActionCard>();
 		foreach(ActionCard card in CurrentRun.MasterDeck) {
 			copiedDeck.Add(card.makeCopy());
@@ -15,7 +15,7 @@ public class CardManager {
 		return copiedDeck;		
 	}
 	
-	public void beginCombat() {
+	public static void beginCombat() {
 		DrawPile = copyMasterDeck();
 		DiscardPile = new List<ActionCard>();
 		Hand = new List<ActionCard>();
@@ -23,40 +23,42 @@ public class CardManager {
 		drawOpeningHand();
 	}
 	
-	public void drawOpeningHand() {
+	public static void drawOpeningHand() {
 		for(int i = 0; i < CurrentRun.DrawPerTurn; i++) {
 			drawCard();
 		}
 	}
 	
-	public void drawCard() {
-		if(DrawPile.Count == 0) {
-			if(DiscardPile.Count == 0)  {
-				// Both draw and discard are empty; do nothing
-				return;
+	public static void drawCard(int number = 1) {
+		for(int i = 0; i < number; i++){
+			if(DrawPile.Count == 0) {
+				if(DiscardPile.Count == 0)  {
+					// Both draw and discard are empty; do nothing
+					return;
+				}
+				// Discard pile has cards; reshuffle them into your draw pile.
+				reshuffle();
 			}
-			// Discard pile has cards; reshuffle them into your draw pile.
-			reshuffle();
+			Hand.Add(DrawPile[0]);
+			DrawPile.RemoveAt(0);
 		}
-		Hand.Add(DrawPile[0]);
-		DrawPile.RemoveAt(0);
 	}
 	
 	// Puts a card into the discard pile from the hand.
 	// Used whenever a card is played, and at end of turn.
-	public void discardCard(ActionCard card) {
+	public static void staticdiscardCard(ActionCard card) {
 		DiscardPile.Add(card);
 		Hand.Remove(card);
 	}
 
-	public void discardHand() {
+	public static void discardHand() {
 		foreach(ActionCard card in Hand) {
 			DiscardPile.Add(card); // Put all cards from hand into discard pile
 		}
 		Hand = new List<ActionCard>(); // Reset hand
 	}
 	
-	public void reshuffle() {
+	public static void reshuffle() {
 		foreach(ActionCard card in DiscardPile) {
 			DrawPile.Add(card); // Put all cards from discard pile into draw pile
 		}
@@ -65,7 +67,7 @@ public class CardManager {
 	}
 	
 	// Source: https://stackoverflow.com/a/69220421/5086634
-	public void randomizeDrawPileOrder() {
+	public static void randomizeDrawPileOrder() {
 		int n = DrawPile.Count;
 		while (n > 1)
 		{

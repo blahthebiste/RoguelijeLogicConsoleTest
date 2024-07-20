@@ -1,5 +1,5 @@
 public enum Zones
 {
-    Hub,
-    Zone1
+    HUB,
+    ZONE1
 }

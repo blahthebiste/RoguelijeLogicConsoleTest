@@ -1,13 +1,13 @@
-public class Inflame : Action {
+public class Restore : Action {
 
-    public Inflame() {
-        this.name = "Inflame";
-        this.description = "Gain 2 Strength.";
+    public Restore() {
+        this.name = "Restore";
+        this.description = "Restore 6 HP. 6 uses.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 2;
+        this.magicNumber = 6;
         this.hasLimitedUses = true;
-        this.uses = 1;
-        this.targetting = TargetCategory.NONE;
+        this.uses = 6;
+        this.targetting = TargetCategory.SINGLE_ANY;
     }
 
     // For now, nothing special.
@@ -17,7 +17,7 @@ public class Inflame : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
-        source.recieveStatusEffect(new Strength(magicNumber));
+        target.recieveHealing(magicNumber);
         base.use(target, modifier);
     }
 }

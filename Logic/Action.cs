@@ -7,6 +7,9 @@ public class Action {
     public ActionType actionType;
     public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
+	public Entity owner; // The entity that is using the action
+
+	public TargetCategory targetting = TargetCategory.NONE;
 	// Negative 1 means unlimited uses.
 	public int uses = -1; // The number of times this action can be used per combat. Usually reserved for spells.
 	public int damage = -1; // Some actions deal damage. -1 means they do not.
@@ -20,16 +23,21 @@ public class Action {
 	public Action() {
 		name = "MISSING NAME";
 		description = "MISSING DESCRIPTION";
+		owner = new Entity();
 	}
     
     // Whether this action can be used right now. Most actions should override this.
     public virtual bool canUse() {
-		if(hasLimitedUses) {
-			return uses > 0;
+		if(hasLimitedUses && uses == 0) {
+			return false;
 		}
-		else {
-			return true;
+		// Iterate through effect list. If stunned, cannot use non-rest actions
+		foreach(Effect effect in owner.EffectList) {
+			if(effect is Stun && this.actionType != actionType.REST) {
+				return false;
+			}
 		}
+		return true;
 	}
     
     // The meat and potatoes of the action.
@@ -53,5 +61,33 @@ public class Action {
 			}
 		}
 		return actionString;
-	} 
+	}
+
+	// Can this action target that entity?
+	// Should be overridden, but the base version has useful basic targeting guidelines.
+	public virtual bool CanTarget(Entity source, Entity target) {
+		switch(this.targetting)
+		{
+			case TargetCategory.NONE:
+			case TargetCategory.ALL_ENEMIES:
+			case TargetCategory.ALL_ALLIES:
+			case TargetCategory.EVERYONE:
+				return false;
+			case TargetCategory.SELF:
+				return target == source;
+			case TargetCategory.SINGLE_ENEMY:
+				// If they are on different teams, they can target with this action
+				return (source.playerControlled != target.playerControlled);
+			case TargetCategory.SINGLE_ALLY:
+				// If they are on the same team, they can target with this action
+				return (source.playerControlled == target.playerControlled);
+			case TargetCategory.SINGLE_ANY:
+				// Always valid
+				return true;
+			default:
+				Console.WriteLine("Action had no targetting set. This should never happen.");
+				return false;
+
+		}
+	}
 }

@@ -1,12 +1,12 @@
-public class Inflame : Action {
+public class Harden : Action {
 
-    public Inflame() {
-        this.name = "Inflame";
-        this.description = "Gain 2 Strength.";
+    public Harden() {
+        this.name = "Harden";
+        this.description = "Gain 1 Toughness.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 2;
+        this.magicNumber = 1;
         this.hasLimitedUses = true;
-        this.uses = 1;
+        this.uses = 3;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -17,7 +17,7 @@ public class Inflame : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
-        source.recieveStatusEffect(new Strength(magicNumber));
+        source.recieveStatusEffect(new Toughness(magicNumber));
         base.use(target, modifier);
     }
 }

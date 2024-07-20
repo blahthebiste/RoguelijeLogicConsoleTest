@@ -1,12 +1,12 @@
 public enum ActionType
 {
-    Attack,
-    Defend,
-    Skill,
-    Spell,
-    Rest,
-    Passive,
-    Ailment
+    ATTACK,
+    DEFEND,
+    SKILL,
+    SPELL,
+    REST,
+    PASSIVE,
+    AILMENT
     // // Possible advanced actions:
     // SpecialAttack,
     // Ultimate,

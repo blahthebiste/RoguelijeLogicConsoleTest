@@ -44,7 +44,7 @@ public static class CurrentRun {
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         Inventory = new List<Item>(); // Starts empty(?).
-        CurrentZone = Zones.Hub; // Party is selected in the Hub world.
+        CurrentZone = Zones.HUB; // Party is selected in the Hub world.
         ZoneProgress = 0;
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;

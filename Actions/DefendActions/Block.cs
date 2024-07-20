@@ -1,10 +1,10 @@
-public class Parry : Action {
+public class Block : Action {
 
-    public Parry() {
-        this.name = "Parry";
-        this.description = "Generate 4 Block.";
+    public Block() {
+        this.name = "Block";
+        this.description = "Generate 6 Block.";
         this.actionType = ActionType.DEFEND;
-        this.block = 4;
+        this.block = 6;
         this.targetting = TargetCategory.NONE;
     }
 

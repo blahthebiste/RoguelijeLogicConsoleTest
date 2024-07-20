@@ -1,10 +1,10 @@
-public class Strike : Action {
+public class Bash : Action {
 
-    public Strike() {
-        this.name = "Strike";
-        this.description = "Deal 6 damage.";
+    public Bash() {
+        this.name = "Bash";
+        this.description = "Deal 4 damage.";
         this.actionType = ActionType.ATTACK;
-        this.damage = 6;
+        this.damage = 4;
         this.targetting = TargetCategory.SINGLE_ENEMY;
     }
 
