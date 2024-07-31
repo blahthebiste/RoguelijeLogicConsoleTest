@@ -12,6 +12,8 @@ void commandLoop() {
     while(true) {
         Console.Write("\n> ");
         cmd = Console.ReadLine();
+        Console.Clear();
+        Console.WriteLine("============================================================");
         if(cmd == null) continue;
         switch(cmd.ToLower().Trim()) 
         {
@@ -48,6 +50,7 @@ void commandLoop() {
                 Console.WriteLine("Unknown command '"+cmd+"'.\nType 'help' for a list of all commands.");
                 break;
         }
+        Console.WriteLine("============================================================");
     }
 }
 
@@ -94,17 +97,17 @@ void depart() {
         zoneSelection();
         return;
     }
-    Console.WriteLine("\n\tAnd we're off!");
+    Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
     // TODO: next step is generate the chosen zone
+    CurrentRun.GenerateNextCombat();
+    printCombatSituation();
 }
 
 // Asks the player what zone to travel to
 void zoneSelection() {
-    Console.WriteLine("============================================================");
     Console.WriteLine("Currently, the only zone available is the Medieval zone.");
     Console.WriteLine("\n\tIt is now set.");
-    Console.WriteLine("============================================================");
     nextZoneID = ZoneID.ZONE1;
 }
 
@@ -165,17 +168,21 @@ void printStarterCharacterInfo(string characterName) {
     if(CurrentRun.Party.Count < CurrentRun.PartySize) {
         Console.WriteLine("\nAdd this character to your party?");
         Console.WriteLine("\tYes\t\tBack");
+        Console.WriteLine("============================================================");
         while(true) {
             Console.Write("\n> ");
             cmd = Console.ReadLine();
+            Console.Clear();
             if(cmd == null) continue;
             if(cmd.ToLower().Trim() == "yes") {
                 CurrentRun.Party.Add(newStarterCharacter);
+                Console.WriteLine("============================================================");
                 Console.WriteLine("Added "+newStarterCharacter.name+" to party.");
                 printStartingPartyMessage();
                 return;
             }
             if(cmd.ToLower().Trim() == "back") {
+                Console.WriteLine("============================================================");
                 printStartingPartyMessage();
                 return;
             }
@@ -200,9 +207,7 @@ void getRunInfo() {
     Console.WriteLine("CompletedZones.Count="+CurrentRun.CompletedZones.Count);
 }
 
-void getPartyInfo() {
-    Console.WriteLine("============================================================");
-    
+void getPartyInfo() {    
     if(CurrentRun.Party.Count > 0){
         Console.WriteLine("Current Party info:\n");
         foreach(PlayerCharacter character in CurrentRun.Party) {
@@ -219,7 +224,6 @@ void getPartyInfo() {
             printCharacterInfo(character);
         }
     }
-    Console.WriteLine("============================================================");
 }
 
 
@@ -238,7 +242,9 @@ void printCharacterInfo(PlayerCharacter character) {
     Console.WriteLine("Personal Card: "+character.personalCard);
 }
 
-
+void printCombatSituation() {
+    
+}
 
 
 

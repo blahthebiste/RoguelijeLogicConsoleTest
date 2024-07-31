@@ -162,8 +162,59 @@ public static class CurrentRun {
             Money = Money + randomMoneyReward + extraMoneyReward;
         }
 
+
+
+    public static void GenerateNextCombat() {
+        // Takes into account number of completed zones and zone progress
+        int targetDifficulty = 0;
+        targetDifficulty += (10 * CompletedZones.Count);
+        targetDifficulty += ZoneProgress;
+        targetDifficulty += rng.Next(-3, 4);
+        targetDifficulty = Math.Max(1, targetDifficulty);
+
+        int lowestDifficultyDiff = Math.Abs(CurrentZone.CombatEncounters[0].difficulty - targetDifficulty);
+        CombatEncounter closestMatchEncounter = CurrentZone.CombatEncounters[0];
+        foreach(CombatEncounter troupe in CurrentZone.CombatEncounters) {
+            difficultyDiff = Math.Abs(troupe.difficulty - targetDifficulty);
+            if(difficultyDiff < lowestDifficultyDiff) {
+                lowestDifficultyDiff = difficultyDiff;
+                closestMatchEncounter = troupe;
+            }
+        }
+        Battlefield.LoadCombat(closestMatchEncounter);
+        // TODO
+    }
+
     public static void GenerateNextChaosTome() {
         // TODO
+        switch(CompletedZones.Count) {
+            case 0:
+                // Increase level cap from 1 to 2
+                LevelCap++;
+                break;
+            case 1:
+                // Increase party size to 4
+                PartySize++;
+                DrawPerTurn++;
+                break;
+            case 2:
+                // Increase level cap from 2 to 3
+                LevelCap++;
+                break;
+            case 3:
+                // Increase party size to 5
+                PartySize++;
+                DrawPerTurn++;
+                break;
+            case 4:
+                // Increase level cap from 2 to 3
+                LevelCap++;
+                break;
+            case 5:
+                break;
+            default:
+                break;
+        }
     }
     //==============================END REWARDS FUNCTIONS==============================
     

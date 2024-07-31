@@ -102,4 +102,30 @@ public static class DataRegistry {
         }
 
     }
+
+    public static class EnemyData {
+        public static class Pengoon {
+            public static string Name = "Pengoon";
+            public static string Description = "Useless enemy for the tutorial";
+            public static int HP = 7;
+            
+            public static List<Action> ActionList = new List<Action>() {
+                new Swipe()
+            };
+
+        }
+    }
+
+    public static class EnemyTroupes {
+        public static class Pengoons {
+            public static string Name = "Pengoons";
+            public static string Description = "Easy encounter for tutorials";
+            public static int Difficulty = 0;
+            public static List<Enemy> EnemyList = new List<Enemy>() {
+                new Pengoon()
+                
+            };
+
+        }
+    }
 }
