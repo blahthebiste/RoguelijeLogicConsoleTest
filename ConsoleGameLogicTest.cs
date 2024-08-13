@@ -56,12 +56,22 @@ void commandLoop() {
 
 void printHelp() {
     Console.WriteLine("exit,quit -- exits the game");
-    Console.WriteLine("start -- begins a run");
-    Console.WriteLine("run -- prints out info about the current run");
-    Console.WriteLine("party -- prints out info about your current party");
-    Console.WriteLine("depart -- sets off with the currently selected party");
-    Console.WriteLine("zone -- selects the zone to travel to");
+    if(!CurrentRun.InARun) {
+        Console.WriteLine("start -- begins a run");
+    }
+    if(CurrentRun.InCombat) {
+        // TODO: make all these
+        Console.WriteLine("hand -- prints out your current hand");
+        Console.WriteLine("draw -- prints out your current draw pile");
+        Console.WriteLine("discard -- prints out your current discard pile");
+        Console.WriteLine("hero <name> -- prints out details about the player character you named");
+        Console.WriteLine("enemy <name> -- prints out details about the enemy you named");
+    }
     if(CurrentRun.InARun) {
+        Console.WriteLine("depart -- sets off with the currently selected party");
+        Console.WriteLine("run -- prints out info about the current run");
+        Console.WriteLine("party -- prints out info about your current party");
+        Console.WriteLine("zone -- selects the zone to travel to");
         if(CurrentRun.Party.Count < CurrentRun.PartySize) {
             // Starting party is not yet chosen. Show character options
             
@@ -107,7 +117,7 @@ void depart() {
 // Asks the player what zone to travel to
 void zoneSelection() {
     Console.WriteLine("Currently, the only zone available is the Medieval zone.");
-    Console.WriteLine("\n\tIt is now set.");
+    Console.WriteLine("\n\tIt is now set. Type 'depart' to set off to the zone.");
     nextZoneID = ZoneID.ZONE1;
 }
 
@@ -166,10 +176,10 @@ void printStarterCharacterInfo(string characterName) {
             break;
     }
     if(CurrentRun.Party.Count < CurrentRun.PartySize) {
-        Console.WriteLine("\nAdd this character to your party?");
-        Console.WriteLine("\tYes\t\tBack");
-        Console.WriteLine("============================================================");
         while(true) {
+            Console.WriteLine("\nAdd this character to your party?");
+            Console.WriteLine("\tYes\t\tBack");
+            Console.WriteLine("============================================================");
             Console.Write("\n> ");
             cmd = Console.ReadLine();
             Console.Clear();
@@ -186,6 +196,7 @@ void printStarterCharacterInfo(string characterName) {
                 printStartingPartyMessage();
                 return;
             }
+            Console.WriteLine("Invalid response.");
         }
     }
 }
@@ -243,7 +254,92 @@ void printCharacterInfo(PlayerCharacter character) {
 }
 
 void printCombatSituation() {
-    
+    Console.WriteLine("============================================================");
+    if(Battlefield.CurrentEncounter == null) {
+            Console.WriteLine("Current Battle: None");
+            return;
+    }
+    Console.WriteLine("Current Battle: "+Battlefield.CurrentEncounter.name);
+    Console.WriteLine("Turn "+Battlefield.turnNumber);
+    Console.WriteLine("");
+    int max_entities;
+    int numEnemies = Battlefield.EnemySide.Count;
+    int numHeroes = Battlefield.PlayerSide.Count;
+    int sizeDiff = Math.Abs(numEnemies - numHeroes);
+
+    List<Enemy?> enemyFilled = new List<Enemy?>();
+    foreach(Enemy ent in Battlefield.EnemySide) {
+        enemyFilled.Add(ent);
+    }
+    List<PlayerCharacter?> playerFilled = new List<PlayerCharacter?>();
+    foreach(PlayerCharacter ent in Battlefield.PlayerSide) {
+        playerFilled.Add(ent);
+    }
+    // Add filler lines to both lists, in between each existing line:
+    for(int i = (numEnemies -1); i > 0; i--) {
+        enemyFilled.Insert(i, null);
+    }
+    for(int i = (numHeroes -1); i > 0; i--) {
+        playerFilled.Insert(i, null);
+    }
+    if(numEnemies > numHeroes) {
+        // More enemies, so format based on their number
+        max_entities = numEnemies;
+        // Need to add filler rows to the player list
+        bool swap = true;
+        while(playerFilled.Count < (max_entities*2) -1) {
+            if(swap) {
+                playerFilled.Insert(0, null);
+                swap = false;
+            }
+            else {
+                playerFilled.Insert(playerFilled.Count-1, null);
+                swap = true;
+            }
+        }
+    }
+    else {
+        max_entities = numHeroes;
+        // Need to add filler rows to the enemy list
+        bool swap = true;
+        while(enemyFilled.Count < (max_entities*2) -1) {
+            if(swap) {
+                enemyFilled.Insert(0, null);
+                swap = false;
+            }
+            else {
+                enemyFilled.Add(null);
+                swap = true;
+            }
+        }
+    }
+   
+    // Loop through the rows and print entity name/HP accordingly
+    for(int i = 0; i < (max_entities*2) -1; i++) {
+        string heroString = "";
+        string enemyString = "";
+        if(playerFilled[i] != null) {
+            heroString = playerFilled[i]!.name+"["+playerFilled[i]!.currentHP+"/"+playerFilled[i]!.maxHP+" HP]";
+            if(playerFilled[i]!.exhausted) heroString = "(E) "+heroString;
+        }
+        if(enemyFilled[i] != null) {
+            string nextEnemyAction = "";
+            string nextEnemyTarget = "";
+            if(enemyFilled[i]!.ActionList.Count > 0) {
+                nextEnemyAction = enemyFilled[i]!.ActionList[enemyFilled[i]!.nextActionIndex].description;
+                if(enemyFilled[i]!.ActionList[enemyFilled[i]!.nextActionIndex].hasTarget()) {
+                    nextEnemyTarget = enemyFilled[i]!.getNextTargetName();
+                }
+            }
+            enemyString = enemyFilled[i]!.name+"["+enemyFilled[i]!.currentHP+"/"+enemyFilled[i]!.maxHP+" HP] - "
+                        +nextEnemyAction+" Target: "+nextEnemyTarget;
+            if(enemyFilled[i]!.exhausted) enemyString = "(E) "+enemyString;
+        }
+        
+        string rowString = String.Format("{0,24}\t|\t{1,32}", heroString, enemyString);
+        Console.WriteLine(rowString);
+    }
+    Console.WriteLine("");
 }
 
 

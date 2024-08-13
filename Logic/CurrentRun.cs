@@ -15,6 +15,7 @@ public static class CurrentRun {
     public static int ZoneProgress; // The number of combat encounters that have been completed in this zone.
     public static List<Zone> CompletedZones;
     public static bool InARun;
+    public static bool InCombat;
     //==============================END DATA==============================
     
     //==============================CONSTRUCTORS==============================
@@ -48,6 +49,7 @@ public static class CurrentRun {
         ZoneProgress = 0;
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
+        InCombat = false;
     }
     //==============================END CONSTRUCTORS==============================
     
@@ -175,13 +177,14 @@ public static class CurrentRun {
         int lowestDifficultyDiff = Math.Abs(CurrentZone.CombatEncounters[0].difficulty - targetDifficulty);
         CombatEncounter closestMatchEncounter = CurrentZone.CombatEncounters[0];
         foreach(CombatEncounter troupe in CurrentZone.CombatEncounters) {
-            difficultyDiff = Math.Abs(troupe.difficulty - targetDifficulty);
+            var difficultyDiff = Math.Abs(troupe.difficulty - targetDifficulty);
             if(difficultyDiff < lowestDifficultyDiff) {
                 lowestDifficultyDiff = difficultyDiff;
                 closestMatchEncounter = troupe;
             }
         }
         Battlefield.LoadCombat(closestMatchEncounter);
+        InCombat = true;
         // TODO
     }
 

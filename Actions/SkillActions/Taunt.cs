@@ -14,9 +14,8 @@ public class Taunt : Action {
 
     public override void use(Entity? target, Modifier? modifier) {
         // Go through all enemies, and for those that target allies, change the target
-        foreach(Entity entity in Battlefield.EnemySide) {
-            var enemy = entity as Enemy;
-            if(enemy != null) enemy.setNextTarget(Battlefield.PlayerSide.IndexOf(owner));
+        foreach(Enemy enemy in Battlefield.EnemySide) {
+            if(enemy != null) enemy.setNextTarget(Battlefield.PlayerSide.FindIndex(a => a.name == owner.name));
         }
     }
 }

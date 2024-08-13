@@ -2,9 +2,9 @@ public class Enemy : Entity {
     
     // Tracks what the enemy is about to do each turn.
     // For most enemies, just increments by 1 until it hits a usable action each turn.
-    int nextActionIndex = 0;
+    public int nextActionIndex = 0;
     
-    int nextTargetPosition = 0; // 0 is the top player character, 2 is the bottom
+    public int nextTargetPosition = 0; // 0 is the top player character, 2 is the bottom
     
     // Default Constructor
     public Enemy() {
@@ -19,6 +19,10 @@ public class Enemy : Entity {
         hostile = true;
         exhausted = false;
         currentHP = maxHP;
+    }
+
+    public ToString(){
+        
     }
 
     // Many enemies will override this
@@ -44,6 +48,26 @@ public class Enemy : Entity {
         }
         else {
             Console.WriteLine("Entity at position "+newTargetPosition+" is not a valid target for "+this.ActionList[nextActionIndex].name);
+        }
+    }
+
+    public string getNextTargetName() {
+        if(ActionList.Count < 1) {
+            return "None";
+        }
+        switch(this.ActionList[nextActionIndex].targetting){
+            case TargetCategory.SINGLE_ENEMY:
+                if(Battlefield.PlayerSide.Count <= nextTargetPosition) {
+                    return "None";
+                }
+                return Battlefield.PlayerSide[nextTargetPosition].name;
+            case TargetCategory.SINGLE_ALLY:
+                if(Battlefield.EnemySide.Count <= nextTargetPosition) {
+                    return "None";
+                }
+                return Battlefield.EnemySide[nextTargetPosition].name;
+            default:
+                return "None";
         }
     }
     

@@ -90,4 +90,11 @@ public class Action {
 
 		}
 	}
+
+	public bool hasTarget() {
+		if(this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY || this.targetting == TargetCategory.SINGLE_ANY) {
+			return true;
+		}
+		return false;
+	}
 }
