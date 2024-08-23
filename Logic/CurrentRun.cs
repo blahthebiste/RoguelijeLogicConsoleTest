@@ -16,6 +16,8 @@ public static class CurrentRun {
     public static List<Zone> CompletedZones;
     public static bool InARun;
     public static bool InCombat;
+
+    public static CombatReward NextCombatReward = new CombatReward();
     //==============================END DATA==============================
     
     //==============================CONSTRUCTORS==============================
@@ -144,6 +146,15 @@ public static class CurrentRun {
     
     // When the player wins, give them stuff.
     public static void DistributeCombatRewards() {
+        Money += NextCombatReward.moneyReward;
+        Console.WriteLine("Earned $"+NextCombatReward.moneyReward);
+        foreach(Item item in NextCombatReward.itemRewards) {
+            Inventory.Add(item);
+            Console.WriteLine("Acquired a "+item.name);
+        }
+    }
+    
+    public static void GenerateCombatRewards() {
             int randomMoneyReward = rng.Next(40, 61);
             int extraMoneyReward = 0;
             // Generate rewards based on the ZoneProgress.
@@ -155,19 +166,20 @@ public static class CurrentRun {
             else if(ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
             {
                 extraMoneyReward = rng.Next(40, 61);
-                Inventory.Add(new AscensionBook());
+                NextCombatReward.itemRewards.Add(new AscensionBook());
             }
             else // Normal combat.
             {
                 // do nothing, no special rewards other than the money.
             }
-            Money = Money + randomMoneyReward + extraMoneyReward;
+            NextCombatReward.moneyReward = randomMoneyReward + extraMoneyReward;
         }
 
 
 
     public static void GenerateNextCombat() {
         // Takes into account number of completed zones and zone progress
+        Console.WriteLine("Generating combat...");
         int targetDifficulty = 0;
         targetDifficulty += (10 * CompletedZones.Count);
         targetDifficulty += ZoneProgress;
@@ -184,36 +196,39 @@ public static class CurrentRun {
             }
         }
         Battlefield.LoadCombat(closestMatchEncounter);
+        CardManager.beginCombat();
         InCombat = true;
         // TODO
     }
 
     public static void GenerateNextChaosTome() {
+        Console.WriteLine("YOU HAVE ACQUIRED A CHAOS TOME.");
         // TODO
         switch(CompletedZones.Count) {
             case 0:
                 // Increase level cap from 1 to 2
-                LevelCap++;
+                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
                 break;
             case 1:
                 // Increase party size to 4
-                PartySize++;
-                DrawPerTurn++;
+                Console.WriteLine("Party size increased from "+PartySize+" to "+ ++PartySize);
+                Console.WriteLine("(Draw per turn increased from "+DrawPerTurn+" to "+ ++DrawPerTurn+")");
                 break;
             case 2:
                 // Increase level cap from 2 to 3
-                LevelCap++;
+                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
                 break;
             case 3:
                 // Increase party size to 5
-                PartySize++;
-                DrawPerTurn++;
+                Console.WriteLine("Party size increased from "+PartySize+" to "+ ++PartySize);
+                Console.WriteLine("(Draw per turn increased from "+DrawPerTurn+" to "+ ++DrawPerTurn+")");
                 break;
             case 4:
                 // Increase level cap from 2 to 3
-                LevelCap++;
+                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
                 break;
             case 5:
+                // Increease level cap from 3 to 4?
                 break;
             default:
                 break;
@@ -228,4 +243,12 @@ public static class CurrentRun {
     }
     
     //==============================END ZONE FUNCTIONS==============================
+
+    public static void LoseLives(int numLives) {
+        Lives -= numLives;
+        if(Lives < 1) {
+            // Game over, man!
+            Console.WriteLine("GAME OVER.");
+        }
+    }
 }

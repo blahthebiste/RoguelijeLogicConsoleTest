@@ -13,13 +13,15 @@ public class Bash : Action {
         return base.canUse();
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         if(target == null) {
             Console.WriteLine("Must target an enemy");
+            return false;
         }
         else {
             // Deal damage to the target.
             target.recieveAttack(damage);
+            return base.use(target, modifier);
         }
     }
 }

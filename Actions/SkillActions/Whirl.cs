@@ -13,8 +13,9 @@ public class Whirl : Action {
         return base.canUse();
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
         owner.recieveStatusEffect(new Whirling(magicNumber, owner));
+        return base.use(target, modifier);
     }
 }

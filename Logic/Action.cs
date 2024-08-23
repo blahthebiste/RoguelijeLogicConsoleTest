@@ -42,10 +42,15 @@ public class Action {
     
     // The meat and potatoes of the action.
     // Each action should override this. Modifier often null.
-    public virtual void use(Entity? target, Modifier? modifier) {
-		if(hasLimitedUses) {
-			uses--;
+    public virtual bool use(Entity? target, Modifier? modifier) {
+		if(this.canUse()) {
+			if(hasLimitedUses) {
+				uses--;
+			}
+			owner.exhausted = true;
+			return true;
 		}
+		return false;
 	}
 
 	// Useful for printing what would be shown to the player

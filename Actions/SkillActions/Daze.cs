@@ -21,13 +21,14 @@ public class Daze : Action {
         return base.CanTarget(target);
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         if(target == null) {
             Console.WriteLine("Invalid target!");
-            return;
+            return false;
         }
         // Apply the Stun status effect
         owner.recieveStatusEffect(new Stun(magicNumber, target));
         Battlefield.BeenDazed.Add(target);
+        return base.use(target, modifier);
     }
 }

@@ -14,10 +14,11 @@ public class Recover : Action {
         return base.canUse();
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         // Restore HP.
         owner.recieveHealing(healing);
         // Draw cards.
         CardManager.drawCard(3);
+        return base.use(target, modifier);
     }
 }

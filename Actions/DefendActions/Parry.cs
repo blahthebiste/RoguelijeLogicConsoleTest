@@ -13,8 +13,9 @@ public class Parry : Action {
         return base.canUse();
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         // Generate Block.
         Battlefield.addBlock(block, true);
+        return base.use(target, modifier);
     }
 }

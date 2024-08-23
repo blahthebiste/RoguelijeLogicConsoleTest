@@ -11,6 +11,7 @@ public class Fighter : PlayerCharacter {
         foreach(Action action in DataRegistry.CharacterData.Fighter.ActionList) {
             this.ActionList.Add(action);
         }
+        this.assignActionOwnership();
     }
 
 }

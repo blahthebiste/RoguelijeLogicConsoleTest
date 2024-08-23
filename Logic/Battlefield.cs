@@ -61,5 +61,57 @@ public static class Battlefield {
         }
     }
 
+    public static void endTurn() {
+        enemyBlock = 0;
+        // Enemies all take their turn:
+        foreach(Enemy enemy in EnemySide) {
+            enemy.takeTurn();
+        }
+        // Now reset everyting:
+        playerBlock = 0;
+        CardManager.discardHand();
+        CardManager.drawHand();
+        foreach(PlayerCharacter hero in PlayerSide) {
+            hero.exhausted = false;
+        }
+        foreach(Enemy enemy in EnemySide) {
+            enemy.exhausted = false;
+        }
+        turnNumber++;
+    }
+
+    public static bool playerCharactersAllExhausted(){
+        foreach(PlayerCharacter hero in PlayerSide) {
+            if(!hero.exhausted) return false;
+        }
+        return true;
+    }
+
+    public static void RemoveEntity(Entity entity) {
+        if(PlayerSide.Contains(entity)) {
+            PlayerSide.Remove((PlayerCharacter)entity);
+            CurrentRun.LoseLives(1);
+            if(noMoreHeroes()) {
+                endCombat(false);
+            }
+        }
+        else if(EnemySide.Contains(entity)) {
+            EnemySide.Remove((Enemy)entity);
+            if(noMoreEnemies()) {
+                endCombat(true);
+            }
+        }
+    }
     
+    public static void endCombat(bool playerWon) {
+        CurrentRun.InCombat = false;
+        if(playerWon) {
+            Console.WriteLine("VICTORY!");
+            Console.WriteLine("");
+            Console.WriteLine("Rewards: ");
+            // distribute rewards.
+            CurrentRun.GenerateCombatRewards();
+            CurrentRun.DistributeCombatRewards();
+        }
+    }
 }

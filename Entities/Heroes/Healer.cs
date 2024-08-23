@@ -11,6 +11,7 @@ public class Healer : PlayerCharacter {
         foreach(Action action in DataRegistry.CharacterData.Healer.ActionList) {
             this.ActionList.Add(action);
         }
+        this.assignActionOwnership();
     }
 
 }

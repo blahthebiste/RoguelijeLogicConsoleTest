@@ -28,8 +28,16 @@ public class Entity {
         return currentHP != 0;
     }
 
+    // Fills in the 'owner' field for all actions in the ActionList to be this entity
+    public void assignActionOwnership() {
+        foreach(Action action in ActionList) {
+            action.owner = this;
+        }
+    }
+
     public virtual void recieveAttack(int damage) {
         this.currentHP -= damage;
+        if(this.currentHP <= 0) this.die();
     }
 
     public virtual void recieveHealing(int healing) {
@@ -55,5 +63,11 @@ public class Entity {
         }
         // Entity does not have this effect, add it
         this.EffectList.Add(newEffect);
+    }
+
+    // Kill this entity and remove it from combat.
+    public virtual void die() {
+        Console.WriteLine(this.name+" has been slain!");
+        Battlefield.RemoveEntity(this);
     }
 }

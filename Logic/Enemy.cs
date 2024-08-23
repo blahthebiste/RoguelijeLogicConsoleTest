@@ -21,12 +21,22 @@ public class Enemy : Entity {
         currentHP = maxHP;
     }
 
-    public ToString(){
-        
+    // Prints out full details about the enemy
+    public override string ToString(){
+        string str = this.name;
+        str += "\nHP: "+this.currentHP+"/"+this.maxHP;
+        str = str +"\nActions:";
+        for(int i = 0; i < this.ActionList.Count; i++) {
+            Action action = ActionList[i];
+            str += "\n\t";
+            str += action.ToString();
+        }
+        return str;
     }
 
     // Many enemies will override this
     public void takeTurn() {
+        ActionList[nextActionIndex].use(getNextTarget(), null); // Null modifier for now
         nextActionIndex++;
         if(nextActionIndex >= ActionList.Count) {
             nextActionIndex = 0;
@@ -51,6 +61,25 @@ public class Enemy : Entity {
         }
     }
 
+    public Entity? getNextTarget() {
+        if(ActionList.Count < 1) {
+            return null;
+        }
+        switch(this.ActionList[nextActionIndex].targetting){
+            case TargetCategory.SINGLE_ENEMY:
+                if(Battlefield.PlayerSide.Count <= nextTargetPosition) {
+                    return null;
+                }
+                return Battlefield.PlayerSide[nextTargetPosition];
+            case TargetCategory.SINGLE_ALLY:
+                if(Battlefield.EnemySide.Count <= nextTargetPosition) {
+                    return null;
+                }
+                return Battlefield.EnemySide[nextTargetPosition];
+            default:
+                return null;
+        }
+    }
     public string getNextTargetName() {
         if(ActionList.Count < 1) {
             return "None";

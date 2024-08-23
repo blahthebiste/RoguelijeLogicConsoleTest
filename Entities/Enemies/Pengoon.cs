@@ -10,6 +10,7 @@ public class Pengoon : Enemy {
         foreach(Action action in DataRegistry.EnemyData.Pengoon.ActionList) {
             this.ActionList.Add(action);
         }
+        this.assignActionOwnership();
     }
 
 }

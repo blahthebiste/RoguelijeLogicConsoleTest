@@ -15,9 +15,9 @@ public class Inflame : Action {
         return base.canUse();
     }
 
-    public override void use(Entity? target, Modifier? modifier) {
+    public override bool use(Entity? target, Modifier? modifier) {
         // Apply the Whirl status effect
         owner.recieveStatusEffect(new Strength(magicNumber, owner));
-        base.use(target, modifier);
+        return base.use(target, modifier);
     }
 }

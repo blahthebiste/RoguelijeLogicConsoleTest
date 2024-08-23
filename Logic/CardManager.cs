@@ -20,10 +20,10 @@ public static class CardManager {
 		DiscardPile = new List<ActionCard>();
 		Hand = new List<ActionCard>();
 		randomizeDrawPileOrder();
-		drawOpeningHand();
+		drawHand();
 	}
 	
-	public static void drawOpeningHand() {
+	public static void drawHand() {
 		for(int i = 0; i < CurrentRun.DrawPerTurn; i++) {
 			drawCard();
 		}
@@ -46,7 +46,7 @@ public static class CardManager {
 	
 	// Puts a card into the discard pile from the hand.
 	// Used whenever a card is played, and at end of turn.
-	public static void staticdiscardCard(ActionCard card) {
+	public static void discardCard(ActionCard card) {
 		DiscardPile.Add(card);
 		Hand.Remove(card);
 	}
@@ -67,14 +67,17 @@ public static class CardManager {
 	}
 	
 	// Source: https://stackoverflow.com/a/69220421/5086634
-	public static void randomizeDrawPileOrder() {
-		int n = DrawPile.Count;
+	public static void randomizeCardOrder(List<ActionCard> cards) {
+		int n = cards.Count;
 		while (n > 1)
 		{
 			n--;
 			int k = CurrentRun.rng.Next(n + 1);
-			(DrawPile[k], DrawPile[n]) = (DrawPile[n], DrawPile[k]);
+			(cards[k], cards[n]) = (cards[n], cards[k]);
 		}
 	}
 
+	public static void randomizeDrawPileOrder() {
+		randomizeCardOrder(DrawPile);
+	}
 }
