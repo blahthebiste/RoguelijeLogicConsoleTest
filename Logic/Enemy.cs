@@ -12,13 +12,8 @@ public class Enemy : Entity {
         hostile = true;
     }
 
-    // Constructor from data
-    public Enemy(string enemyID) {
-        DataRegistry.fillEnemyData(this, enemyID);
-        playerControlled = false;
-        hostile = true;
-        exhausted = false;
-        currentHP = maxHP;
+    public void enterCombat() {
+        chooseNextTarget();
     }
 
     // Prints out full details about the enemy
@@ -36,10 +31,40 @@ public class Enemy : Entity {
 
     // Many enemies will override this
     public void takeTurn() {
-        ActionList[nextActionIndex].use(getNextTarget(), null); // Null modifier for now
+        Entity? nextTarget = getNextTarget();
+        if(nextTarget != null) {
+            Console.WriteLine(this.name +" uses "+ActionList[nextActionIndex].name + " on "+nextTarget.name+"!");
+        }
+        else {
+            Console.WriteLine(this.name +" uses "+ActionList[nextActionIndex].name + "!");
+        }
+        ActionList[nextActionIndex].use(nextTarget, null); // Null modifier for now
         nextActionIndex++;
         if(nextActionIndex >= ActionList.Count) {
             nextActionIndex = 0;
+        }
+        chooseNextTarget();
+    }
+
+    // Selects a random target index from the appropriate side of combat.
+    public void chooseNextTarget(){
+        if(ActionList.Count < 1) {
+            Console.WriteLine("Entity has no actions.");
+            return;
+        }
+        int newTargetIndex;
+        switch(this.ActionList[nextActionIndex].targetting){
+            case TargetCategory.SINGLE_ENEMY:
+                newTargetIndex = CurrentRun.rng.Next(0, Battlefield.PlayerSide.Count);
+                setNextTarget(newTargetIndex, true);
+                break;
+            case TargetCategory.SINGLE_ALLY:
+                newTargetIndex = CurrentRun.rng.Next(0, Battlefield.EnemySide.Count);
+                setNextTarget(newTargetIndex, false);
+                break;
+            default:
+                Console.WriteLine("Next action does not use targeting.");
+                return;
         }
     }
 
@@ -63,6 +88,7 @@ public class Enemy : Entity {
 
     public Entity? getNextTarget() {
         if(ActionList.Count < 1) {
+            Console.WriteLine("Entity has no actions.");
             return null;
         }
         switch(this.ActionList[nextActionIndex].targetting){
@@ -77,6 +103,7 @@ public class Enemy : Entity {
                 }
                 return Battlefield.EnemySide[nextTargetPosition];
             default:
+                Console.WriteLine("Next action does not use targeting.");
                 return null;
         }
     }

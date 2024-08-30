@@ -1,0 +1,41 @@
+[
+	{
+		"Name": "Fighter",
+		"Description": "Sturdy attacker that can handle any situation",
+		"HP": 10,
+		"PersonalCard": "Basic Attack",
+		"ActionList": [
+			"Strike",
+			"Parry",
+			"Rest",
+			"Whirl",
+			"Inflame"
+		]
+	},
+	{
+		"Name": "Defender",
+		"Description": "Healthy wall that protects weaker allies",
+		"HP": 12,
+		"PersonalCard": "Basic Defend",
+		"ActionList": [
+			"Bash",
+			"Block",
+			"Rest",
+			"Taunt",
+			"Harden"
+		]
+	},
+	{
+		"Name": "Healer",
+		"Description": "Restores HP and rests well",
+		"HP": 10,
+		"PersonalCard": "Basic Rest",
+		"ActionList": [
+			"Whack",
+			"Cower",
+			"Recover",
+			"Daze",
+			"Restore"
+		]
+	}
+]

@@ -161,7 +161,7 @@ public static class CurrentRun {
             if(ZoneProgress % 10 == 0) // Every 10th stage is a Boss combat
             {
                 extraMoneyReward = rng.Next(40, 61);
-                GenerateNextChaosTome();
+                GenerateNextChaosTome(); // TODO: make claimable combat reward
             }
             else if(ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
             {
@@ -203,36 +203,7 @@ public static class CurrentRun {
 
     public static void GenerateNextChaosTome() {
         Console.WriteLine("YOU HAVE ACQUIRED A CHAOS TOME.");
-        // TODO
-        switch(CompletedZones.Count) {
-            case 0:
-                // Increase level cap from 1 to 2
-                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
-                break;
-            case 1:
-                // Increase party size to 4
-                Console.WriteLine("Party size increased from "+PartySize+" to "+ ++PartySize);
-                Console.WriteLine("(Draw per turn increased from "+DrawPerTurn+" to "+ ++DrawPerTurn+")");
-                break;
-            case 2:
-                // Increase level cap from 2 to 3
-                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
-                break;
-            case 3:
-                // Increase party size to 5
-                Console.WriteLine("Party size increased from "+PartySize+" to "+ ++PartySize);
-                Console.WriteLine("(Draw per turn increased from "+DrawPerTurn+" to "+ ++DrawPerTurn+")");
-                break;
-            case 4:
-                // Increase level cap from 2 to 3
-                Console.WriteLine("Level cap increased from "+LevelCap+" to "+ ++LevelCap);
-                break;
-            case 5:
-                // Increease level cap from 3 to 4?
-                break;
-            default:
-                break;
-        }
+        NextCombatReward.itemRewards.Add(new ChaosTome(CompletedZones.Count));
     }
     //==============================END REWARDS FUNCTIONS==============================
     

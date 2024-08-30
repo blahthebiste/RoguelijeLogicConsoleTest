@@ -5,17 +5,21 @@ public class CombatEncounter {
     public List<Entity> EnemyTroupe = new List<Entity>();
 
     public CombatEncounter(string combatID) {
-        switch(combatID.ToLower().Trim()) {
-            case "pengoons":
-                this.name = DataRegistry.EnemyTroupes.Pengoons.Name;
-                this.description = DataRegistry.EnemyTroupes.Pengoons.Description;
-                this.difficulty = DataRegistry.EnemyTroupes.Pengoons.Difficulty;
-                foreach(Entity enemy in DataRegistry.EnemyTroupes.Pengoons.EnemyList) {
-                    this.EnemyTroupe.Add(enemy);
-                }
-                break;
-            default:
-                break;
+        TroupeData? data = DataRegistry.EnemyTroupes.getTroupeDataByName(combatID);
+        if(data == null) {
+            Console.WriteLine("Could not generate enemy troupe; ID not found.");
+            return;
         }
+        foreach(string enemyName in data.EnemyList) {
+            Entity? newEnemy = DataRegistry.EnemyData.getEnemyByName(enemyName);
+            if(newEnemy == null) {
+                Console.WriteLine("Could not generate enemy troupe; enemy not found.");
+                return;
+            }
+            EnemyTroupe.Add(newEnemy);
+        }
+        name = data.Name;
+        description = data.Description;
+        difficulty = data.Difficulty;
     }
 }

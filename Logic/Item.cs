@@ -11,4 +11,9 @@ public class Item {
 
 		return actionString;
 	}
+
+    // Removes the item from the player's inventory.
+    public void RemoveFromInventory(){
+        CurrentRun.Inventory.Remove(this);
+    }
 }

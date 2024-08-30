@@ -23,6 +23,10 @@ public static class Battlefield {
         foreach(Enemy enemy in combat.EnemyTroupe) {
             EnemySide.Add(enemy);
         }
+        // Have enemies choose their targets:
+        foreach(Enemy enemy in EnemySide) {
+            enemy.enterCombat();
+        }
         turnNumber = 1;
     }
     

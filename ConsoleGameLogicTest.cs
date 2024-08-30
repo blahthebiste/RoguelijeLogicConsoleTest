@@ -3,6 +3,7 @@ Console.WriteLine("Initializing console test program for Roguelije game logic...
 
 string? cmd;
 ZoneID nextZoneID = ZoneID.HUB;
+DataRegistry.LoadData();
 printStartScreen();
 // Enter command loop
 commandLoop();
@@ -153,13 +154,13 @@ void startRun() {
 
 // Skips the party selection process to start the run immediately
 void setDefaultParty(){
-    PlayerCharacter newFighter = new Fighter();
+    PlayerCharacter newFighter = new PlayerCharacter("Fighter");
     CurrentRun.Party.Add(newFighter);
     CurrentRun.MasterDeck.Add(newFighter.personalCard);
-    PlayerCharacter newHealer = new Healer();
+    PlayerCharacter newHealer = new PlayerCharacter("Healer");
     CurrentRun.Party.Add(newHealer);
     CurrentRun.MasterDeck.Add(newHealer.personalCard);
-    PlayerCharacter newDefender = new Defender();
+    PlayerCharacter newDefender = new PlayerCharacter("Defender");
     CurrentRun.Party.Add(newDefender);
     CurrentRun.MasterDeck.Add(newDefender.personalCard);
     zoneSelection();
@@ -215,43 +216,15 @@ void printStartingPartyMessage() {
 }
  
 void printStarterCharacterInfo(string characterName) {
-    PlayerCharacter newStarterCharacter;
-    switch(characterName.ToLower().Trim())
-    {
-        case "fighter":
-            newStarterCharacter = new Fighter();
-            Console.WriteLine(newStarterCharacter.name+" - "+DataRegistry.CharacterData.Fighter.Description);
-            Console.WriteLine("HP: "+newStarterCharacter.maxHP);
-            Console.WriteLine("Actions:");
-            foreach(Action action in newStarterCharacter.ActionList) {
-                Console.WriteLine(action.ToString());
-            }
-            Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
-            break;
-        case "defender":
-            newStarterCharacter = new Defender();
-            Console.WriteLine(newStarterCharacter.name+" - "+DataRegistry.CharacterData.Defender.Description);
-            Console.WriteLine("HP: "+newStarterCharacter.maxHP);
-            Console.WriteLine("Actions:");
-            foreach(Action action in newStarterCharacter.ActionList) {
-                Console.WriteLine(action.ToString());
-            }
-            Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
-            break;
-        case "healer":
-            newStarterCharacter = new Healer();
-            Console.WriteLine(newStarterCharacter.name+" - "+DataRegistry.CharacterData.Healer.Description);
-            Console.WriteLine("HP: "+newStarterCharacter.maxHP);
-            Console.WriteLine("Actions:");
-            foreach(Action action in newStarterCharacter.ActionList) {
-                Console.WriteLine(action.ToString());
-            }
-            Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
-            break;
-        default:
-            newStarterCharacter = new PlayerCharacter();
-            break;
+    PlayerCharacter newStarterCharacter = new PlayerCharacter(characterName.ToLower().Trim());
+    Console.WriteLine(newStarterCharacter.name+" - "+newStarterCharacter.description);
+    Console.WriteLine("HP: "+newStarterCharacter.maxHP);
+    Console.WriteLine("Actions:");
+    foreach(Action action in newStarterCharacter.ActionList) {
+        Console.WriteLine(action.ToString());
     }
+    Console.WriteLine("Personal Card: "+newStarterCharacter.personalCard);
+            
     if(CurrentRun.Party.Count < CurrentRun.PartySize) {
         while(true) {
             Console.WriteLine("\nAdd this character to your party?");

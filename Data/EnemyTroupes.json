@@ -1,0 +1,11 @@
+[
+	{
+		"Name": "Pengoons",
+		"Description": "Easy encounter for tutorials",
+		"Difficulty": 0,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon"
+		]
+	}
+]

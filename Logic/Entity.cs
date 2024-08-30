@@ -1,6 +1,7 @@
 // Both player characters and enemies extend from this class
 public class Entity {
-    public String name = "Missing Name!";
+    public String name = "Missing entity name!";
+    public String description = "Missing entity description!";
     public int maxHP = 1;
     public bool hostile = true;
     public bool playerControlled = false;
@@ -36,11 +37,24 @@ public class Entity {
     }
 
     public virtual void recieveAttack(int damage) {
+        int blockedDamage = 0;
+        if(this.playerControlled && Battlefield.playerBlock > 0) {
+            blockedDamage = Math.Min(damage, Battlefield.playerBlock);
+            Battlefield.playerBlock -= blockedDamage;
+        }
+        else if(!this.playerControlled && Battlefield.enemyBlock > 0) {
+            blockedDamage = Math.Min(damage, Battlefield.enemyBlock);
+            Battlefield.enemyBlock -= blockedDamage;
+        }
+        Console.WriteLine(blockedDamage+" damage was blocked.");
+        damage -= blockedDamage;
+        Console.WriteLine(this.name+" was hit for "+damage+" damage.");
         this.currentHP -= damage;
         if(this.currentHP <= 0) this.die();
     }
 
     public virtual void recieveHealing(int healing) {
+        Console.WriteLine(this.name+" regained "+healing+" HP.");
         if(this.currentHP + healing > this.maxHP) {
             this.currentHP = this.maxHP;
         }
