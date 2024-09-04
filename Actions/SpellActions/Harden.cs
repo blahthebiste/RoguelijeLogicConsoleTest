@@ -16,8 +16,12 @@ public class Harden : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Apply the Whirl status effect
-        owner.recieveStatusEffect(new Toughness(magicNumber, owner));
+        owner.ReceiveStatusEffect(new Toughness(magicNumber, owner));
         return base.use(target, modifier);
     }
 }

@@ -14,8 +14,13 @@ public class Cower : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
+        int calcedBlock = this.owner.onGainBlock(block);
         // Generate Block.
-        Battlefield.addBlock(block, true);
+        Battlefield.addBlock(calcedBlock, true);
         return base.use(target, modifier);
     }
 }

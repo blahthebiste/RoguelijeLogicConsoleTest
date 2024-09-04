@@ -1,10 +1,10 @@
-public class Parry : Action {
+public class Dodge : Action {
 
-    public Parry() {
-        this.name = "Parry";
-        this.description = "Generate 4 Block.";
+    public Dodge() {
+        this.name = "Dodge";
+        this.description = "Dodge the next attack this turn.";
         this.actionType = ActionType.DEFEND;
-        this.block = 4;
+        this.magicNumber = 1;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -18,9 +18,8 @@ public class Parry : Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-        int calcedBlock = this.owner.onGainBlock(block);
-        // Generate Block.
-        Battlefield.addBlock(calcedBlock, true);
+        // Apply the Dodge status effect
+        owner.ReceiveStatusEffect(new Dodging(magicNumber, owner));
         return base.use(target, modifier);
     }
 }

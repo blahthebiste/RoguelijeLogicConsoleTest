@@ -26,8 +26,12 @@ public class Daze : Action {
             Console.WriteLine("Invalid target!");
             return false;
         }
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Apply the Stun status effect
-        owner.recieveStatusEffect(new Stun(magicNumber, target));
+        owner.ReceiveStatusEffect(new Stun(magicNumber, target));
         Battlefield.BeenDazed.Add(target);
         return base.use(target, modifier);
     }

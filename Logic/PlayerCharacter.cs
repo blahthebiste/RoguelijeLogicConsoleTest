@@ -31,6 +31,7 @@ public class PlayerCharacter : Entity {
                 Console.WriteLine("Could not generate player character; action not found.");
                 return;
             }
+            newAction.owner = this;
             ActionList.Add(newAction);
         }
         name = data.Name;

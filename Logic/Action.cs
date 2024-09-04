@@ -7,7 +7,7 @@ public class Action {
     public ActionType actionType;
     public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
-	public Entity owner; // The entity that is using the action
+	public Entity? owner; // The entity that is using the action
 
 	public TargetCategory targetting = TargetCategory.NONE;
 	// Negative 1 means unlimited uses.
@@ -23,13 +23,16 @@ public class Action {
 	public Action() {
 		name = "MISSING NAME";
 		description = "MISSING DESCRIPTION";
-		owner = new Entity();
 	}
     
     // Whether this action can be used right now. Most actions should override this.
     public virtual bool canUse() {
 		if(hasLimitedUses && uses == 0) {
 			return false;
+		}
+		if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
 		}
 		// Iterate through effect list. If stunned, cannot use non-rest actions
 		foreach(StatusEffect effect in owner.EffectList) {
@@ -43,7 +46,12 @@ public class Action {
     // The meat and potatoes of the action.
     // Each action should override this. Modifier often null.
     public virtual bool use(Entity? target, Modifier? modifier) {
+		if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+		}
 		if(this.canUse()) {
+			this.owner.previousAction = this; // Update previous action.
 			if(hasLimitedUses) {
 				uses--;
 			}
@@ -71,6 +79,10 @@ public class Action {
 	// Can this action target that entity?
 	// Should be overridden, but the base version has useful basic targeting guidelines.
 	public virtual bool CanTarget(Entity target) {
+		if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
 		switch(this.targetting)
 		{
 			case TargetCategory.NONE:

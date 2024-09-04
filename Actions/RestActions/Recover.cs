@@ -15,8 +15,12 @@ public class Recover : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Restore HP.
-        owner.recieveHealing(healing);
+        owner.ReceiveHealing(healing);
         // Draw cards.
         CardManager.drawCard(3);
         return base.use(target, modifier);

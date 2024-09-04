@@ -9,6 +9,7 @@ public class Entity {
     public bool exhausted = false;
     public List<Action> ActionList = new List<Action>(); // Equipment is tied to actions.
     public List<StatusEffect> EffectList = new List<StatusEffect>(); // All status effects currently on the entity.
+    public Action previousAction = new Idle();
     
     // Default constuctor
     public Entity() {
@@ -36,34 +37,28 @@ public class Entity {
         }
     }
 
-    public virtual void recieveAttack(int damage) {
-        int blockedDamage = 0;
-        if(this.playerControlled && Battlefield.playerBlock > 0) {
-            blockedDamage = Math.Min(damage, Battlefield.playerBlock);
-            Battlefield.playerBlock -= blockedDamage;
+    // Should always be used instead of direct HP operations
+    public void changeHP(int delta){
+        if(delta < 0) {
+            foreach(StatusEffect effect in EffectList) {
+                delta = effect.onLoseHP(delta);  // Handle events for status effects
+            }
+            // TODO: events for items, passives, modifiers...
+            delta = onLoseHP(delta); // Handle events for the entity
         }
-        else if(!this.playerControlled && Battlefield.enemyBlock > 0) {
-            blockedDamage = Math.Min(damage, Battlefield.enemyBlock);
-            Battlefield.enemyBlock -= blockedDamage;
-        }
-        Console.WriteLine(blockedDamage+" damage was blocked.");
-        damage -= blockedDamage;
-        Console.WriteLine(this.name+" was hit for "+damage+" damage.");
-        this.currentHP -= damage;
-        if(this.currentHP <= 0) this.die();
+        this.currentHP += delta;
+        if(this.currentHP > this.maxHP) this.currentHP = this.maxHP; // Cap healing
+        if(this.currentHP <= 0) this.die(); // Trigger death
     }
 
-    public virtual void recieveHealing(int healing) {
+
+
+    public virtual void ReceiveHealing(int healing) {
         Console.WriteLine(this.name+" regained "+healing+" HP.");
-        if(this.currentHP + healing > this.maxHP) {
-            this.currentHP = this.maxHP;
-        }
-        else {
-            this.currentHP += healing;
-        }
+        changeHP(healing);
     }
 
-    public virtual void recieveStatusEffect(StatusEffect newEffect) {
+    public virtual void ReceiveStatusEffect(StatusEffect newEffect) {
         string newEffectName = newEffect.name;
         Console.WriteLine("New effect is '"+newEffectName+"'.");
         foreach(StatusEffect existingEffect in EffectList) {
@@ -83,5 +78,92 @@ public class Entity {
     public virtual void die() {
         Console.WriteLine(this.name+" has been slain!");
         Battlefield.RemoveEntity(this);
+    }
+
+    //====================EVENTS====================
+    public virtual void startOfTurn() {
+        foreach(StatusEffect effect in EffectList) {
+            effect.startOfTurn(); // Handle events for status effects
+        }
+        EffectList.RemoveAll(element => element.amount == 0);
+    }
+
+    public virtual void endOfTurn() {
+        foreach(StatusEffect effect in EffectList) {
+            effect.endOfTurn(); // Handle events for status effects
+        }
+        EffectList.RemoveAll(element => element.amount == 0);
+    }
+    
+    public virtual Attack onAttack(Attack atk) {
+        foreach(StatusEffect effect in EffectList) {
+            atk = effect.onAttack(atk); // Handle events for status effects
+        }
+        EffectList.RemoveAll(element => element.amount == 0);
+        int targetIndex;
+        if(atk.target.playerControlled) {
+            targetIndex = Battlefield.PlayerSide.IndexOf((PlayerCharacter)atk.target);
+            if(atk.hitsAbove && targetIndex > 0) {
+                Entity aboveTarget = Battlefield.PlayerSide[targetIndex-1];
+                Attack aboveAtk = new Attack(atk, aboveTarget);
+                Console.WriteLine("Also hits target above.");
+                aboveTarget.onReceiveAttack(aboveAtk);
+            }
+            if(atk.hitsBelow && targetIndex < (Battlefield.PlayerSide.Count-1)) {
+                Entity belowTarget = Battlefield.PlayerSide[targetIndex+1];
+                Attack belowAtk = new Attack(atk, belowTarget);
+                Console.WriteLine("Also hits target below.");
+                belowTarget.onReceiveAttack(belowAtk);
+            }
+        }
+        else {
+            targetIndex = Battlefield.EnemySide.IndexOf((Enemy)atk.target);
+            if(atk.hitsAbove && targetIndex > 0) {
+                Entity aboveTarget = Battlefield.EnemySide[targetIndex-1];
+                Attack aboveAtk = new Attack(atk, aboveTarget);
+                Console.WriteLine("Also hits target above.");
+                aboveTarget.onReceiveAttack(aboveAtk);
+            }
+            if(atk.hitsBelow && targetIndex < (Battlefield.EnemySide.Count-1)) {
+                Entity belowTarget = Battlefield.EnemySide[targetIndex+1];
+                Attack belowAtk = new Attack(atk, belowTarget);
+                Console.WriteLine("Also hits target below.");
+                belowTarget.onReceiveAttack(belowAtk);
+            }
+        }
+        return atk;
+    }
+    
+    public virtual Attack onReceiveAttack(Attack atk) {
+        foreach(StatusEffect effect in EffectList) {
+            atk = effect.onReceiveAttack(atk); // Handle events for status effects
+        }
+        EffectList.RemoveAll(element => element.amount == 0);
+        int blockedDamage = 0;
+        if(this.playerControlled && Battlefield.playerBlock > 0) {
+            blockedDamage = Math.Min(atk.damage, Battlefield.playerBlock);
+            Battlefield.playerBlock -= blockedDamage;
+        }
+        else if(!this.playerControlled && Battlefield.enemyBlock > 0) {
+            blockedDamage = Math.Min(atk.damage, Battlefield.enemyBlock);
+            Battlefield.enemyBlock -= blockedDamage;
+        }
+        Console.WriteLine(blockedDamage+" damage was blocked.");
+        atk.damage -= blockedDamage;
+        Console.WriteLine(this.name+" was hit for "+atk.damage+" damage.");
+        changeHP(-atk.damage);
+        return atk;
+    }
+
+    public virtual int onLoseHP(int HPloss) {
+        return HPloss;
+    }
+
+    public virtual int onGainBlock(int block) {
+        foreach(StatusEffect effect in EffectList) {
+            block = effect.onGainBlock(block); // Handle events for status effects
+        }
+        EffectList.RemoveAll(element => element.amount == 0);
+        return block;
     }
 }

@@ -1,10 +1,10 @@
-public class Swipe : Action {
+public class Stab : Action {
 
-    public Swipe() {
-        this.name = "Swipe";
-        this.description = "Deal 2 damage.";
+    public Stab() {
+        this.name = "Stab";
+        this.description = "Deal 5 damage.";
         this.actionType = ActionType.ATTACK;
-        this.damage = 2;
+        this.damage = 5;
         this.targetting = TargetCategory.SINGLE_ENEMY;
     }
 
@@ -25,7 +25,7 @@ public class Swipe : Action {
         else {
             // Deal damage to the target.
             Attack atk = new Attack(damage, this.owner, target);
-            atk = this.owner.onAttack(atk);
+            atk = owner.onAttack(atk);
             target.onReceiveAttack(atk);
             return base.use(target, modifier);
         }

@@ -16,8 +16,12 @@ public class Inflame : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Apply the Whirl status effect
-        owner.recieveStatusEffect(new Strength(magicNumber, owner));
+        owner.ReceiveStatusEffect(new Strength(magicNumber, owner));
         return base.use(target, modifier);
     }
 }

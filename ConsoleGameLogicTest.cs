@@ -318,6 +318,12 @@ void printCharacterInfo(PlayerCharacter character) {
             Console.WriteLine(action.ToString() + action.equippedItem.ToString());
         }
     }
+    if(character.EffectList.Count > 0) {
+        Console.WriteLine("Current effects:");
+        foreach(StatusEffect effect in character.EffectList) {
+            Console.WriteLine("\t"+effect.ToString());
+        }
+    }
     Console.WriteLine("Personal Card: "+character.personalCard);
 }
 
@@ -341,6 +347,12 @@ void printEnemyInfo(Enemy enemy) {
         }
         else {
             Console.WriteLine(action.ToString() + action.equippedItem.ToString());
+        }
+    }
+    if(enemy.EffectList.Count > 0) {
+        Console.WriteLine("Current effects:");
+        foreach(StatusEffect effect in enemy.EffectList) {
+            Console.WriteLine("\t"+effect.ToString());
         }
     }
 }

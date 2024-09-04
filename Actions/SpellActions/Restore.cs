@@ -16,8 +16,12 @@ public class Restore : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Apply the Whirl status effect
-        owner.recieveHealing(magicNumber);
+        owner.ReceiveHealing(magicNumber);
         return base.use(target, modifier);
     }
 }

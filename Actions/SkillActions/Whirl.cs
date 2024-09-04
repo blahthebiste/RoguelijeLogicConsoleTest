@@ -14,8 +14,12 @@ public class Whirl : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         // Apply the Whirl status effect
-        owner.recieveStatusEffect(new Whirling(magicNumber, owner));
+        owner.ReceiveStatusEffect(new Whirling(magicNumber, owner));
         return base.use(target, modifier);
     }
 }

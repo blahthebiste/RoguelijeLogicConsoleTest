@@ -18,9 +18,15 @@ public class Bash : Action {
             Console.WriteLine("Must target an enemy");
             return false;
         }
+        if(owner == null) {
+            Console.WriteLine("ERROR: no owner for action!");
+            return false;
+        }
         else {
             // Deal damage to the target.
-            target.recieveAttack(damage);
+            Attack atk = new Attack(damage, this.owner, target);
+            atk = this.owner.onAttack(atk);
+            target.onReceiveAttack(atk);
             return base.use(target, modifier);
         }
     }
