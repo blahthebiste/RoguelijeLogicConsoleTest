@@ -1,11 +1,11 @@
-public class Daze : Action {
+public class Backstab : Action {
 
-    public Daze() {
-        this.name = "Daze";
-        this.description = "Stun an enemy that has not been Dazed.";
+    public Backstab() {
+        this.name = "Backstab";
+        this.description = "Kill an enemy with 8 HP or less.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
-        this.magicNumber = 1;
+        this.magicNumber = 8;
     }
 
     // For now, nothing special.
@@ -14,8 +14,8 @@ public class Daze : Action {
     }
 
     public override bool CanTarget(Entity target) {
-        if(Battlefield.BeenDazed.Contains(target)) {
-            Console.WriteLine("That target has already been Dazed!");
+        if(target.currentHP > 8) {
+            Console.WriteLine("That target has too much HP!");
             return false;
         }
         return base.CanTarget(target);
@@ -30,9 +30,8 @@ public class Daze : Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-        // Apply the Stun status effect
-        target.ReceiveStatusEffect(new Stun(magicNumber, target));
-        Battlefield.BeenDazed.Add(target);
+        // Kill them
+        target.die();
         return base.use(target, modifier);
     }
 }

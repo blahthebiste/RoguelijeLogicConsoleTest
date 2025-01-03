@@ -16,4 +16,10 @@ public class Item {
     public void RemoveFromInventory(){
         CurrentRun.Inventory.Remove(this);
     }
+    
+    // Adds the item to the player's inventory.
+    public void AddToInventory(){
+        CurrentRun.Inventory.Add(this);
+    }
+
 }

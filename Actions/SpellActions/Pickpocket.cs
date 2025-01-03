@@ -1,14 +1,13 @@
-public class Restore : Action {
+public class Pickpocket : Action {
 
-    public Restore() {
-        this.name = "Restore";
-        this.description = "Restore 6 HP.";
+    public Pickpocket() {
+        this.name = "Pickpocket";
+        this.description = "Gain a random level 1 item for this combat only.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 6;
         this.hasLimitedUses = true;
-        this.uses = 6;
+        this.uses = 1;
         this.maxUses = this.uses;
-        this.targetting = TargetCategory.SINGLE_ANY;
+        this.targetting = TargetCategory.NONE;
     }
 
     // For now, nothing special.
@@ -21,12 +20,8 @@ public class Restore : Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-        if(target == null) {
-            Console.WriteLine("Invalid target!");
-            return false;
-        }
-        // Apply healing
-        target.ReceiveHealing(magicNumber);
+        // Generate a random item
+        
         return base.use(target, modifier);
     }
 }

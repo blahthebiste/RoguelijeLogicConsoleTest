@@ -37,5 +37,18 @@
 			"Daze",
 			"Restore"
 		]
+	},
+	{
+		"Name": "Mage",
+		"Description": "Uses spells to blast enemies",
+		"HP": 8,
+		"PersonalCard": "Basic Spell",
+		"ActionList": [
+			"Whack",
+			"Cower",
+			"Focus",
+			"Charge",
+			"Zap"
+		]
 	}
 ]

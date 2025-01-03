@@ -3,7 +3,7 @@ public class Whirling : StatusEffect {
     public Whirling(int amount, Entity owner) {
         this.amount = amount;
         this.name = "Whirling";
-        this.description = "Next attack also hits adjacent targets.";
+        this.description = "Next X attacks also hit adjacent targets.";
         this.owner = owner;
     }
 

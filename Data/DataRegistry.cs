@@ -39,7 +39,7 @@ public static class DataRegistry {
             "\n\t* Fighter",
             "\n\t* Defender",
             "\n\t* Thief - Stabby, sneaky goblin with bonus items",
-            "\n\t* Mage - Uses spells to blast enemies",
+            "\n\t* Mage",
             "\n\t* Healer"
         };
 
@@ -183,18 +183,26 @@ public static class DataRegistry {
                     return new Recover();
                 case "rest":
                     return new Rest();
+                case "idle":
+                    return new Idle();
+                case "focus":
+                    return new Focus();
                 case "daze":
                     return new Daze();
                 case "taunt":
                     return new Taunt();
                 case "whirl":
                     return new Whirl();
+                case "charge":
+                    return new Charge();
                 case "harden":
                     return new Harden();
                 case "inflame":
                     return new Inflame();
                 case "restore":
                     return new Restore();
+                case "zap":
+                    return new Zap();
                 default:
                     Console.WriteLine("ERROR: no action registered under the name "+actionName);
                     return null;

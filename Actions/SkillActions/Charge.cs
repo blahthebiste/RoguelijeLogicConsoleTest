@@ -1,13 +1,10 @@
-public class Inflame : Action {
+public class Charge : Action {
 
-    public Inflame() {
-        this.name = "Inflame";
-        this.description = "Gain 2 Strength.";
-        this.actionType = ActionType.SPELL;
-        this.magicNumber = 2;
-        this.hasLimitedUses = true;
-        this.uses = 1;
-        this.maxUses = this.uses;
+    public Charge() {
+        this.name = "Charge";
+        this.description = "Next spell has +5 to damage/block/healing.";
+        this.actionType = ActionType.SKILL;
+        this.magicNumber = 5;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -21,8 +18,8 @@ public class Inflame : Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-        // Apply the strength buff
-        owner.ReceiveStatusEffect(new Strength(magicNumber, owner));
+        // Apply the Charged status effect
+        owner.ReceiveStatusEffect(new Charged(magicNumber, owner));
         return base.use(target, modifier);
     }
 }

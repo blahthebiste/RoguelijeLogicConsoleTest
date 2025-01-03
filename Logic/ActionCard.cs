@@ -92,7 +92,10 @@ public class ActionCard {
     
     // Whether this card can be played on that entity.
     public bool canBeUsedBy(Entity entityToUseAction) {
-        if(entityToUseAction.exhausted) return false;
+        if(entityToUseAction.exhausted) {
+            Console.WriteLine("Unit is exhausted and cannot act.");
+            return false;
+        }
         if(!entityToUseAction.playerControlled) return false;
         return true;
     }

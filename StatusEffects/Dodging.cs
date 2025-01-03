@@ -4,7 +4,7 @@ public class Dodging : StatusEffect {
     public Dodging(int amount, Entity owner) {
         this.amount = amount;
         this.name = "Dodging";
-        this.description = "Dodge the next attack.";
+        this.description = "Dodge the next X attacks.";
         this.owner = owner;
     }
 

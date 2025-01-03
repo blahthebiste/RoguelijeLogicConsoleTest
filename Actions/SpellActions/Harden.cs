@@ -7,6 +7,7 @@ public class Harden : Action {
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 3;
+        this.maxUses = this.uses;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -20,7 +21,7 @@ public class Harden : Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-        // Apply the Whirl status effect
+        // Apply the damage resistance buff
         owner.ReceiveStatusEffect(new Toughness(magicNumber, owner));
         return base.use(target, modifier);
     }

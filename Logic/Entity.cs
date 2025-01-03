@@ -1,7 +1,7 @@
 // Both player characters and enemies extend from this class
 public class Entity {
-    public String name = "Missing entity name!";
-    public String description = "Missing entity description!";
+    public string name = "Missing entity name!";
+    public string description = "Missing entity description!";
     public int maxHP = 1;
     public bool hostile = true;
     public bool playerControlled = false;
@@ -74,6 +74,30 @@ public class Entity {
         this.EffectList.Add(newEffect);
     }
 
+    // Returns a reference to the status effect object, if it exists.
+    // Otherwise returns null.
+    public StatusEffect? GetStatusEffect(string effectName) {
+        foreach(StatusEffect existingEffect in EffectList) {
+            string existingEffectName = existingEffect.name;
+            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            if(existingEffectName == effectName) {
+                return existingEffect;
+            }
+        }
+        return null;
+    }
+    
+    public bool HasStatusEffect(string effectName) {
+        foreach(StatusEffect existingEffect in EffectList) {
+            string existingEffectName = existingEffect.name;
+            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            if(existingEffectName == effectName) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Kill this entity and remove it from combat.
     public virtual void die() {
         Console.WriteLine(this.name+" has been slain!");
@@ -99,8 +123,9 @@ public class Entity {
         foreach(StatusEffect effect in EffectList) {
             atk = effect.onAttack(atk); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0);
+        EffectList.RemoveAll(element => element.amount == 0); // Clean up status effect list
         int targetIndex;
+        // Apply additional targets if applicable
         if(atk.target.playerControlled) {
             targetIndex = Battlefield.PlayerSide.IndexOf((PlayerCharacter)atk.target);
             if(atk.hitsAbove && targetIndex > 0) {

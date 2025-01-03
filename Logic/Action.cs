@@ -12,6 +12,7 @@ public class Action {
 	public TargetCategory targetting = TargetCategory.NONE;
 	// Negative 1 means unlimited uses.
 	public int uses = -1; // The number of times this action can be used per combat. Usually reserved for spells.
+	public int maxUses = -1; // The most uses the action can gain.
 	public int damage = -1; // Some actions deal damage. -1 means they do not.
 	public int block = -1; // Some actions gain block. -1 means they do not.
 	public int healing = -1; // Some actions restore HP. -1 means they do not.
@@ -28,6 +29,7 @@ public class Action {
     // Whether this action can be used right now. Most actions should override this.
     public virtual bool canUse() {
 		if(hasLimitedUses && uses == 0) {
+			Console.WriteLine("No uses left.");
 			return false;
 		}
 		if(owner == null) {
@@ -37,6 +39,7 @@ public class Action {
 		// Iterate through effect list. If stunned, cannot use non-rest actions
 		foreach(StatusEffect effect in owner.EffectList) {
 			if(effect is Stun && this.actionType != ActionType.REST) {
+				Console.WriteLine("Cannot use non-rest actions while stunned!");
 				return false;
 			}
 		}
@@ -57,6 +60,9 @@ public class Action {
 			}
 			owner.exhausted = true;
 			return true;
+		}
+		else {
+
 		}
 		return false;
 	}
@@ -114,4 +120,15 @@ public class Action {
 		}
 		return false;
 	}
+
+
+
+	//==========================ITEM OPERATIONS=========================
+	
+
+    public void Unequip() {
+		if(this.equippedItem == null) return;
+        CurrentRun.Inventory.Add(this.equippedItem);
+		this.equippedItem = null;
+    }
 }
