@@ -50,5 +50,18 @@
 			"Charge",
 			"Zap"
 		]
+	},
+	{
+		"Name": "Thief",
+		"Description": "Stabby, sneaky goblin with bonus items",
+		"HP": 10,
+		"PersonalCard": "Basic Skill",
+		"ActionList": [
+			"Stab",
+			"Dodge",
+			"Breathe",
+			"Backstab",
+			"Pickpocket"
+		]
 	}
 ]

@@ -9,17 +9,16 @@ public class Rest : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Restore HP.
+            owner!.ReceiveHealing(healing);
+            return true;
         }
-        // Restore HP.
-        owner.ReceiveHealing(healing);
-        return base.use(target, modifier);
+        return false;
     }
 }

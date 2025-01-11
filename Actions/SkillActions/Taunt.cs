@@ -8,19 +8,18 @@ public class Taunt : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Go through all enemies, and for those that target allies, change the target
+            foreach(Enemy enemy in Battlefield.EnemySide) {
+                if(enemy != null) enemy.setNextTarget(Battlefield.PlayerSide.FindIndex(a => a.name == owner!.name));
+            }
+            return true;
         }
-        // Go through all enemies, and for those that target allies, change the target
-        foreach(Enemy enemy in Battlefield.EnemySide) {
-            if(enemy != null) enemy.setNextTarget(Battlefield.PlayerSide.FindIndex(a => a.name == owner.name));
-        }
-        return base.use(target, modifier);
+        return false;
     }
 }

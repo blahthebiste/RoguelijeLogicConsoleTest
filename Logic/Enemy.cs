@@ -32,12 +32,6 @@ public class Enemy : Entity {
     // Many enemies will override this
     public void takeTurn() {
         Entity? nextTarget = getNextTarget();
-        if(nextTarget != null) {
-            Console.WriteLine(this.name +" uses "+ActionList[nextActionIndex].name + " on "+nextTarget.name+"!");
-        }
-        else {
-            Console.WriteLine(this.name +" uses "+ActionList[nextActionIndex].name + "!");
-        }
         ActionList[nextActionIndex].use(nextTarget, null); // Null modifier for now
         nextActionIndex++;
         if(nextActionIndex >= ActionList.Count) {

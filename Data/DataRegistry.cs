@@ -38,7 +38,7 @@ public static class DataRegistry {
             "Enter the name of a character to learn more about them.",
             "\n\t* Fighter",
             "\n\t* Defender",
-            "\n\t* Thief - Stabby, sneaky goblin with bonus items",
+            "\n\t* Thief",
             "\n\t* Mage",
             "\n\t* Healer"
         };
@@ -173,16 +173,22 @@ public static class DataRegistry {
                     return new Swipe();
                 case "whack":
                     return new Whack();
+                case "stab":
+                    return new Stab();
                 case "block":
                     return new Block();
                 case "cower":
                     return new Cower();
                 case "parry":
                     return new Parry();
+                case "dodge":
+                    return new Dodge();
                 case "recover":
                     return new Recover();
                 case "rest":
                     return new Rest();
+                case "breathe":
+                    return new Breathe();
                 case "idle":
                     return new Idle();
                 case "focus":
@@ -195,6 +201,8 @@ public static class DataRegistry {
                     return new Whirl();
                 case "charge":
                     return new Charge();
+                case "backstab":
+                    return new Backstab();
                 case "harden":
                     return new Harden();
                 case "inflame":
@@ -203,8 +211,23 @@ public static class DataRegistry {
                     return new Restore();
                 case "zap":
                     return new Zap();
+                case "pickpocket":
+                    return new Pickpocket();
                 default:
                     Console.WriteLine("ERROR: no action registered under the name "+actionName);
+                    return null;
+            }
+        }
+    }
+
+    public static class ItemData {
+        // Translates an action name into an action object. Returns null if none are found.
+        public static Item? getItemByName(string itemName) {
+            switch(itemName.ToLower().Trim()) {
+                case "shortsword":
+                    return new Shortsword();
+                default:
+                    Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;
             }
         }

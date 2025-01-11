@@ -9,8 +9,8 @@ public class Backstab : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool CanTarget(Entity target) {
@@ -22,16 +22,11 @@ public class Backstab : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(target == null) {
-            Console.WriteLine("Invalid target!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Kill them
+            target!.die();
+            return true;
         }
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-        }
-        // Kill them
-        target.die();
-        return base.use(target, modifier);
+        return false;
     }
 }

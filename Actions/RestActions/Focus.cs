@@ -8,22 +8,21 @@ public class Focus : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-        }
-        // Restore spell uses.
-        foreach(Action action in owner.ActionList) {
-            if(action.hasLimitedUses) {
-                Console.WriteLine("Regaining uses for "+action.name+" up to "+action.maxUses);
-                action.uses = action.maxUses;
+        if(base.use(target, modifier)) {
+            // Restore spell uses.
+            foreach(Action action in owner!.ActionList) {
+                if(action.hasLimitedUses) {
+                    Console.WriteLine("Regaining uses for "+action.name+" up to "+action.maxUses);
+                    action.uses = action.maxUses;
+                }
             }
+            return true;
         }
-        return base.use(target, modifier);
+        return false;
     }
 }

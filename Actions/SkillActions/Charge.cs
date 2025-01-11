@@ -9,17 +9,16 @@ public class Charge : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Apply the Charged status effect
+            owner!.AddStatusEffect(new Charged(magicNumber, owner));
+            return true;
         }
-        // Apply the Charged status effect
-        owner.ReceiveStatusEffect(new Charged(magicNumber, owner));
-        return base.use(target, modifier);
+        return false;
     }
 }

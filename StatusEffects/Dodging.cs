@@ -10,7 +10,7 @@ public class Dodging : StatusEffect {
 
     // Dodge attacks
     public override Attack onReceiveAttack(Attack atk) {
-        atk.damage = 0; // TODO: replace with proper dodge mechanic
+        atk.damage = 0; // TODO: replace with proper dodge mechanic?
         this.Decrease(1); // Wears down by 1
         return base.onAttack(atk);
     }

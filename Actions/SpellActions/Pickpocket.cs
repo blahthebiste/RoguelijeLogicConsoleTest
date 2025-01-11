@@ -1,5 +1,7 @@
 public class Pickpocket : Action {
 
+    List<EquipmentItem> pickpocketedItems = new List<EquipmentItem>();
+
     public Pickpocket() {
         this.name = "Pickpocket";
         this.description = "Gain a random level 1 item for this combat only.";
@@ -11,17 +13,46 @@ public class Pickpocket : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Generate a random item
+            EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromTier1Pool();
+            pickpocketedItems.Add(pickpocketedItem);
+            CurrentRun.Inventory.Add(pickpocketedItem);
+            Console.WriteLine("Got a(n) "+pickpocketedItem.name+".");
+            return true;
         }
-        // Generate a random item
-        
-        return base.use(target, modifier);
+        return false;
+    }
+
+    // Remove all items created by this spell at the end of combat.
+    public override void endOfCombat(){
+        // Start with inventory
+        foreach(EquipmentItem item in CurrentRun.Inventory) {
+            if(pickpocketedItems.Contains(item)) {
+                CurrentRun.Inventory.Remove(item);
+            }
+        }
+        // Loop through each hero's action list and remove matching equipped items
+        foreach(Entity hero in CurrentRun.Party) {
+            foreach(Action action in hero.ActionList) {
+                if(action.equippedItem == null) continue;
+                if(pickpocketedItems.Contains(action.equippedItem)) {
+                    CurrentRun.Inventory.Remove(action.equippedItem);
+                }
+            }
+        }
+        foreach(Entity hero in CurrentRun.Bench) {
+            foreach(Action action in hero.ActionList) {
+                if(action.equippedItem == null) continue;
+                if(pickpocketedItems.Contains(action.equippedItem)) {
+                    CurrentRun.Inventory.Remove(action.equippedItem);
+                }
+            }
+        }
     }
 }

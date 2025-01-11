@@ -1,11 +1,10 @@
-public class Recover : Action {
+public class Breathe : Action {
 
-    public Recover() {
-        this.name = "Recover";
-        this.description = "Recover 5 HP. Draw 3 cards.";
+    public Breathe() {
+        this.name = "Breathe";
+        this.description = "Recover 2 HP.";
         this.actionType = ActionType.REST;
-        this.healing = 5;
-        this.magicNumber = 3;
+        this.healing = 2;
         this.targetting = TargetCategory.NONE;
     }
 
@@ -18,8 +17,6 @@ public class Recover : Action {
         if(base.use(target, modifier)) {
             // Restore HP.
             owner!.ReceiveHealing(healing);
-            // Draw cards.
-            CardManager.drawCard(3);
             return true;
         }
         return false;

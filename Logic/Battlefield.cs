@@ -109,6 +109,11 @@ public static class Battlefield {
     
     public static void endCombat(bool playerWon) {
         CurrentRun.InCombat = false;
+        foreach(Entity hero in PlayerSide) {
+            foreach(Action action in hero.ActionList) {
+                action.endOfCombat();
+            }
+        }
         if(playerWon) {
             Console.WriteLine("VICTORY!");
             Console.WriteLine("");

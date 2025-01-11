@@ -12,21 +12,16 @@ public class Restore : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Apply healing
+            target!.ReceiveHealing(magicNumber);
+            return true;
         }
-        if(target == null) {
-            Console.WriteLine("Invalid target!");
-            return false;
-        }
-        // Apply healing
-        target.ReceiveHealing(magicNumber);
-        return base.use(target, modifier);
+        return false;
     }
 }

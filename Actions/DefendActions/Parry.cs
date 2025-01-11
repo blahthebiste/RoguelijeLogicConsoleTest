@@ -9,18 +9,17 @@ public class Parry : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            int calcedBlock = this.owner!.onGainBlock(block);
+            // Generate Block.
+            Battlefield.addBlock(calcedBlock, true);
+            return true;
         }
-        int calcedBlock = this.owner.onGainBlock(block);
-        // Generate Block.
-        Battlefield.addBlock(calcedBlock, true);
-        return base.use(target, modifier);
+        return false;
     }
 }

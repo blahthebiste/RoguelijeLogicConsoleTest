@@ -1,6 +1,6 @@
 public enum ActionType
 {
-    NONE,
+    ANY,
     ATTACK,
     DEFEND,
     SKILL,
@@ -8,6 +8,7 @@ public enum ActionType
     REST,
     PASSIVE,
     AILMENT
+    
     // // Possible advanced actions:
     // SpecialAttack,
     // Ultimate,

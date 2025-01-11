@@ -27,7 +27,7 @@ public class Action {
 	}
     
     // Whether this action can be used right now. Most actions should override this.
-    public virtual bool canUse() {
+    public virtual bool canUse(Entity? target, Modifier? modifier) {
 		if(hasLimitedUses && uses == 0) {
 			Console.WriteLine("No uses left.");
 			return false;
@@ -36,6 +36,10 @@ public class Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
 		}
+		if(CurrentRun.requiresTarget(this) && target == null) {
+            Console.WriteLine("Invalid target!");
+            return false;
+        }
 		// Iterate through effect list. If stunned, cannot use non-rest actions
 		foreach(StatusEffect effect in owner.EffectList) {
 			if(effect is Stun && this.actionType != ActionType.REST) {
@@ -49,16 +53,20 @@ public class Action {
     // The meat and potatoes of the action.
     // Each action should override this. Modifier often null.
     public virtual bool use(Entity? target, Modifier? modifier) {
-		if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-		}
-		if(this.canUse()) {
-			this.owner.previousAction = this; // Update previous action.
+		if(this.canUse(target, modifier)) {
+			if(target == null) {
+				Console.WriteLine(owner!.name+" used "+this.name+"!");
+			}
+			else {
+				Console.WriteLine(owner!.name+" used "+this.name+" on "+target!.name+"!");
+			}
+			this.owner!.previousAction = this; // Update previous action.
 			if(hasLimitedUses) {
 				uses--;
+				Console.WriteLine(this.uses+" use(s) remaining.");
 			}
-			owner.exhausted = true;
+			owner!.exhausted = true;
+			owner!.onUseAction(this); // Trigger event			
 			return true;
 		}
 		else {
@@ -130,5 +138,11 @@ public class Action {
 		if(this.equippedItem == null) return;
         CurrentRun.Inventory.Add(this.equippedItem);
 		this.equippedItem = null;
+    }
+
+	
+	//=============================EVENTS============================
+    public virtual void endOfCombat(){
+        
     }
 }

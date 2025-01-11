@@ -9,8 +9,8 @@ public class Daze : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool CanTarget(Entity target) {
@@ -22,17 +22,12 @@ public class Daze : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(target == null) {
-            Console.WriteLine("Invalid target!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Apply the Stun status effect
+            target!.AddStatusEffect(new Stun(magicNumber, target));
+            Battlefield.BeenDazed.Add(target);
+            return true;
         }
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-        }
-        // Apply the Stun status effect
-        target.ReceiveStatusEffect(new Stun(magicNumber, target));
-        Battlefield.BeenDazed.Add(target);
-        return base.use(target, modifier);
+        return false;
     }
 }

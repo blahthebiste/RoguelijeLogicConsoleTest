@@ -17,6 +17,10 @@ public static class CurrentRun {
     public static bool InARun;
     public static bool InCombat;
 
+    public static List<string> Tier1ItemPool; 
+    // public static List<string> Tier2ItemPool; 
+    // public static List<string> Tier3ItemPool; 
+
     public static CombatReward NextCombatReward = new CombatReward();
     //==============================END DATA==============================
     
@@ -52,6 +56,8 @@ public static class CurrentRun {
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
         InCombat = false;
+        Tier1ItemPool = new List<string>();
+        Tier1ItemPool.Add("Shortsword");
     }
     //==============================END CONSTRUCTORS==============================
     
@@ -214,12 +220,45 @@ public static class CurrentRun {
     }
     
     //==============================END ZONE FUNCTIONS==============================
+    
+    //==============================ITEM POOL FUNCTIONS==============================
+
+    public static EquipmentItem getRandomItemFromTier1Pool(bool removeFromPool=true){
+        if(Tier1ItemPool.Count < 1) {
+            Console.WriteLine("WARNING: Item pool is empty. Generating placeholder");
+            return new RubberDuck();
+        }
+        Item? retrievedItem;
+        // Generate a random item
+        int randomIndex = rng.Next(0, Tier1ItemPool.Count);
+        string chosenItemName = Tier1ItemPool[randomIndex];
+        retrievedItem = DataRegistry.ItemData.getItemByName(chosenItemName);
+        if(retrievedItem is EquipmentItem) {
+            if(removeFromPool) Tier1ItemPool.Remove(chosenItemName);
+            return (EquipmentItem)retrievedItem;
+        }
+        Console.WriteLine("WARNING: Item was null or not equippable");
+        return new RubberDuck();
+    }
+
+    //============================END ITEM POOL FUNCTIONS============================
 
     public static void LoseLives(int numLives) {
         Lives -= numLives;
         if(Lives < 1) {
             // Game over, man!
             Console.WriteLine("GAME OVER.");
+        }
+    }
+
+    public static bool requiresTarget(Action action){
+        switch(action.targetting) {
+            case TargetCategory.SINGLE_ENEMY:
+            case TargetCategory.SINGLE_ALLY:
+            case TargetCategory.SINGLE_ANY:
+                return true;
+            default:
+                return false;
         }
     }
 }

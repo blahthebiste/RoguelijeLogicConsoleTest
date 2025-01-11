@@ -42,6 +42,11 @@ public class StatusEffect {
     public virtual int onGainBlock(int block) {
         return block;
     }
+
+    // Triggered every time the owner of this effect acts
+    public virtual Action onUseAction(Action actionBeingUsed) {
+        return actionBeingUsed;
+    }
     
 
 }

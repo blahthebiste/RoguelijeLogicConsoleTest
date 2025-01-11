@@ -85,7 +85,7 @@ public class ActionCard {
     
     // Whether this card can be played on that action.
     public bool actionCanBeUsed(Action hoveredAction) {
-        if(!hoveredAction.canUse()) return false;
+        //if(!hoveredAction.canUse()) return false;
         if(hoveredAction.actionType == this.actionType) return true;
         else return false;
     }

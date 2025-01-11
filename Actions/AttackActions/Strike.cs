@@ -9,25 +9,18 @@ public class Strike : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(target == null) {
-            Console.WriteLine("Must target an enemy");
-            return false;
+        if(base.use(target, modifier)) {
+        // Deal damage to the target.
+        Attack atk = new Attack(damage, this.owner!, target!);
+        atk = owner!.onAttack(atk);
+        target!.onReceiveAttack(atk);
+            return true;
         }
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-        }
-        else {
-            // Deal damage to the target.
-            Attack atk = new Attack(damage, this.owner, target);
-            atk = owner.onAttack(atk);
-            target.onReceiveAttack(atk);
-            return base.use(target, modifier);
-        }
+        return false;
     }
 }

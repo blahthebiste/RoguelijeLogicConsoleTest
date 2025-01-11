@@ -12,29 +12,23 @@ public class Zap : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(target == null) {
-            Console.WriteLine("Invalid target!");
-            return false;
+        if(base.use(target, modifier)) {           
+            if(owner!.HasStatusEffect("Charged")) {
+                StatusEffect charge = owner.GetStatusEffect("Charged")!;
+                magicNumber += charge.amount;
+                owner.EffectList.Remove(charge);
+            }
+            // Deal damage to the target.
+            Attack atk = new Attack(magicNumber, this.owner!, target!);
+            //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
+            target!.onReceiveAttack(atk);
+            return true;
         }
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
-        }
-        
-        if(owner.HasStatusEffect("Charged")) {
-            StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            magicNumber += charge.amount;
-            owner.EffectList.Remove(charge);
-        }
-         // Deal damage to the target.
-        Attack atk = new Attack(magicNumber, this.owner, target);
-        //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
-        target.onReceiveAttack(atk);
-        return base.use(target, modifier);
+        return false;
     }
 }

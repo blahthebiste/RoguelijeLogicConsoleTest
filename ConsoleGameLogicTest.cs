@@ -84,6 +84,9 @@ void commandLoop() {
             case "end":
                 endPlayerTurn();
                 break;
+            case "inventory":
+                printInventory();
+                break;
             case "next":
                 next();
                 break;
@@ -126,6 +129,7 @@ void printHelp() {
         Console.WriteLine("party -- prints out info about your current party");
         Console.WriteLine("run -- prints out info about the current run");
         Console.WriteLine("masterdeck -- prints out your current deck");
+        Console.WriteLine("inventory -- prints out your inventory");
         Console.WriteLine("depart -- sets off with the currently selected party");
         Console.WriteLine("zone -- selects the zone to travel to");
         if(CurrentRun.Party.Count < CurrentRun.PartySize) {
@@ -154,9 +158,9 @@ void startRun() {
 
 // Skips the party selection process to start the run immediately
 void setDefaultParty(){
-    PlayerCharacter newFighter = new PlayerCharacter("Fighter");
-    CurrentRun.Party.Add(newFighter);
-    CurrentRun.MasterDeck.Add(newFighter.personalCard);
+    PlayerCharacter newThief = new PlayerCharacter("Thief");
+    CurrentRun.Party.Add(newThief);
+    CurrentRun.MasterDeck.Add(newThief.personalCard);
     PlayerCharacter newHealer = new PlayerCharacter("Healer");
     CurrentRun.Party.Add(newHealer);
     CurrentRun.MasterDeck.Add(newHealer.personalCard);
@@ -501,6 +505,13 @@ void printDiscardPile() {
         foreach(ActionCard card in CardManager.DiscardPile) {
             Console.WriteLine(card.ToString());
         }
+    }
+}
+
+void printInventory() {
+    Console.WriteLine("Inventory ("+CurrentRun.Inventory.Count+" items):");
+    foreach(Item item in CurrentRun.Inventory) {
+        Console.WriteLine(item.ToString());
     }
 }
 

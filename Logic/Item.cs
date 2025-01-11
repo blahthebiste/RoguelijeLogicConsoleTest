@@ -2,24 +2,25 @@
 public class Item {
     public string name = "MISSING NAME";
     public string description = "MISSING DESCRIPTION";
-    public ActionType slot = ActionType.NONE;
-
 
     // Useful for printing what would be shown to the player
 	public override string ToString() {
-		string actionString = "(Slot - "+this.slot+") "+this.name + ": " + this.description;
+		string actionString = this.name + ": " + this.description;
 
 		return actionString;
 	}
 
     // Removes the item from the player's inventory.
-    public void RemoveFromInventory(){
+    public virtual void RemoveFromInventory(){
         CurrentRun.Inventory.Remove(this);
     }
     
     // Adds the item to the player's inventory.
-    public void AddToInventory(){
+    public virtual void AddToInventory(){
         CurrentRun.Inventory.Add(this);
     }
 
+    public virtual void endOfCombat(){
+        
+    }
 }

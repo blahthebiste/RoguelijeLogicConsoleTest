@@ -9,17 +9,16 @@ public class Dodge : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Apply the Dodge status effect
+            owner!.AddStatusEffect(new Dodging(magicNumber, owner));
+            return true;
         }
-        // Apply the Dodge status effect
-        owner.ReceiveStatusEffect(new Dodging(magicNumber, owner));
-        return base.use(target, modifier);
+        return false;
     }
 }

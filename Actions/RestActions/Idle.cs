@@ -8,12 +8,15 @@ public class Idle : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        // Do nothing.
-        return base.use(target, modifier);
+        if(base.use(target, modifier)) {
+            // Do nothing.            
+            return true;
+        }
+        return false;
     }
 }

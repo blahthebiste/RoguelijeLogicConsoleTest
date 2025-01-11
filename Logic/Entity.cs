@@ -54,13 +54,13 @@ public class Entity {
 
 
     public virtual void ReceiveHealing(int healing) {
-        Console.WriteLine(this.name+" regained "+healing+" HP.");
+        Console.WriteLine(this.name+" was healed for "+healing+" HP.");
         changeHP(healing);
     }
 
-    public virtual void ReceiveStatusEffect(StatusEffect newEffect) {
+    public virtual void AddStatusEffect(StatusEffect newEffect) {
         string newEffectName = newEffect.name;
-        Console.WriteLine("New effect is '"+newEffectName+"'.");
+        Console.WriteLine(this.name+" gained new effect: "+newEffectName+" with value "+newEffect.amount+".");
         foreach(StatusEffect existingEffect in EffectList) {
             string existingEffectName = existingEffect.name;
             Console.WriteLine("Comparing to '"+existingEffectName+"'...");
@@ -73,6 +73,26 @@ public class Entity {
         // Entity does not have this effect, add it
         this.EffectList.Add(newEffect);
     }
+
+    // // Bool value is whether the effect was successfully removed
+    // public virtual bool RemoveStatusEffect(StatusEffect effectToRemove) {
+    //     string effectToRemoveName = effectToRemove.name;
+    //     Console.WriteLine("Old effect is '"+newEffectName+"'.");
+    //     EffectList.remove();
+
+
+    //     foreach(StatusEffect existingEffect in EffectList) {
+    //         string existingEffectName = existingEffect.name;
+    //         Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+    //         if(existingEffectName == effectToRemoveName) {
+    //             // If the entity has the effect, remove it
+    //             existingEffect.amount += newEffect.amount;
+    //             return;
+    //         }
+    //     }
+    //     // Entity does not have this effect, return false
+    //     return false;
+    // }
 
     // Returns a reference to the status effect object, if it exists.
     // Otherwise returns null.
@@ -190,5 +210,13 @@ public class Entity {
         }
         EffectList.RemoveAll(element => element.amount == 0);
         return block;
+    }
+
+    // Triggered every time an entity acts
+    public virtual Action onUseAction(Action actionBeingUsed) {
+        foreach(StatusEffect eff in this.EffectList) {
+            actionBeingUsed = eff.onUseAction(actionBeingUsed);
+        }
+        return actionBeingUsed;
     }
 }

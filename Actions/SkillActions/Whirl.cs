@@ -9,17 +9,16 @@ public class Whirl : Action {
     }
 
     // For now, nothing special.
-    public override bool canUse() {
-        return base.canUse();
+    public override bool canUse(Entity? target, Modifier? modifier) {
+        return base.canUse(target, modifier);
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(owner == null) {
-            Console.WriteLine("ERROR: no owner for action!");
-            return false;
+        if(base.use(target, modifier)) {
+            // Apply the Whirl status effect
+            owner!.AddStatusEffect(new Whirling(magicNumber, owner));
+            return true;
         }
-        // Apply the Whirl status effect
-        owner.ReceiveStatusEffect(new Whirling(magicNumber, owner));
-        return base.use(target, modifier);
+        return false;
     }
 }
