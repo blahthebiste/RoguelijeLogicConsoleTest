@@ -36,11 +36,11 @@ public static class DataRegistry {
         public static List<string> characterSelectMessage = new List<string>(){
             "\nChoose starting party",
             "Enter the name of a character to learn more about them.",
-            "\n\t* Fighter",
-            "\n\t* Defender",
-            "\n\t* Thief",
-            "\n\t* Mage",
-            "\n\t* Healer"
+            "\n\t* "+CharacterData.getPlayerDataByName("Fighter")!.Name+": "+CharacterData.getPlayerDataByName("Fighter")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Defender")!.Name+": "+CharacterData.getPlayerDataByName("Defender")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Thief")!.Name+": "+CharacterData.getPlayerDataByName("Thief")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Mage")!.Name+": "+CharacterData.getPlayerDataByName("Mage")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Healer")!.Name+": "+CharacterData.getPlayerDataByName("Healer")!.Description
         };
 
     }

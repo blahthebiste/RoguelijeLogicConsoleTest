@@ -134,10 +134,28 @@ public class Action {
 	//==========================ITEM OPERATIONS=========================
 	
 
+    public void Equip(EquipmentItem item) {
+		// Let the item itself do the heavy liftiing.
+		if(item.Equip(this)) {
+			// If it returns true, then the equipping was successful.
+			this.equippedItem = item; 
+		}
+		else {
+			// Otherwise, it failed, so do nothing.
+			Console.WriteLine("ERROR: Could not equip item "+item.name+" to action "+this.name);
+		}
+    }
+
     public void Unequip() {
 		if(this.equippedItem == null) return;
-        CurrentRun.Inventory.Add(this.equippedItem);
-		this.equippedItem = null;
+        if(this.equippedItem.Unequip(this)) {
+			// If it returns true, then the unequipping was successful.
+			this.equippedItem = null; 
+		}
+		else {
+			// Otherwise, it failed, so do nothing.
+			Console.WriteLine("ERROR: Could not unequip item "+this.equippedItem.name+" from action "+this.name);
+		}
     }
 
 	

@@ -90,6 +90,22 @@ void commandLoop() {
             case "next":
                 next();
                 break;
+            case "equip":
+                if(cmd.ToLower().Trim().Split().Length < 3) {
+                    Console.WriteLine("Incorrect syntax -- requires <item> and <hero> arguments");
+                }
+                else {
+                    equipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
+                }
+                break;
+            case "unequip":
+                if(cmd.ToLower().Trim().Split().Length < 3) {
+                    Console.WriteLine("Incorrect syntax -- requires <item> and <hero> arguments");
+                }
+                else {
+                    unequipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
+                }
+                break;
             default:
                 // If the first word is a number, and that number is less than 10, then the user is playing a card.
                 if(int.TryParse(cmd.ToLower().Trim().Split()[0], out int n)) {
@@ -114,6 +130,7 @@ void printHelp() {
     Console.WriteLine("exit,quit -- exits the game");
     if(!CurrentRun.InARun) {
         Console.WriteLine("start -- begins a run");
+        return; // All other commands only show once the run starts
     }
     if(CurrentRun.InCombat) {
         Console.WriteLine("hand -- prints out your current hand");
@@ -125,17 +142,20 @@ void printHelp() {
         Console.WriteLine("end -- end your turn");
         Console.WriteLine("combat -- prints out the current combat situation");
     }
-    else if(CurrentRun.InARun) {
-        Console.WriteLine("party -- prints out info about your current party");
-        Console.WriteLine("run -- prints out info about the current run");
-        Console.WriteLine("masterdeck -- prints out your current deck");
-        Console.WriteLine("inventory -- prints out your inventory");
+    else {
         Console.WriteLine("depart -- sets off with the currently selected party");
         Console.WriteLine("zone -- selects the zone to travel to");
-        if(CurrentRun.Party.Count < CurrentRun.PartySize) {
-            // Starting party is not yet chosen. Show character options
-            
-        }
+    }
+    // These commands are always available once the run starts
+    Console.WriteLine("party -- prints out info about your current party");
+    Console.WriteLine("run -- prints out info about the current run");
+    Console.WriteLine("masterdeck -- prints out your current deck");
+    Console.WriteLine("inventory -- prints out your inventory");
+    Console.WriteLine("equip <item> <hero> -- equip an item to a hero (takes hero's action)");
+    Console.WriteLine("unequip <item> <hero> -- unequip an item from a hero (takes hero's action)");
+    if(CurrentRun.Party.Count < CurrentRun.PartySize) {
+        // Starting party is not yet chosen. Show character options
+        
     }
 }
 
@@ -319,7 +339,7 @@ void printCharacterInfo(PlayerCharacter character) {
             Console.WriteLine(action.ToString() + " (No item equipped)");
         }
         else {
-            Console.WriteLine(action.ToString() + action.equippedItem.ToString());
+            Console.WriteLine(action.ToString() + " Item: " +action.equippedItem.ToString());
         }
     }
     if(character.EffectList.Count > 0) {
@@ -598,6 +618,181 @@ void playCard(string cmd) {
     }
     // If we got here, no hero matched.
     Console.WriteLine("No hero with the name "+whoIsUsingTheAction+" exists in this battle.");
+}
+
+// Attempts to equip the specified item to the hero.
+// If multiple action slots are valid options, prompts the user to choose.
+// Errors if the item or hero is not found, or if the hero is exhausted
+void equipItem(string itemName, string heroName) {
+    PlayerCharacter? heroToEquip = null;
+    EquipmentItem? itemToEquip = null;
+    // Works a little differently depending on whether we are in combat or not.
+    if(CurrentRun.InCombat) {
+        // Combat version: only alive heroes who are not on the bench can item swap.
+        // This takes the hero's action.
+
+        // First, find the hero:
+        foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToEquip = hero;
+            }
+        }
+        // Now find the item:
+        foreach(Item item in CurrentRun.Inventory){
+            if(item.name.ToLower().Trim() == itemName.ToLower().Trim()) {
+                if(item is EquipmentItem) {
+                    itemToEquip = (EquipmentItem)item;
+                }
+                else {
+                    Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
+                    return;
+                }
+            }
+        }
+        // Finally, check if the hero can act:
+        if(heroToEquip != null && heroToEquip.exhausted) {
+            Console.WriteLine("ERROR: "+heroName+" cannot swap items because they are exhausted.");
+            return;
+        }
+    }
+    else if(CurrentRun.InARun){
+        // Non-combat version: free swapping for all heroes, bench or not
+        // First, find the hero:
+        foreach(PlayerCharacter hero in CurrentRun.Party){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToEquip = hero;
+            }
+        }
+        // Also search the benched heroes:
+        foreach(PlayerCharacter hero in CurrentRun.Bench){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToEquip = hero;
+            }
+        }
+        // Now find the item:
+        foreach(Item item in CurrentRun.Inventory){
+            if(item.name.ToLower().Trim() == itemName.ToLower().Trim()) {
+                if(item is EquipmentItem) {
+                    itemToEquip = (EquipmentItem)item;
+                }
+                else {
+                    Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
+                    return;
+                }
+            }
+        }
+        
+    }
+    if(itemToEquip == null) {
+        Console.WriteLine("ERROR: Could not find item with name "+itemName);
+        return;
+    }
+    if(heroToEquip == null) {
+        Console.WriteLine("ERROR: Could not find hero with name "+heroName);
+        return;
+    }
+    int numMatchingActions = itemToEquip.numberMatchingActions(heroToEquip);
+    // If the hero has no matching actions, print an error:
+    if(numMatchingActions == 0) {
+        Console.WriteLine("Item '"+itemName+"' cannot be equipped by "+heroName+"; no actions match item's slot restrictions");
+        return;
+    }
+    // If the hero has multiple matching actions, prompt the player to choose one:
+    if(numMatchingActions > 1) {
+        Console.WriteLine(heroName+" has multiple actions that this item can be equipped to.");
+        Console.WriteLine("Select one from the following by entering its number, or type something else to go back:");
+        Console.WriteLine("");
+        List<Action> matchingActions = new List<Action>();
+        // Find all matching actions from the hero's action list:
+        foreach(Action action in heroToEquip.ActionList) {
+            if(itemToEquip.matchesActionType(action.actionType)) {
+                matchingActions.Add(action);
+            }
+        }
+        // Print them out and await selection:
+        for(int i = 0; i < matchingActions.Count; i++) {
+            Console.Write("["+(i+1)+" - "+matchingActions[i].name+"]\t");
+        }
+        Console.Write("\n> ");
+        string? cmd2 = Console.ReadLine();
+        if(cmd2 == null) return;
+        if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
+            // If they entered a valid number for action selection, equip the item to the action:
+            if(actionSelection <= matchingActions.Count && actionSelection > 0) {
+                itemToEquip.Equip(matchingActions[actionSelection]);
+            }
+        }
+        // Return afterwards regardless.
+        return;
+    }
+    // If the hero has exactly 1 matching action, equip the item to the action:
+    if(numMatchingActions == 1) {
+        // Find the first matching action from the hero's action list:
+        foreach(Action action in heroToEquip.ActionList) {
+            if(itemToEquip.matchesActionType(action.actionType)) {
+                action.Equip(itemToEquip);
+                break;
+            }
+        }
+    }
+}
+
+// Attempts to unequip the specified item from the hero.
+// Errors if the item or hero is not found, or if the hero is exhausted
+void unequipItem(string itemName, string heroName) {
+    PlayerCharacter? heroToUnequip = null;
+    // Works a little differently depending on whether we are in combat or not.
+    if(CurrentRun.InCombat) {
+        // Combat version: only alive heroes who are not on the bench can item swap.
+        // This takes the hero's action.
+
+        // First, find the hero:
+        foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToUnequip = hero;
+            }
+        }
+        // Finally, check if the hero can act:
+        if(heroToUnequip != null && heroToUnequip.exhausted) {
+            Console.WriteLine("ERROR: "+heroName+" cannot swap items because they are exhausted.");
+            return;
+        }
+    }
+    else if(CurrentRun.InARun){
+        // Non-combat version: free swapping for all heroes, bench or not
+        // First, find the hero:
+        foreach(PlayerCharacter hero in CurrentRun.Party){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToUnequip = hero;
+            }
+        }
+        // Also search the benched heroes:
+        foreach(PlayerCharacter hero in CurrentRun.Bench){
+            // PlayerSide only includes living heroes
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                heroToUnequip = hero;
+            }
+        }
+    }
+    
+    if(heroToUnequip == null) {
+        Console.WriteLine("ERROR: Could not find hero with name "+heroName);
+        return;
+    }
+    // Find the action in the hero's action list that has the item equipped:
+    foreach(Action action in heroToUnequip.ActionList) {
+        if(action.equippedItem != null && action.equippedItem.name.ToLower().Trim() == itemName) {
+            action.Unequip();
+            Console.WriteLine(heroName+" unequipped "+itemName+".");
+            return;
+        }
+    }
+    Console.WriteLine("ERROR: Could not find item '"+itemName+"' in "+heroName+"'s equipped items.");
 }
 
 

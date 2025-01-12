@@ -10,6 +10,33 @@ public class EquipmentItem : Item {
 		return actionString;
 	}
     
+    // Equip this item to the specified action.
+    // Boolean return code signifies whether the equip attempt succeeded.
+    public bool Equip(Action action) {
+        if(this.slot != ActionType.ANY && this.slot != action.actionType) {
+            Console.WriteLine("ERROR: item does not fit that action type!");
+            return false;
+        }
+        // Before we equip it, check for an item already in that slot. It must be removed first.
+        if(action.equippedItem != null) {
+            action.Unequip();
+        }
+        // Finally, equip the item.
+        this.parentAction = action;
+        action.equippedItem = this;
+        if(action.owner != null) {
+            Console.WriteLine("Equipping "+this.name+" to "+action.owner.name);
+            // Exhaust the hero who equipped/unequipped this in combat
+            if(CurrentRun.InCombat) {
+                action.owner.exhausted = true;
+            }
+        }
+        CurrentRun.Inventory.Remove(this);
+        this.onEquip();
+        return true;
+    }
+
+    // Equip this item to the action of the specified hero, at the specified index in their action list.
     // Boolean return code signifies whether the equip attempt succeeded.
     public bool Equip(string heroName, int actionIndex) {
         foreach(PlayerCharacter hero in CurrentRun.Party){
@@ -35,6 +62,12 @@ public class EquipmentItem : Item {
                 // Finally, equip the item.
                 this.parentAction = hero.ActionList[actionIndex-1];
                 hero.ActionList[actionIndex-1].equippedItem = this;
+                Console.WriteLine("Equipping "+this.name+" to "+this.parentAction.owner!.name);
+                // Exhaust the hero who equipped/unequipped this in combat
+                if(CurrentRun.InCombat) {
+                    this.parentAction!.owner!.exhausted = true;
+                }
+                CurrentRun.Inventory.Remove(this);
                 this.onEquip();
                 return true;
             }
@@ -45,6 +78,24 @@ public class EquipmentItem : Item {
 
     
     
+    // Unequip this item from the specified action.
+    // Boolean return code signifies whether the unequip attempt succeeded.
+    public bool Unequip(Action action) {
+        // Unequip the item.
+        this.onUnequip();
+        if(action.owner != null) {
+            Console.WriteLine("Unequipping "+this.name+" from "+this.parentAction!.owner!.name);
+            // Exhaust the hero who equipped/unequipped this in combat
+            if(CurrentRun.InCombat) {
+                action.owner.exhausted = true;
+            }
+        }
+        action.equippedItem = null;
+        CurrentRun.Inventory.Add(this);
+        return true;
+    }
+
+    // Unequip this item from the specified index of the specified hero's action list.
     // Boolean return code signifies whether the unequip attempt succeeded.
     public bool Unequip(string heroName, int actionIndex) {
         foreach(PlayerCharacter hero in CurrentRun.Party){
@@ -63,9 +114,15 @@ public class EquipmentItem : Item {
                     return false;
                 }
                 // Finally, unequip the item.
+                this.onUnequip();
+                Console.WriteLine("Unequipping "+this.name+" from "+this.parentAction!.owner!.name);
+                // Exhaust the hero who equipped/unequipped this in combat
+                if(CurrentRun.InCombat) {
+                    this.parentAction!.owner!.exhausted = true;
+                }
                 this.parentAction = null;
                 hero.ActionList[actionIndex-1].equippedItem = null;
-                this.onUnequip();
+                CurrentRun.Inventory.Add(this);
                 return true;
             }
         }
@@ -79,16 +136,37 @@ public class EquipmentItem : Item {
         return this.parentAction.owner;
     }
 
+    public bool matchesActionType(ActionType type) {
+        if(this.slot == ActionType.ANY) {
+            return true;
+        }
+        if(type == this.slot) {
+            return true;
+        }
+        return false;
+    }
+
+    // Counts how many actions on the specified entity are allowed to equip this item
+    public int numberMatchingActions(Entity entityToEquip) {
+        int matches = 0;
+        foreach(Action action in entityToEquip.ActionList) {
+            if(this.matchesActionType(action.actionType)) {
+                matches++;
+            }
+        }
+        return matches;
+    }
+
     public bool isEquipped(){
         return this.parentAction != null;
     }
 
     public virtual void onEquip() {
-        Console.WriteLine("Equipping "+this.name);
+
     }
 
 
     public virtual void onUnequip() {
-        Console.WriteLine("Unequipping "+this.name);
+        
     }
 }

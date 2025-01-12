@@ -1,5 +1,8 @@
 public static class CurrentRun {
     //==============================DATA==============================
+    //===
+    //===
+    //===
     public static Random rng = new Random();
     public static int Lives; // How many lives the player has left before losing this run.
     public static int Money;
@@ -22,9 +25,18 @@ public static class CurrentRun {
     // public static List<string> Tier3ItemPool; 
 
     public static CombatReward NextCombatReward = new CombatReward();
+    //===
+    //===
+    //===
     //==============================END DATA==============================
     
+
+
+
     //==============================CONSTRUCTORS==============================
+    //===
+    //===
+    //===
     static CurrentRun() {
         Lives = 6; // Subject to change
         Money = 0; // Subject to change
@@ -59,9 +71,18 @@ public static class CurrentRun {
         Tier1ItemPool = new List<string>();
         Tier1ItemPool.Add("Shortsword");
     }
+    //===
+    //===
+    //===
     //==============================END CONSTRUCTORS==============================
     
+
+
+
     //==============================PARTY FUNCTIONS==============================
+    //===
+    //===
+    //===
     // Whether there are any empty slots in the party currently.
     public static bool RoomInParty() {
         if(Party.Count < PartySize){
@@ -146,10 +167,18 @@ public static class CurrentRun {
         Party[Party.IndexOf(hero1)] = hero2;
         Party[Party.IndexOf(hero2)] = hero1;
     }
+    //===
+    //===
+    //===
     //==============================END PARTY FUNCTIONS==============================
     
+
+
+
     //==============================REWARDS FUNCTIONS==============================
-    
+    //===
+    //===
+    //===
     // When the player wins, give them stuff.
     public static void DistributeCombatRewards() {
         Money += NextCombatReward.moneyReward;
@@ -211,18 +240,34 @@ public static class CurrentRun {
         Console.WriteLine("YOU HAVE ACQUIRED A CHAOS TOME.");
         NextCombatReward.itemRewards.Add(new ChaosTome(CompletedZones.Count));
     }
+    //===
+    //===
+    //===
     //==============================END REWARDS FUNCTIONS==============================
     
+
+
+
     //==============================ZONE FUNCTIONS==============================
+    //===
+    //===
+    //===
     public static void SetZone(ZoneID newZoneID) {
         CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
     }
-    
+    //===
+    //===
+    //===
     //==============================END ZONE FUNCTIONS==============================
     
-    //==============================ITEM POOL FUNCTIONS==============================
 
+
+
+    //==============================ITEM POOL FUNCTIONS==============================
+    //===
+    //===
+    //===
     public static EquipmentItem getRandomItemFromTier1Pool(bool removeFromPool=true){
         if(Tier1ItemPool.Count < 1) {
             Console.WriteLine("WARNING: Item pool is empty. Generating placeholder");
@@ -240,9 +285,19 @@ public static class CurrentRun {
         Console.WriteLine("WARNING: Item was null or not equippable");
         return new RubberDuck();
     }
-
+    //===
+    //===
+    //===
     //============================END ITEM POOL FUNCTIONS============================
 
+
+
+
+
+    //============================MISC UTIL FUNCTIONS============================
+    //===
+    //===
+    //===
     public static void LoseLives(int numLives) {
         Lives -= numLives;
         if(Lives < 1) {
@@ -261,4 +316,8 @@ public static class CurrentRun {
                 return false;
         }
     }
+    //===
+    //===
+    //===
+    //============================END MISC UTIL FUNCTIONS============================
 }

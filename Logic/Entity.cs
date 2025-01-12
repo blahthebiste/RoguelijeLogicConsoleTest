@@ -74,25 +74,21 @@ public class Entity {
         this.EffectList.Add(newEffect);
     }
 
-    // // Bool value is whether the effect was successfully removed
-    // public virtual bool RemoveStatusEffect(StatusEffect effectToRemove) {
-    //     string effectToRemoveName = effectToRemove.name;
-    //     Console.WriteLine("Old effect is '"+newEffectName+"'.");
-    //     EffectList.remove();
-
-
-    //     foreach(StatusEffect existingEffect in EffectList) {
-    //         string existingEffectName = existingEffect.name;
-    //         Console.WriteLine("Comparing to '"+existingEffectName+"'...");
-    //         if(existingEffectName == effectToRemoveName) {
-    //             // If the entity has the effect, remove it
-    //             existingEffect.amount += newEffect.amount;
-    //             return;
-    //         }
-    //     }
-    //     // Entity does not have this effect, return false
-    //     return false;
-    // }
+    // Bool value is whether the effect was successfully removed
+    public virtual bool RemoveStatusEffectByName(string effectName) {
+        Console.WriteLine("Removing effect named '"+effectName+"'.");
+        foreach(StatusEffect existingEffect in EffectList.ToList()) {
+            string existingEffectName = existingEffect.name;
+            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            if(existingEffectName == effectName) {
+                // If the entity has the effect, remove it
+                EffectList.Remove(existingEffect);
+                return true;
+            }
+        }
+        // Entity does not have this effect, return false
+        return false;
+    }
 
     // Returns a reference to the status effect object, if it exists.
     // Otherwise returns null.

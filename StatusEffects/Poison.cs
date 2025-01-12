@@ -15,8 +15,8 @@ public class Poison : StatusEffect {
 
     // Remove poison when resting
     public override Action onUseAction(Action actionBeingUsed) {
-        if(actionBeingUsed.actionType == ActionType.REST) {
-            this.amount = 0; 
+        if(owner != null && actionBeingUsed.actionType == ActionType.REST) {
+            owner.RemoveStatusEffectByName(this.name);
         }
         return actionBeingUsed;
     }
