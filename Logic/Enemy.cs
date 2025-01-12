@@ -32,12 +32,11 @@ public class Enemy : Entity {
     // Many enemies will override this
     public void takeTurn() {
         Entity? nextTarget = getNextTarget();
-        ActionList[nextActionIndex].use(nextTarget, null); // Null modifier for now
+        getNextAction().use(nextTarget, null); // Null modifier for now
         nextActionIndex++;
         if(nextActionIndex >= ActionList.Count) {
             nextActionIndex = 0;
         }
-        chooseNextTarget();
     }
 
     // Selects a random target index from the appropriate side of combat.
@@ -47,7 +46,7 @@ public class Enemy : Entity {
             return;
         }
         int newTargetIndex;
-        switch(this.ActionList[nextActionIndex].targetting){
+        switch(this.getNextAction().targetting){
             case TargetCategory.SINGLE_ENEMY:
                 newTargetIndex = CurrentRun.rng.Next(0, Battlefield.PlayerSide.Count);
                 setNextTarget(newTargetIndex, true);
@@ -72,11 +71,11 @@ public class Enemy : Entity {
             nextTarget = Battlefield.EnemySide[newTargetPosition];
         }
         // Check if the next action can target them
-        if(this.ActionList[nextActionIndex].CanTarget(nextTarget)) {
+        if(this.getNextAction().CanTarget(nextTarget)) {
             this.nextTargetPosition = newTargetPosition;
         }
         else {
-            Console.WriteLine("Entity at position "+newTargetPosition+" is not a valid target for "+this.ActionList[nextActionIndex].name);
+            Console.WriteLine("Entity at position "+newTargetPosition+" is not a valid target for "+this.getNextAction().name);
         }
     }
 
@@ -85,7 +84,7 @@ public class Enemy : Entity {
             Console.WriteLine("Entity has no actions.");
             return null;
         }
-        switch(this.ActionList[nextActionIndex].targetting){
+        switch(this.getNextAction().targetting){
             case TargetCategory.SINGLE_ENEMY:
                 if(Battlefield.PlayerSide.Count <= nextTargetPosition) {
                     return null;
@@ -105,7 +104,7 @@ public class Enemy : Entity {
         if(ActionList.Count < 1) {
             return "None";
         }
-        switch(this.ActionList[nextActionIndex].targetting){
+        switch(this.getNextAction().targetting){
             case TargetCategory.SINGLE_ENEMY:
                 if(Battlefield.PlayerSide.Count <= nextTargetPosition) {
                     return "None";
@@ -121,4 +120,16 @@ public class Enemy : Entity {
         }
     }
     
+    public Action getNextAction() {
+        if(ActionList.Count < 1) {
+            Console.WriteLine("ERROR: action list of "+this.getNextTargetName()+" was empty! Returning Idle for next action");
+            return new Idle();
+        }
+        return this.ActionList[this.nextActionIndex];
+    }
+
+    public override void startOfTurn(){
+        base.startOfTurn();
+        chooseNextTarget();
+    }
 }

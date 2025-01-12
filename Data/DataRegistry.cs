@@ -226,6 +226,8 @@ public static class DataRegistry {
             switch(itemName.ToLower().Trim()) {
                 case "shortsword":
                     return new Shortsword();
+                case "longbow":
+                    return new Longbow();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

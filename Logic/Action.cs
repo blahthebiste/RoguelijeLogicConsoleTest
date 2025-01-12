@@ -7,6 +7,7 @@ public class Action {
     public ActionType actionType;
     public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
+    public bool ignoresTaunt = false;
 	public Entity? owner; // The entity that is using the action
 
 	public TargetCategory targetting = TargetCategory.NONE;
@@ -36,8 +37,8 @@ public class Action {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
 		}
-		if(CurrentRun.requiresTarget(this) && target == null) {
-            Console.WriteLine("Invalid target!");
+		if(this.requiresTarget() && target == null) {
+            Console.WriteLine("ERROR: no target for action!");
             return false;
         }
 		// Iterate through effect list. If stunned, cannot use non-rest actions
@@ -47,6 +48,17 @@ public class Action {
 				return false;
 			}
 		}
+		if(this.requiresTarget()) {
+			// Check if target is valid:
+			if(CanTarget(target!)) {
+				return true;
+			}
+			else {
+				Console.WriteLine(owner!.name+" cannot target "+target!.name+" with "+this.name+"!");
+				return false;
+			}
+		}
+		// Passed all checks, action can be used
 		return true;
 	}
     
@@ -107,8 +119,22 @@ public class Action {
 			case TargetCategory.SELF:
 				return target == owner;
 			case TargetCategory.SINGLE_ENEMY:
-				// If they are on different teams, they can target with this action
-				return (owner.playerControlled != target.playerControlled);
+				// If they are on different teams, they can target with this action.
+				bool opposingTeams = (owner.playerControlled != target.playerControlled);
+				// Check for Taunt as well:
+				if(this.ignoresTaunt || !Battlefield.Taunters.Contains(target)) {
+					// If the target does not have taunt, need to check if their allies do:
+					if(Battlefield.Taunters.Count > 0) {
+						foreach(Entity taunter in Battlefield.Taunters) {
+							if(target.playerControlled == taunter.playerControlled) {
+								// Taunter is on the same team as the target, and will protect them.
+								Console.WriteLine(target.name+" could not be targeted, because they were protected by "+taunter.name);
+								return false;
+							}
+						}
+					}	
+				}
+				return opposingTeams;
 			case TargetCategory.SINGLE_ALLY:
 				// If they are on the same team, they can target with this action
 				return (owner.playerControlled == target.playerControlled);
@@ -128,6 +154,18 @@ public class Action {
 		}
 		return false;
 	}
+
+	
+    public bool requiresTarget(){
+        switch(this.targetting) {
+            case TargetCategory.SINGLE_ENEMY:
+            case TargetCategory.SINGLE_ALLY:
+            case TargetCategory.SINGLE_ANY:
+                return true;
+            default:
+                return false;
+        }
+    }
 
 
 

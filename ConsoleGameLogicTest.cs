@@ -457,8 +457,8 @@ void printCombatSituation() {
             string nextEnemyAction = "";
             string nextEnemyTarget = "";
             if(enemyFilled[i]!.ActionList.Count > 0) {
-                nextEnemyAction = enemyFilled[i]!.ActionList[enemyFilled[i]!.nextActionIndex].description;
-                if(enemyFilled[i]!.ActionList[enemyFilled[i]!.nextActionIndex].hasTarget()) {
+                nextEnemyAction = enemyFilled[i]!.getNextAction().description;
+                if(enemyFilled[i]!.getNextAction().hasTarget()) {
                     nextEnemyTarget = enemyFilled[i]!.getNextTargetName();
                 }
             }
@@ -489,6 +489,8 @@ void printCombatSituation() {
 void endPlayerTurn() {
     Console.WriteLine("Ending turn.");
     Battlefield.endTurn();
+    Console.WriteLine("Beginning of turn "+Battlefield.turnNumber);
+    Battlefield.startTurn();
     printCombatSituation();
 }
 

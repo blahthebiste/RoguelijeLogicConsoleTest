@@ -70,6 +70,7 @@ public static class CurrentRun {
         InCombat = false;
         Tier1ItemPool = new List<string>();
         Tier1ItemPool.Add("Shortsword");
+        Tier1ItemPool.Add("Longbow");
     }
     //===
     //===
@@ -306,16 +307,6 @@ public static class CurrentRun {
         }
     }
 
-    public static bool requiresTarget(Action action){
-        switch(action.targetting) {
-            case TargetCategory.SINGLE_ENEMY:
-            case TargetCategory.SINGLE_ALLY:
-            case TargetCategory.SINGLE_ANY:
-                return true;
-            default:
-                return false;
-        }
-    }
     //===
     //===
     //===

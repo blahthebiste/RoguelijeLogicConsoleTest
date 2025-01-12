@@ -67,11 +67,13 @@ public class Entity {
             if(existingEffectName == newEffectName) {
                 // If the entity already has the effect, just add to it
                 existingEffect.amount += newEffect.amount;
+                existingEffect.onAmountChanged(newEffect.amount);
                 return;
             }
         }
         // Entity does not have this effect, add it
         this.EffectList.Add(newEffect);
+        newEffect.onApplied();
     }
 
     // Bool value is whether the effect was successfully removed
@@ -82,6 +84,7 @@ public class Entity {
             Console.WriteLine("Comparing to '"+existingEffectName+"'...");
             if(existingEffectName == effectName) {
                 // If the entity has the effect, remove it
+                existingEffect.onRemoved();
                 EffectList.Remove(existingEffect);
                 return true;
             }
@@ -125,21 +128,18 @@ public class Entity {
         foreach(StatusEffect effect in EffectList) {
             effect.startOfTurn(); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0);
     }
 
     public virtual void endOfTurn() {
-        foreach(StatusEffect effect in EffectList) {
+        foreach(StatusEffect effect in EffectList.ToList()) {
             effect.endOfTurn(); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0);
     }
     
     public virtual Attack onAttack(Attack atk) {
         foreach(StatusEffect effect in EffectList) {
             atk = effect.onAttack(atk); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0); // Clean up status effect list
         int targetIndex;
         // Apply additional targets if applicable
         if(atk.target.playerControlled) {
@@ -179,7 +179,6 @@ public class Entity {
         foreach(StatusEffect effect in EffectList) {
             atk = effect.onReceiveAttack(atk); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0);
         int blockedDamage = 0;
         if(this.playerControlled && Battlefield.playerBlock > 0) {
             blockedDamage = Math.Min(atk.damage, Battlefield.playerBlock);
@@ -204,7 +203,6 @@ public class Entity {
         foreach(StatusEffect effect in EffectList) {
             block = effect.onGainBlock(block); // Handle events for status effects
         }
-        EffectList.RemoveAll(element => element.amount == 0);
         return block;
     }
 

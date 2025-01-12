@@ -3,6 +3,9 @@ public static class Battlefield {
     public static CombatEncounter? CurrentEncounter;
     public static List<Enemy> EnemySide = new List<Enemy>();
     public static List<PlayerCharacter> PlayerSide = new List<PlayerCharacter>();
+    
+    // Used to keep track of who is currently taunting. Used for targeting restrictions.
+    public static List<Entity> Taunters = new List<Entity>();
 
      // Used for Dazed logic
     public static List<Entity> BeenDazed = new List<Entity>();
@@ -33,6 +36,7 @@ public static class Battlefield {
     public static void ResetCombat() {
         EnemySide = new List<Enemy>();
         PlayerSide = new List<PlayerCharacter>();
+        Taunters = new List<Entity>();
         turnNumber = 0;
     }
     
@@ -71,7 +75,25 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.takeTurn();
         }
-        // Now reset everyting:
+        // Run endOfTurn events:
+        foreach(PlayerCharacter hero in PlayerSide) {
+            hero.endOfTurn();
+        }
+        foreach(Enemy enemy in EnemySide) {
+            enemy.endOfTurn();
+        }
+        turnNumber++;
+    }
+    public static void startTurn() {
+        // Run startOfTurn events:
+        foreach(PlayerCharacter hero in PlayerSide) {
+            hero.startOfTurn();
+        }
+        foreach(Enemy enemy in EnemySide) {
+            enemy.startOfTurn();
+        }
+
+        // Now reset everything:
         playerBlock = 0;
         CardManager.discardHand();
         CardManager.drawHand();
@@ -81,7 +103,6 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.exhausted = false;
         }
-        turnNumber++;
     }
 
     public static bool playerCharactersAllExhausted(){

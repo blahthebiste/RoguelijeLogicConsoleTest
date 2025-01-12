@@ -2,7 +2,7 @@ public class Taunt : Action {
 
     public Taunt() {
         this.name = "Taunt";
-        this.description = "Redirect all enemy attacks to me.";
+        this.description = "Forces enemies to target me instead of my allies.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.NONE;
     }
@@ -14,10 +14,8 @@ public class Taunt : Action {
 
     public override bool use(Entity? target, Modifier? modifier) {
         if(base.use(target, modifier)) {
-            // Go through all enemies, and for those that target allies, change the target
-            foreach(Enemy enemy in Battlefield.EnemySide) {
-                if(enemy != null) enemy.setNextTarget(Battlefield.PlayerSide.FindIndex(a => a.name == owner!.name));
-            }
+            // Apply taunting status effect, which updates enemy targets and the Battlefield.Taunters list accordingly:
+            owner!.AddStatusEffect(new Taunting(1, owner!));
             return true;
         }
         return false;
