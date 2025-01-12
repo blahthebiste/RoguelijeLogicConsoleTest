@@ -31,12 +31,7 @@ public class Pickpocket : Action {
 
     // Remove all items created by this spell at the end of combat.
     public override void endOfCombat(){
-        // Start with inventory
-        foreach(EquipmentItem item in CurrentRun.Inventory.ToList()) {
-            if(pickpocketedItems.Contains(item)) {
-                CurrentRun.Inventory.Remove(item);
-            }
-        }
+        
         // Loop through each hero's action list and remove matching equipped items
         foreach(Entity hero in CurrentRun.Party) {
             foreach(Action action in hero.ActionList.ToList()) {
@@ -52,6 +47,11 @@ public class Pickpocket : Action {
                 if(pickpocketedItems.Contains(action.equippedItem)) {
                     action.Unequip();
                 }
+            }
+        }// Do inventory last since unequipped items go here
+        foreach(EquipmentItem item in CurrentRun.Inventory.ToList()) {
+            if(pickpocketedItems.Contains(item)) {
+                CurrentRun.Inventory.Remove(item);
             }
         }
     }
