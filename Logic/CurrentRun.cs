@@ -13,6 +13,8 @@ public static class CurrentRun {
     public static List<PlayerCharacter> Party; // List of all characters currently in the party.
     public static List<PlayerCharacter> Bench; // List of all characters NOT currently in the party.
     public static List<ActionCard> MasterDeck; // The current deck that the player starts each combat with.
+    public static List<ActionCard> CardCollection; // The extra cards that the player collects throughout a run.
+    //public static Dictionary<ActionType, > CardOrderDict; // Used for determining what order to show cards in
     public static List<Item> Inventory; // All unequipped items, unused modifiers, unused legend books, and unused ascension books.
     public static Zone CurrentZone;
     public static int ZoneProgress; // The number of combat encounters that have been completed in this zone.
@@ -47,6 +49,7 @@ public static class CurrentRun {
         Party = new List<PlayerCharacter>(); // Decided shortly, but not yet
         Bench = new List<PlayerCharacter>(); // Starts empty.
         MasterDeck = new List<ActionCard>(); // Populate the default starter deck (2 of each? Or 3?)
+        CardCollection = new List<ActionCard>(); // Starts empty
         MasterDeck.Add(new BasicAttack());
         MasterDeck.Add(new BasicAttack());
         MasterDeck.Add(new BasicAttack());
@@ -172,6 +175,73 @@ public static class CurrentRun {
     //===
     //===
     //==============================END PARTY FUNCTIONS==============================
+    
+
+
+
+    //==============================DECK FUNCTIONS==============================
+    //===
+    //===
+    //===
+    // Whether there are any empty slots in the master deck currently.
+    public static bool RoomInDeck() {
+        if(MasterDeck.Count < MinimumDeckSize){
+            return true;
+        }
+        return false;
+    }
+
+    // Re-orders the given list of cards by action type->rarity.
+    public static List<ActionCard> ReorderCards(List<ActionCard> deck){
+        List<ActionCard> orderedDeck = new List<ActionCard>();
+        foreach(ActionCard card in deck){ 
+            // For now, do not actually change the order
+            // TODO: use LINQ for ordering or something
+            orderedDeck.Add(card);
+        }
+        return orderedDeck;
+    }
+
+    // Moves a card from the Master deck into the collection
+    public static void MoveToCollection(ActionCard card){
+        if(MasterDeck.Contains(card)) {
+            Console.WriteLine("Removing "+card.name+" from master deck");
+            MasterDeck.Remove(card);
+            CardCollection.Add(card);
+            CardCollection = ReorderCards(CardCollection);
+        }
+        else {
+            // print error
+            Console.WriteLine("ERROR: card "+card.name+" does not exist in your master deck!");
+        }
+    }
+    
+      // Move a character from the bench to the party
+    public static void MoveToMasterDeck(ActionCard card){
+        if(CardCollection.Contains(card)) {
+            if(RoomInDeck()) {
+                // There is room in the deck
+                Console.WriteLine("Adding "+card.name+" to master deck");
+                CardCollection.Remove(card);
+                MasterDeck.Add(card);
+                MasterDeck = ReorderCards(MasterDeck);
+            }
+            else {
+                // print error
+                Console.WriteLine("ERROR: cannot add card to master deck; master deck is full!");
+            }
+        }
+        else {
+            // print error
+            Console.WriteLine("ERROR: card "+card.name+" does not exist in your collection!");
+        }
+    }
+
+    
+    //===
+    //===
+    //===
+    //==============================END DECK FUNCTIONS==============================
     
 
 

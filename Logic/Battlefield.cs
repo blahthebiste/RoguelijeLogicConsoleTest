@@ -139,6 +139,7 @@ public static class Battlefield {
             Console.WriteLine("VICTORY!");
             Console.WriteLine("");
             Console.WriteLine("Rewards: ");
+            CurrentRun.InCombat = false;
             // distribute rewards.
             CurrentRun.GenerateCombatRewards();
             CurrentRun.DistributeCombatRewards();

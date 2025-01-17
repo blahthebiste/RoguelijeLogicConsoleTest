@@ -8,14 +8,17 @@ printStartScreen();
 // Enter command loop
 commandLoop();
 
+void printSeparator() {
+    Console.WriteLine("============================================================");
+}
 
 void commandLoop() {
     while(true) {
         Console.Write("\n> ");
         cmd = Console.ReadLine();
         //Console.Clear();
-        Console.WriteLine("============================================================");
         if(cmd == null) continue;
+        printSeparator();
         switch(cmd.ToLower().Trim().Split()[0]) 
         {
             case "exit":
@@ -53,6 +56,7 @@ void commandLoop() {
             case "hero":
                 if(cmd.ToLower().Trim().Split().Length < 2) {
                     Console.WriteLine("This command requires an argument -- hero name");
+                    continue;
                 }
                 else {
                     printCharacterInfoFromName(cmd.ToLower().Trim().Split()[1]);
@@ -61,6 +65,7 @@ void commandLoop() {
             case "enemy":
                 if(cmd.ToLower().Trim().Split().Length < 2) {
                     Console.WriteLine("This command requires an argument -- enemy name");
+                    continue;
                 }
                 else {
                     printEnemyInfoFromName(cmd.ToLower().Trim().Split()[1]);
@@ -78,6 +83,9 @@ void commandLoop() {
             case "masterdeck":
                 printMasterDeck();
                 break;
+            case "collection":
+                printCardCollection();
+                break;
             case "combat":
                 printCombatSituation();
                 break;
@@ -88,11 +96,12 @@ void commandLoop() {
                 printInventory();
                 break;
             case "next":
-                next();
+                nextNode();
                 break;
             case "equip":
                 if(cmd.ToLower().Trim().Split().Length < 3) {
                     Console.WriteLine("Incorrect syntax -- requires <item> and <hero> arguments");
+                    continue;
                 }
                 else {
                     equipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
@@ -101,10 +110,14 @@ void commandLoop() {
             case "unequip":
                 if(cmd.ToLower().Trim().Split().Length < 3) {
                     Console.WriteLine("Incorrect syntax -- requires <item> and <hero> arguments");
+                    continue;
                 }
                 else {
                     unequipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
                 }
+                break;
+            case "edit":
+                editMasterDeck();
                 break;
             default:
                 // If the first word is a number, and that number is less than 10, then the user is playing a card.
@@ -115,14 +128,16 @@ void commandLoop() {
                     }
                     else {
                         Console.WriteLine("Invalid number. You only have "+CardManager.Hand.Count+" cards in your hand.");
+                        continue;
                     }
                 }
                 else {   
                     Console.WriteLine("Unknown command '"+cmd+"'.\nType 'help' for a list of all commands.");
+                    continue;
                 }
                 break;
         }
-        Console.WriteLine("============================================================");
+        printSeparator();
     }
 }
 
@@ -145,18 +160,28 @@ void printHelp() {
     else {
         Console.WriteLine("depart -- sets off with the currently selected party");
         Console.WriteLine("zone -- selects the zone to travel to");
+        Console.WriteLine("edit -- enter the deck editor");
     }
     // These commands are always available once the run starts
     Console.WriteLine("party -- prints out info about your current party");
     Console.WriteLine("run -- prints out info about the current run");
     Console.WriteLine("masterdeck -- prints out your current deck");
+    Console.WriteLine("collection -- prints out your entire card collection");
     Console.WriteLine("inventory -- prints out your inventory");
     Console.WriteLine("equip <item> <hero> -- equip an item to a hero (takes hero's action)");
     Console.WriteLine("unequip <item> <hero> -- unequip an item from a hero (takes hero's action)");
-    if(CurrentRun.Party.Count < CurrentRun.PartySize) {
+    if(nextZoneID == ZoneID.HUB && CurrentRun.Party.Count < CurrentRun.PartySize) {
         // Starting party is not yet chosen. Show character options
-        
+        Console.WriteLine("<hero> -- view a hero, and choose whether to add them to the party");
     }
+}
+
+// Version of printHelp that shows valid commands in the deck editor
+void printDeckEditorHelp() {
+    Console.WriteLine("exit,quit -- exits the editor");
+    Console.WriteLine("move <card> <in/out> -- move the specified card either in or out of your master deck");
+    Console.WriteLine("party -- prints out info about your current party");
+    Console.WriteLine("run -- prints out info about the current run");
 }
 
 void printStartScreen() {
@@ -180,13 +205,10 @@ void startRun() {
 void setDefaultParty(){
     PlayerCharacter newThief = new PlayerCharacter("Thief");
     CurrentRun.Party.Add(newThief);
-    CurrentRun.MasterDeck.Add(newThief.personalCard);
     PlayerCharacter newHealer = new PlayerCharacter("Healer");
     CurrentRun.Party.Add(newHealer);
-    CurrentRun.MasterDeck.Add(newHealer.personalCard);
     PlayerCharacter newDefender = new PlayerCharacter("Defender");
     CurrentRun.Party.Add(newDefender);
-    CurrentRun.MasterDeck.Add(newDefender.personalCard);
     zoneSelection();
     depart();
 }
@@ -210,9 +232,17 @@ void depart() {
 }
 
 // Allow the player to choose between a couple of events
-void next(){
+void nextNode(){
+    if(CurrentRun.Party.Count < 1) {
+        Console.WriteLine("ERROR: must have at least 1 hero in your party to proceed!");
+        return;
+    }
+    if(CurrentRun.MasterDeck.Count < CurrentRun.MinimumDeckSize) {
+        Console.WriteLine("ERROR: must have at least "+CurrentRun.MinimumDeckSize+" cards in your deck to proceed!");
+        return;
+    }
     Console.WriteLine("Which event would you like to go to next?");
-    // TODO
+    // TODO: present multiple options, let player choose 1
 }
 
 // Asks the player what zone to travel to
@@ -253,21 +283,20 @@ void printStarterCharacterInfo(string characterName) {
         while(true) {
             Console.WriteLine("\nAdd this character to your party?");
             Console.WriteLine("\tYes\t\tBack");
-            Console.WriteLine("============================================================");
+            printSeparator();
             Console.Write("\n> ");
             cmd = Console.ReadLine();
             //Console.Clear();
             if(cmd == null) continue;
             if(cmd.ToLower().Trim() == "yes") {
                 CurrentRun.Party.Add(newStarterCharacter);
-                CurrentRun.MasterDeck.Add(newStarterCharacter.personalCard);
-                Console.WriteLine("============================================================");
+                printSeparator();
                 Console.WriteLine("Added "+newStarterCharacter.name+" to party.");
                 printStartingPartyMessage();
                 return;
             }
             if(cmd.ToLower().Trim() == "back") {
-                Console.WriteLine("============================================================");
+                printSeparator();
                 printStartingPartyMessage();
                 return;
             }
@@ -297,6 +326,37 @@ void printMasterDeck() {
     Console.WriteLine("Master Deck:");
     foreach(ActionCard card in CurrentRun.MasterDeck) {
        Console.WriteLine(card.ToString());
+    }
+}
+
+void printCardCollection() {
+    Console.WriteLine("Card Collection:");
+    foreach(ActionCard card in CurrentRun.CardCollection) {
+       Console.WriteLine(card.ToString());
+    }
+}
+
+// Displays the master deck and collection side by side.
+// Shows a number next to each card to use as its ID for moving it to/from the master deck.
+void printDeckEditor(){
+    string deckHeader = "Master Deck (minimum: "+CurrentRun.MinimumDeckSize+")";
+    string collectionHeader = "Card Collection";
+    string headerString = String.Format("{0,24}\t|\t{1,32}", deckHeader, collectionHeader);
+    Console.WriteLine(headerString);
+    int sizeMasterDeck = CurrentRun.MasterDeck.Count;
+    int sizeCollection = CurrentRun.CardCollection.Count;
+    int maxRows = (sizeMasterDeck > sizeCollection) ? sizeMasterDeck : sizeCollection;
+    for(int i = 0; i < maxRows; i++) {
+        string deckString = "";
+        string collectionString = "";
+        if(CurrentRun.MasterDeck.Count > i) {
+            deckString = "["+(i+1)+"] "+CurrentRun.MasterDeck[i]!.name;
+        }
+        if(CurrentRun.CardCollection.Count > i) {
+            collectionString = "["+(i+1)+"] "+CurrentRun.CardCollection[i]!.name;
+        }
+        string rowString = String.Format("{0,24}\t|\t{1,32}", deckString, collectionString);
+        Console.WriteLine(rowString);
     }
 }
 
@@ -382,7 +442,7 @@ void printEnemyInfo(Enemy enemy) {
 }
 
 void printCombatSituation() {
-    Console.WriteLine("============================================================");
+    printSeparator();
     if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
             Console.WriteLine("Current Battle: None");
             return;
@@ -542,7 +602,7 @@ void printInventory() {
 void playCard(string cmd) {
     if(cmd.ToLower().Trim().Split().Length < 2) {
         Console.WriteLine("You must include the name of hero that you want to use this action as an argument.");
-        Console.WriteLine("Example:     2 fighter pengoon");
+        Console.WriteLine("Example:    > 2 fighter pengoon");
         return;
     }
     string whoIsUsingTheAction = cmd.ToLower().Trim().Split()[1];
@@ -572,7 +632,7 @@ void playCard(string cmd) {
         }
     }
     int cardNumber; // The index in the hand where the card is; 1-indexed
-    int.TryParse(cmd.ToLower().Trim().Split()[0], out cardNumber);
+    int.TryParse(cmd.ToLower().Trim().Split()[0], out cardNumber); // No need to check, this is only run if arg 1 is an int
     foreach(PlayerCharacter hero in Battlefield.PlayerSide){
         if(hero.name.ToLower().Trim() == whoIsUsingTheAction) {
             ActionCard selectedCard = CardManager.Hand[cardNumber - 1];
@@ -798,8 +858,81 @@ void unequipItem(string itemName, string heroName) {
 }
 
 
+// Enters the collection, where the player can edit their deck
+void editMasterDeck() {
+    if(CurrentRun.InCombat) {
+        Console.WriteLine("Cannot edit deck during combat!");
+        return;
+    }
+    // Outside of combat, loop through deck editor commands:
+    while(true) {
+        printDeckEditor();
+        Console.Write("\n> ");
+        cmd = Console.ReadLine();
+        if(cmd == null) continue;
+        //Console.Clear();
+        printSeparator();
+        switch(cmd.ToLower().Trim().Split()[0]) 
+        {
+            case "exit":
+            case "quit":
+                Console.WriteLine("Exited deck editor.");
+                return;
+            case "help":
+                printDeckEditorHelp();
+                break;
+            case "run":
+                getRunInfo();
+                break;
+            case "party":
+                getPartyInfo();
+                break;
+            case "move":
+                // The player wants to move a card between their master deck and collection.
+                if(cmd.ToLower().Trim().Split().Length < 3) {
+                    Console.WriteLine("Incorrect syntax -- requires <card> and <in/out> arguments");
+                    continue;
+                }
+                else {
+                    int cardIndex; // The index in the deck/collection where the card is; 1-indexed
+                    if(!int.TryParse(cmd.ToLower().Trim().Split()[1], out cardIndex)){
+                        Console.WriteLine("Incorrect syntax -- first argument must be an integer");
+                        continue;
+                    }
+                    cardIndex--; // Make it 0-indexed for our convenience
+                    string direction = cmd.ToLower().Trim().Split()[2];
+                    if(direction != "in" && direction != "out") {
+                        Console.WriteLine("Incorrect syntax -- second argument must either be 'in' or 'out'");
+                        continue;
+                    }
+                    if(direction == "in") {
+                        // No need to check if deck is full, the MoveToMasterDeck function handles that with an error message
+                        if(cardIndex < 0 || cardIndex > CurrentRun.CardCollection.Count) {
+                            Console.WriteLine("ERROR -- Card index must be in the range 1 to "+CurrentRun.CardCollection.Count);
+                            continue;
+                        }
+                        // We now know the index is valud. Perform the move
+                        CurrentRun.MoveToMasterDeck(CurrentRun.CardCollection[cardIndex]);
 
+                    }
+                    else { // Direction must be 'out'
+                        if(cardIndex < 0 || cardIndex > CurrentRun.MasterDeck.Count) {
+                            Console.WriteLine("ERROR -- Card index must be in the range 1 to "+CurrentRun.MasterDeck.Count);
+                            continue;
+                        }
+                        // We now know the index is valud. Perform the move
+                        CurrentRun.MoveToCollection(CurrentRun.MasterDeck[cardIndex]);
+                    }
 
+                }
+                break;
+            default:
+                Console.WriteLine("Unknown command '"+cmd+"'.\nType 'help' for a list of valid commands.");
+                break;
+        }
+        printSeparator();
+    }
+}
 
 
 

@@ -17,6 +17,10 @@ public static class CardManager {
 	
 	public static void beginCombat() {
 		DrawPile = copyMasterDeck();
+		// Add character cards to drawpile:
+		foreach(PlayerCharacter hero in CurrentRun.Party) {
+			DrawPile.Add(hero.personalCard);
+		}
 		DiscardPile = new List<ActionCard>();
 		Hand = new List<ActionCard>();
 		randomizeDrawPileOrder();

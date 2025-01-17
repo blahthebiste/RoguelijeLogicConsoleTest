@@ -1,16 +1,14 @@
 // All action cards extend this class.
 public class ActionCard {
     public ActionType? actionType;
-    public String? name;
-    public String? description;
+    public String name = "MISSING NAME";
+    public String description = "MISSING DESCRIPTION";
     public Modifier? modifier; // Each card can have 1 modifier.
     public Entity? owner; // Some cards are tied to specific characters.
     
     // Default constructor
     public ActionCard() {
         this.actionType = null;
-        this.name = null;
-        this.description = null;
         this.modifier = null;
         this.owner = null;
     }
