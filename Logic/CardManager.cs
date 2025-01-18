@@ -71,17 +71,17 @@ public static class CardManager {
 	}
 	
 	// Source: https://stackoverflow.com/a/69220421/5086634
-	public static void randomizeCardOrder(List<ActionCard> cards) {
-		int n = cards.Count;
-		while (n > 1)
-		{
-			n--;
-			int k = CurrentRun.rng.Next(n + 1);
-			(cards[k], cards[n]) = (cards[n], cards[k]);
-		}
-	}
+	// public static void randomizeCardOrder(List<ActionCard> cards) {
+	// 	int n = cards.Count;
+	// 	while (n > 1)
+	// 	{
+	// 		n--;
+	// 		int k = CurrentRun.rng.Next(n + 1);
+	// 		(cards[k], cards[n]) = (cards[n], cards[k]);
+	// 	}
+	// }
 
 	public static void randomizeDrawPileOrder() {
-		randomizeCardOrder(DrawPile);
+		CurrentRun.Shuffle(DrawPile);
 	}
 }

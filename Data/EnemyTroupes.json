@@ -1,9 +1,115 @@
 [
 	{
 		"Name": "Pengoons",
-		"Description": "Easy encounter for tutorials",
+		"Description": "Trivial encounter for tutorials",
 		"Difficulty": 0,
 		"EnemyList": [
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Mist Wolf",
+		"Description": "A vicious denizen of The Blackwood, capable of vanishing into the shadows.",
+		"Difficulty": 1,
+		"EnemyList": [
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Blackwood Bandits",
+		"Description": "A band of outlaws, known around these parts for preying upon unprepared travelers.",
+		"Difficulty": 2,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "The Witch of Blackwood",
+		"Description": "An immortal agent of chaos, armed with brews and hexes.",
+		"Difficulty": 4,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Plagued Peasants",
+		"Description": "These townsfolk keep following you... None of them have spoken a word.",
+		"Difficulty": 5,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Rats",
+		"Description": "I'm the giant rat that makes all of the rules!",
+		"Difficulty": 6,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "The Dark One",
+		"Description": "The king's loyal servant, said to wield dark magic more powerful than that of any sorcerer.",
+		"Difficulty": 8,
+		"EnemyList": [
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Castle Gate",
+		"Description": "Archers defend the wall, while guards block the way.",
+		"Difficulty": 9,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "Courtyard Sorcerers",
+		"Description": "Cryomancers freeze intruders where they stand, protected by powerful shielding magic.",
+		"Difficulty": 10,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "The King's Court",
+		"Description": "The king responsible for never-ending Winter, surrounded by legendary warriors.",
+		"Difficulty": 12,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
+			"Pengoon",
+			"Pengoon"
+		]
+	},
+	{
+		"Name": "True Winter King",
+		"Description": "With the King's Court defeated, the king reveals his true form...",
+		"Difficulty": 15,
+		"EnemyList": [
+			"Pengoon",
+			"Pengoon",
 			"Pengoon",
 			"Pengoon"
 		]

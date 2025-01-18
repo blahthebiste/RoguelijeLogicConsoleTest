@@ -46,6 +46,9 @@ void commandLoop() {
             case "recommended":
                 setDefaultParty();
                 break;
+            case "tutorial":
+                tutorial();
+                break;
             case "fighter":
             case "defender":
             case "healer":
@@ -80,7 +83,7 @@ void commandLoop() {
             case "discard":
                 printDiscardPile();
                 break;
-            case "masterdeck":
+            case "deck":
                 printMasterDeck();
                 break;
             case "collection":
@@ -145,6 +148,7 @@ void printHelp() {
     Console.WriteLine("exit,quit -- exits the game");
     if(!CurrentRun.InARun) {
         Console.WriteLine("start -- begins a run");
+        Console.WriteLine("tutorial -- starts the tutorial");
         return; // All other commands only show once the run starts
     }
     if(CurrentRun.InCombat) {
@@ -165,7 +169,7 @@ void printHelp() {
     // These commands are always available once the run starts
     Console.WriteLine("party -- prints out info about your current party");
     Console.WriteLine("run -- prints out info about the current run");
-    Console.WriteLine("masterdeck -- prints out your current deck");
+    Console.WriteLine("deck -- prints out your current deck");
     Console.WriteLine("collection -- prints out your entire card collection");
     Console.WriteLine("inventory -- prints out your inventory");
     Console.WriteLine("equip <item> <hero> -- equip an item to a hero (takes hero's action)");
@@ -189,6 +193,17 @@ void printStartScreen() {
         Console.WriteLine(line);
     }
 
+}
+
+// Starts a run and auto-selects party and encounter
+void tutorial() {
+    if(CurrentRun.InARun) {
+        Console.WriteLine("\nInvalid command -- already in a run");
+        return;
+    }
+    Console.WriteLine("\n\tStarting new Tutorial run...");
+    CurrentRun.InARun = true;
+    setDefaultParty();
 }
 
 void startRun() {
@@ -226,12 +241,12 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    // TODO: next step is generate the chosen zone
     CurrentRun.GenerateNextCombat();
-    printCombatSituation();
 }
 
-// Allow the player to choose between a couple of events
+// Allow the player to choose between a couple of events, if they were just in combat;
+// Or, allow them to choose between a couple of combat encounters, if they just came from an event.
+// If they have already been to an event and selected their next combat, enter combat.
 void nextNode(){
     if(CurrentRun.Party.Count < 1) {
         Console.WriteLine("ERROR: must have at least 1 hero in your party to proceed!");
@@ -241,8 +256,21 @@ void nextNode(){
         Console.WriteLine("ERROR: must have at least "+CurrentRun.MinimumDeckSize+" cards in your deck to proceed!");
         return;
     }
-    Console.WriteLine("Which event would you like to go to next?");
-    // TODO: present multiple options, let player choose 1
+    // Determine if the next node is an event or combat:
+    if(!CurrentRun.LastEncounterWasEvent) {
+        Console.WriteLine("Which event would you like to go to next?");
+        // Present multiple options, let player choose 1
+        CurrentRun.GenerateEvents();
+    }
+    else if(CurrentRun.NextCombatEncounter == null) {
+        // Player has already done an event, but has not yet selected combat
+        CurrentRun.GenerateNextCombat();
+    }
+    else {
+        // Event is completed, and next combat is selected; enter combat
+        CurrentRun.EnterCombat();
+        printCombatSituation();
+    }
 }
 
 // Asks the player what zone to travel to
@@ -324,6 +352,10 @@ void getRunInfo() {
 
 void printMasterDeck() {
     Console.WriteLine("Master Deck:");
+    if(CurrentRun.MasterDeck.Count == 0) {
+        Console.WriteLine("\tYour deck is empty.");
+        return;
+    }
     foreach(ActionCard card in CurrentRun.MasterDeck) {
        Console.WriteLine(card.ToString());
     }
@@ -331,6 +363,10 @@ void printMasterDeck() {
 
 void printCardCollection() {
     Console.WriteLine("Card Collection:");
+    if(CurrentRun.CardCollection.Count == 0) {
+        Console.WriteLine("\tYour card collection is empty.");
+        return;
+    }
     foreach(ActionCard card in CurrentRun.CardCollection) {
        Console.WriteLine(card.ToString());
     }
@@ -572,7 +608,7 @@ void printDrawPile() {
     else {
         // Need to show draw pile in a different random order so as not to let the player see their next draw.
         List<ActionCard> RandomizedDrawPile = new List<ActionCard>(CardManager.DrawPile);
-        CardManager.randomizeCardOrder(RandomizedDrawPile);
+        CurrentRun.Shuffle(RandomizedDrawPile);
         foreach(ActionCard card in RandomizedDrawPile) {
             Console.WriteLine(card.ToString());
         }
@@ -770,7 +806,7 @@ void equipItem(string itemName, string heroName) {
         List<Action> matchingActions = new List<Action>();
         // Find all matching actions from the hero's action list:
         foreach(Action action in heroToEquip.ActionList) {
-            if(itemToEquip.matchesActionType(action.actionType)) {
+            if(itemToEquip.matchesActionType(action)) {
                 matchingActions.Add(action);
             }
         }
@@ -794,7 +830,7 @@ void equipItem(string itemName, string heroName) {
     if(numMatchingActions == 1) {
         // Find the first matching action from the hero's action list:
         foreach(Action action in heroToEquip.ActionList) {
-            if(itemToEquip.matchesActionType(action.actionType)) {
+            if(itemToEquip.matchesActionType(action)) {
                 action.Equip(itemToEquip);
                 break;
             }

@@ -136,13 +136,15 @@ public class EquipmentItem : Item {
         return this.parentAction.owner;
     }
 
-    public bool matchesActionType(ActionType type) {
+    public bool matchesActionType(Action action) {
+        ActionType type = action.actionType;
         if(this.slot == ActionType.ANY) {
             return true;
         }
         if(type == this.slot) {
             return true;
         }
+        // No need to check for DUAL; Actions can never be DUAL, only ActionCards
         return false;
     }
 
@@ -150,7 +152,7 @@ public class EquipmentItem : Item {
     public int numberMatchingActions(Entity entityToEquip) {
         int matches = 0;
         foreach(Action action in entityToEquip.ActionList) {
-            if(this.matchesActionType(action.actionType)) {
+            if(this.matchesActionType(action)) {
                 matches++;
             }
         }

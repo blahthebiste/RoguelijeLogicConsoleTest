@@ -81,17 +81,6 @@ public static class DataRegistry {
     }
 
     public static class EnemyData {
-        public static class PengoonData {
-            public static string Name = "Pengoon";
-            public static string Description = "Useless enemy for the tutorial";
-            public static int HP = 7;
-            
-            public static List<Action> ActionList = new List<Action>() {
-                new Swipe()
-            };
-
-        }
-
         // Translates an enemy name into an enemy object. Returns null if none are found.
         public static Entity? getEnemyByName(string enemyName){ 
             switch(enemyName.ToLower().Trim()) {

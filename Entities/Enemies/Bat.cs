@@ -1,9 +1,9 @@
-public class Pengoon : Enemy {
+public class Bat : Enemy {
 
-    public Pengoon() {
-        this.name = "Pengoon";
-        this.description = "\"What is my purpose?\" \"You are part of the tutorial.\" \"Oh god!\"";
-        this.maxHP = 7;
+    public Bat() {
+        this.name = "Bat";
+        this.description = "This bat seems bewitched to attack anything its master deems a threat.";
+        this.maxHP = 3;
         this.hostile = true;
         this.playerControlled = false;
         this.currentHP = maxHP;

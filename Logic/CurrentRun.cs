@@ -21,12 +21,20 @@ public static class CurrentRun {
     public static List<Zone> CompletedZones;
     public static bool InARun;
     public static bool InCombat;
+    public static bool LastEncounterWasEvent; // Signifies whether the player has completed their event yet.
 
     public static List<string> Tier1ItemPool; 
     // public static List<string> Tier2ItemPool; 
     // public static List<string> Tier3ItemPool; 
+    
+    public static List<Event> EventPool; // Resets after each act
+    
+    public static int NUMDRAFTABLEBASICCARDS = 10;
+    public static List<ActionCard> DraftableCardPool; // Pool of cards that the player can draft. Starts full of basic action cards.
+    public static List<ActionCard> ComplexCardPool; // Pool of advanced cards that the player can eventually draft.
 
     public static CombatReward NextCombatReward = new CombatReward();
+    public static CombatEncounter? NextCombatEncounter;
     //===
     //===
     //===
@@ -71,9 +79,15 @@ public static class CurrentRun {
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
         InCombat = false;
+        LastEncounterWasEvent = true; // Starts true so that the player goes to combat first
         Tier1ItemPool = new List<string>();
-        Tier1ItemPool.Add("Shortsword");
-        Tier1ItemPool.Add("Longbow");
+        DraftableCardPool = new List<ActionCard>();
+        ComplexCardPool = new List<ActionCard>();
+        EventPool = new List<Event>();
+        PopulateTier1ItemPool();
+        PopulateDraftPool();
+        PopulateComplexDraftPool();
+        PopulateEventPool();
     }
     //===
     //===
@@ -252,6 +266,26 @@ public static class CurrentRun {
     //===
     // When the player wins, give them stuff.
     public static void DistributeCombatRewards() {
+        int randomMoneyReward = rng.Next(40, 61);
+        int extraMoneyReward = 0;
+        // Generate rewards based on the ZoneProgress.
+        if(ZoneProgress % 10 == 0) // Every 10th stage is a Boss combat
+        {
+            extraMoneyReward = rng.Next(40, 61);
+            GenerateNextChaosTome(); // TODO: make claimable combat reward
+        }
+        else if(ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
+        {
+            extraMoneyReward = rng.Next(40, 61);
+            NextCombatReward.itemRewards.Add(new AscensionBook());
+        }
+        else // Normal combat.
+        {
+            // Do nothing; no bonus for now
+
+        }
+        // TODO: lore bonus based on combat difficulty?
+        NextCombatReward.moneyReward = randomMoneyReward + extraMoneyReward;
         Money += NextCombatReward.moneyReward;
         Console.WriteLine("Earned $"+NextCombatReward.moneyReward);
         foreach(Item item in NextCombatReward.itemRewards) {
@@ -259,58 +293,13 @@ public static class CurrentRun {
             Console.WriteLine("Acquired a "+item.name);
         }
     }
-    
-    public static void GenerateCombatRewards() {
-            int randomMoneyReward = rng.Next(40, 61);
-            int extraMoneyReward = 0;
-            // Generate rewards based on the ZoneProgress.
-            if(ZoneProgress % 10 == 0) // Every 10th stage is a Boss combat
-            {
-                extraMoneyReward = rng.Next(40, 61);
-                GenerateNextChaosTome(); // TODO: make claimable combat reward
-            }
-            else if(ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
-            {
-                extraMoneyReward = rng.Next(40, 61);
-                NextCombatReward.itemRewards.Add(new AscensionBook());
-            }
-            else // Normal combat.
-            {
-                // do nothing, no special rewards other than the money.
-            }
-            NextCombatReward.moneyReward = randomMoneyReward + extraMoneyReward;
-        }
 
-
-
-    public static void GenerateNextCombat() {
-        // Takes into account number of completed zones and zone progress
-        Console.WriteLine("Generating combat...");
-        int targetDifficulty = 0;
-        targetDifficulty += (10 * CompletedZones.Count);
-        targetDifficulty += ZoneProgress;
-        targetDifficulty += rng.Next(-3, 4);
-        targetDifficulty = Math.Max(1, targetDifficulty);
-
-        int lowestDifficultyDiff = Math.Abs(CurrentZone.CombatEncounters[0].difficulty - targetDifficulty);
-        CombatEncounter closestMatchEncounter = CurrentZone.CombatEncounters[0];
-        foreach(CombatEncounter troupe in CurrentZone.CombatEncounters) {
-            var difficultyDiff = Math.Abs(troupe.difficulty - targetDifficulty);
-            if(difficultyDiff < lowestDifficultyDiff) {
-                lowestDifficultyDiff = difficultyDiff;
-                closestMatchEncounter = troupe;
-            }
-        }
-        Battlefield.LoadCombat(closestMatchEncounter);
-        CardManager.beginCombat();
-        InCombat = true;
-        // TODO
-    }
 
     public static void GenerateNextChaosTome() {
         Console.WriteLine("YOU HAVE ACQUIRED A CHAOS TOME.");
         NextCombatReward.itemRewards.Add(new ChaosTome(CompletedZones.Count));
     }
+
     //===
     //===
     //===
@@ -319,6 +308,116 @@ public static class CurrentRun {
 
 
 
+    //==============================EVENT FUNCTIONS==============================
+    //===
+    //===
+    //===
+
+    // Fills the pool of draftable cards with basic action cards.
+    public static void PopulateDraftPool() {
+        for(int i = 0; i < NUMDRAFTABLEBASICCARDS; i++) {
+            DraftableCardPool.Add(new BasicAttack());
+            DraftableCardPool.Add(new BasicDefend());
+            DraftableCardPool.Add(new BasicRest());
+            DraftableCardPool.Add(new BasicSkill());
+            DraftableCardPool.Add(new BasicSpell());
+        }
+        Console.WriteLine("Populated draftable card pool.");
+    }
+
+    // Fills the pool of not-quite-yet-draftable cards with complex action cards.
+    public static void PopulateComplexDraftPool() {
+        ComplexCardPool.Add(new DualAttackDefend());
+        // Randomize the order:
+        Shuffle(ComplexCardPool);
+        Console.WriteLine("Populated complex card pool.");
+    }
+
+    // Add the card at the specified index to the player's master deck, and replace it in the pool with a complex action card. 
+    public static void DraftCard(int index) {
+        if(index < 0 || index > DraftableCardPool.Count) {
+            Console.WriteLine("ERROR: index out of bounds for DraftableCardPool!");
+        }
+        else {
+            ActionCard newCard = DraftableCardPool[index]!;
+            CardCollection.Add(newCard);
+            Console.WriteLine("Added one '"+newCard.name+"' card to your collection.");
+            DraftableCardPool.Remove(newCard);
+            DraftableCardPool.Add(ComplexCardPool[0]);
+            // If ComplexCardPool is exhausted, add a Wound
+            if(ComplexCardPool.Count == 0) {
+                ComplexCardPool.Add(new Wound());
+            }
+        }
+    }
+
+    // TODO: fill out
+    public static void PopulateEventPool() {
+        for(int i = 0; i < 25; i++) {
+            // Add 25x card draft event
+            EventPool.Add(new CardDraft());
+        }
+        Console.WriteLine("Populated event pool.");
+    }
+
+    
+    // Picks 3 valid events from the event pool.
+    // 2 will be shown to the player, 1 will be hidden.
+    // The player will decide which of the 3 events they want to go to.
+    public static void GenerateEvents() {
+        // Shuffle the pool so that the first 3 are random:
+        Shuffle(EventPool);
+        // Display the first 3
+        while(true) {
+            Console.WriteLine("Choose one of the following events to visit, by entering its number:\n");
+            Console.WriteLine("\t[1] "+EventPool[0]!.name);
+            Console.WriteLine("\t[2] ??? Mystery Event ???");
+            Console.WriteLine("\t[3] "+EventPool[2]!.name);
+            Console.WriteLine("");
+            Console.Write("\n> ");
+            string? cmd2 = Console.ReadLine();
+            if(cmd2 == null) continue;
+            if(int.TryParse(cmd2.ToLower().Trim(), out int eventSelection)) {
+                // If they entered a valid number for card selection, add it to their collection:
+                if(eventSelection <= 3 && eventSelection > 0) {
+                    EnterEvent(eventSelection-1);
+                    return;
+                }
+                else {
+                    Console.WriteLine("Must enter a number between 1 and 3.\n");
+                }
+            }
+            else {
+                Console.WriteLine("Must enter a number between 1 and 3.\n");
+            }
+        }
+    }
+
+    // Source: https://stackoverflow.com/a/69220421/5086634
+    // public static void randomizeEventOrder() {
+	// 	int n = EventPool.Count;
+	// 	while (n > 1)
+	// 	{
+	// 		n--;
+	// 		int k = rng.Next(n + 1);
+	// 		(EventPool[k], EventPool[n]) = (EventPool[n], EventPool[k]);
+	// 	}
+	// }
+    
+
+    // Execute the event at the specified index of the event pool, and remove it from the pool.
+    public static void EnterEvent(int index) {
+        Event chosenEvent = EventPool[index];
+        EventPool.Remove(chosenEvent);
+        Console.WriteLine("Entering "+chosenEvent.name+"...\n");
+        chosenEvent.execute();
+        LastEncounterWasEvent = true;
+    }
+    //===
+    //===
+    //===
+    //==============================END EVENT FUNCTIONS==============================
+
     //==============================ZONE FUNCTIONS==============================
     //===
     //===
@@ -326,6 +425,139 @@ public static class CurrentRun {
     public static void SetZone(ZoneID newZoneID) {
         CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
+    }
+
+    
+    // Sets the NextCombatEncounter (which can then be started by EnterCombat().)
+    // Picks 3 valid combats from the encounter pool, and display them and their difficulty rating to the player.
+    // The player will decide which of the 3 fights they want to battle next.
+    // For now, combat options are predetermined by the zone and progress (this may change).
+    public static void GenerateNextCombat() {
+        if(NextCombatEncounter != null) {
+            Console.WriteLine("Next combat encounter has already been chosen!");
+            return;
+        }
+        List<CombatEncounter> nextEncounterOptions = new List<CombatEncounter>();
+        switch(ZoneProgress) {
+            case 1:
+            case 2:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Phase1CombatEncounters, 3);
+                break;
+            case 3:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Miniboss1Encounters, 3);
+                break;
+            case 4:
+            case 5:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Phase2CombatEncounters, 3);
+                break;
+            case 6:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Miniboss2Encounters, 3);
+                break;
+            case 7:
+            case 8:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Phase3CombatEncounters, 3);
+                break;
+            case 9:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.Miniboss3Encounters, 3);
+                break;
+            case 10:
+                nextEncounterOptions = GetRandomCombatEncounters(CurrentZone.BossEncounters, 3);
+                break;
+            default:
+                Console.WriteLine("ERROR: invalid zone progress while generating next combats");
+                return;
+        }
+        if(nextEncounterOptions == null || nextEncounterOptions.Count == 0) {
+            // No valid combats
+            Console.WriteLine("ERROR: No valid combat encounters found!");
+            return;
+        }
+        if(nextEncounterOptions.Count == 1) {
+            // Only 1 valid combat was found.
+            NextCombatEncounter = nextEncounterOptions[0];
+            PrintNextCombat();
+            return;
+        }
+        else {
+            // Multiple valid combat encounters found.
+            // Display them all and let the player choose.
+            while(true) {
+                Console.WriteLine("Choose one of the following combat encounters, by entering its number:\n");
+                for(int i = 0; i < nextEncounterOptions.Count; i++) {
+                    Console.WriteLine("\t["+(i+1)+"] "+nextEncounterOptions[i]);
+                }
+                Console.WriteLine("");
+                Console.Write("\n> ");
+                string? cmd2 = Console.ReadLine();
+                if(cmd2 == null) continue;
+                if(int.TryParse(cmd2.ToLower().Trim(), out int combatSelection)) {
+                    // If they entered a valid number for combat selection, set it as next:
+                    if(combatSelection <= nextEncounterOptions.Count && combatSelection > 0) {
+                        NextCombatEncounter = nextEncounterOptions[combatSelection-1]!;
+                        CurrentZone.RemoveEncounter(NextCombatEncounter); // Prevent it from appearing again
+                        PrintNextCombat();
+                        return;
+                    }
+                    else {
+                        Console.WriteLine("Must enter a number between 1 and "+nextEncounterOptions.Count+".\n");
+                    }
+                }
+                else {
+                    Console.WriteLine("Must enter a number between 1 and "+nextEncounterOptions.Count+".\n");
+                }
+            }
+        }
+    }
+
+    public static void PrintNextCombat() {
+        if(NextCombatEncounter == null) {
+            Console.WriteLine("Next combat encounter has not been selected.");
+            return;
+        }
+        switch(ZoneProgress) {
+            case 1:
+            case 2:
+            case 4:
+            case 5:
+            case 7:
+            case 8:
+                Console.WriteLine("Next combat:");
+                break;
+            case 3:
+            case 6:
+            case 9:
+                Console.WriteLine("Upcoming Miniboss:");
+                break;
+            case 10:
+                Console.WriteLine("Prepare for the Boss:");
+                break;
+        }            
+        Console.WriteLine(NextCombatEncounter.name);
+    }
+    
+    // Begins combat
+    public static void EnterCombat() {
+        if(NextCombatEncounter == null) {
+            Console.WriteLine("Cannot enter combat; need to select next combat encounter!");
+            return;
+        }
+        Console.WriteLine("Entering combat...");
+        LastEncounterWasEvent = false;
+        Battlefield.LoadCombat(NextCombatEncounter);
+        CardManager.beginCombat();
+        InCombat = true;
+    }
+
+    // Tries to get <numEncountersRequested> random combat encounters from the given list.
+    // May return a list shorter than numEncountersRequested if encounterList does not have enough.
+    public static List<CombatEncounter> GetRandomCombatEncounters(List<CombatEncounter> encounterList, int numEncountersRequested) {
+        List<CombatEncounter> randomEncounters = new List<CombatEncounter>();
+        Shuffle(encounterList);
+        int returnCount = (numEncountersRequested < encounterList.Count) ? numEncountersRequested : encounterList.Count;
+        for(int i = 0; i < returnCount; i++) {
+            randomEncounters.Add(encounterList[i]);
+        }
+        return randomEncounters;
     }
     //===
     //===
@@ -339,6 +571,12 @@ public static class CurrentRun {
     //===
     //===
     //===
+    public static void PopulateTier1ItemPool() {
+        // TODO
+        Tier1ItemPool.Add("Shortsword");
+        Tier1ItemPool.Add("Longbow");
+    }
+
     public static EquipmentItem getRandomItemFromTier1Pool(bool removeFromPool=true){
         if(Tier1ItemPool.Count < 1) {
             Console.WriteLine("WARNING: Item pool is empty. Generating placeholder");
@@ -374,6 +612,17 @@ public static class CurrentRun {
         if(Lives < 1) {
             // Game over, man!
             Console.WriteLine("GAME OVER.");
+        }
+    }
+
+    // Source: https://stackoverflow.com/a/69220421/5086634
+    public static void Shuffle<T>(this IList<T> list) {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            (list[k], list[n]) = (list[n], list[k]);
         }
     }
 

@@ -130,7 +130,11 @@ public static class Battlefield {
     
     public static void endCombat(bool playerWon) {
         CurrentRun.InCombat = false;
+        CurrentRun.NextCombatEncounter = null;
+        CurrentRun.ZoneProgress += 1;
         foreach(Entity hero in PlayerSide) {
+            hero.exhausted = false;
+            hero.currentHP = hero.maxHP;
             foreach(Action action in hero.ActionList) {
                 action.endOfCombat();
             }
@@ -140,8 +144,7 @@ public static class Battlefield {
             Console.WriteLine("");
             Console.WriteLine("Rewards: ");
             CurrentRun.InCombat = false;
-            // distribute rewards.
-            CurrentRun.GenerateCombatRewards();
+            // Distribute rewards.
             CurrentRun.DistributeCombatRewards();
         }
     }

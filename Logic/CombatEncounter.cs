@@ -22,4 +22,9 @@ public class CombatEncounter {
         description = data.Description;
         difficulty = data.Difficulty;
     }
+    
+    public override string ToString() {
+        string str = "(Difficulty " +this.difficulty + ") " + this.name + " - "+this.description;
+        return str;
+    }
 }
