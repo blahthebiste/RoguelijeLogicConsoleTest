@@ -4,6 +4,8 @@ public class ChaosTome : Item {
 
     // The only property chaos tomes have is their number
     public ChaosTome(int completedZones) {
+        this.name = "CHAOS TOME";
+        this.description = "The knowledge stored within this tome is incomprehensible to your mortal mind. However, it seems more than capable of comprehending you.";
         this.completedZones = completedZones;
     }
 

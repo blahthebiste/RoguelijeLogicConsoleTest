@@ -357,6 +357,10 @@ public static class CurrentRun {
             // Add 25x card draft event
             EventPool.Add(new CardDraft());
         }
+        for(int i = 0; i < 10; i++) {
+            // Add 10x plunder event
+            EventPool.Add(new Plunder());
+        }
         Console.WriteLine("Populated event pool.");
     }
 
@@ -392,18 +396,6 @@ public static class CurrentRun {
             }
         }
     }
-
-    // Source: https://stackoverflow.com/a/69220421/5086634
-    // public static void randomizeEventOrder() {
-	// 	int n = EventPool.Count;
-	// 	while (n > 1)
-	// 	{
-	// 		n--;
-	// 		int k = rng.Next(n + 1);
-	// 		(EventPool[k], EventPool[n]) = (EventPool[n], EventPool[k]);
-	// 	}
-	// }
-    
 
     // Execute the event at the specified index of the event pool, and remove it from the pool.
     public static void EnterEvent(int index) {
