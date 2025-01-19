@@ -20,7 +20,4 @@ public class Item {
         CurrentRun.Inventory.Add(this);
     }
 
-    public virtual void endOfCombat(){
-        
-    }
 }

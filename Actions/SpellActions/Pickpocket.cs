@@ -19,8 +19,8 @@ public class Pickpocket : Action {
 
     public override bool use(Entity? target, Modifier? modifier) {
         if(base.use(target, modifier)) {
-            // Generate a random item
-            EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromTier1Pool();
+            // Generate a random item (not removed from the pool)
+            EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromPool(1, false);
             pickpocketedItems.Add(pickpocketedItem);
             CurrentRun.Inventory.Add(pickpocketedItem);
             Console.WriteLine("Got a(n) "+pickpocketedItem.name+".");
@@ -48,10 +48,13 @@ public class Pickpocket : Action {
                     action.Unequip();
                 }
             }
-        }// Do inventory last since unequipped items go here
-        foreach(EquipmentItem item in CurrentRun.Inventory.ToList()) {
-            if(pickpocketedItems.Contains(item)) {
-                CurrentRun.Inventory.Remove(item);
+        }
+        // Do inventory last since unequipped items go here
+        foreach(Item item in CurrentRun.Inventory.ToList()) {
+            if(item is EquipmentItem) {
+                if(pickpocketedItems.Contains(item)) {
+                    CurrentRun.Inventory.Remove(item);
+                }
             }
         }
     }

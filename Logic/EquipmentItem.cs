@@ -171,4 +171,22 @@ public class EquipmentItem : Item {
     public virtual void onUnequip() {
         
     }
+
+    public virtual void startOfCombat(){
+        
+    }
+
+    public virtual void endOfCombat(){
+        
+    }
+
+    // Triggers whenever the action that the item is equipped to is used
+    public virtual Action onUseEquippedAction(Action actionBeingUsed) {
+        return actionBeingUsed;
+    }
+
+    // Triggered every time the owner of this item uses any action
+    public virtual Action onUseAction(Action actionBeingUsed) {
+        return actionBeingUsed;
+    }
 }

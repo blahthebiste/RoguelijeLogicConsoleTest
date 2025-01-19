@@ -629,7 +629,7 @@ void printDiscardPile() {
 void printInventory() {
     Console.WriteLine("Inventory ("+CurrentRun.Inventory.Count+" items):");
     foreach(Item item in CurrentRun.Inventory) {
-        Console.WriteLine(item.ToString());
+        Console.WriteLine("\t*\t"+item.ToString());
     }
 }
 
@@ -738,7 +738,7 @@ void equipItem(string itemName, string heroName) {
         }
         // Now find the item:
         foreach(Item item in CurrentRun.Inventory){
-            if(item.name.ToLower().Trim() == itemName.ToLower().Trim()) {
+            if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim()) {
                 if(item is EquipmentItem) {
                     itemToEquip = (EquipmentItem)item;
                 }
@@ -772,7 +772,7 @@ void equipItem(string itemName, string heroName) {
         }
         // Now find the item:
         foreach(Item item in CurrentRun.Inventory){
-            if(item.name.ToLower().Trim() == itemName.ToLower().Trim()) {
+            if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim()) {
                 if(item is EquipmentItem) {
                     itemToEquip = (EquipmentItem)item;
                 }
@@ -971,8 +971,15 @@ void editMasterDeck() {
 }
 
 
-
-
+// Compares two strings.
+// Ignores all whitespace and capitalization.
+static bool StringsMatchIgnoreWhitespaceLower(string str1, string str2) {
+    string strippedStr1 = string.Concat(str1.Split(null)); // Split on whitespace, then reform, to remove all whitespace
+    string strippedStr2 = string.Concat(str2.Split(null)); // Split on whitespace, then reform, to remove all whitespace
+    string loweredStr1 = strippedStr1.ToLower();
+    string loweredStr2 = strippedStr2.ToLower();
+    return loweredStr1 == loweredStr2;
+}
 
 
 Console.WriteLine("Exited Roguelije game logic test.");

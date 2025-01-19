@@ -24,8 +24,8 @@ public static class CurrentRun {
     public static bool LastEncounterWasEvent; // Signifies whether the player has completed their event yet.
 
     public static List<string> Tier1ItemPool; 
-    // public static List<string> Tier2ItemPool; 
-    // public static List<string> Tier3ItemPool; 
+    public static List<string> Tier2ItemPool; 
+    public static List<string> Tier3ItemPool; 
     
     public static List<Event> EventPool; // Resets after each act
     
@@ -81,10 +81,12 @@ public static class CurrentRun {
         InCombat = false;
         LastEncounterWasEvent = true; // Starts true so that the player goes to combat first
         Tier1ItemPool = new List<string>();
+        Tier2ItemPool = new List<string>();
+        Tier3ItemPool = new List<string>();
         DraftableCardPool = new List<ActionCard>();
         ComplexCardPool = new List<ActionCard>();
         EventPool = new List<Event>();
-        PopulateTier1ItemPool();
+        PopulateItemPools();
         PopulateDraftPool();
         PopulateComplexDraftPool();
         PopulateEventPool();
@@ -563,24 +565,49 @@ public static class CurrentRun {
     //===
     //===
     //===
-    public static void PopulateTier1ItemPool() {
+    // Populate all 3 item pools
+    public static void PopulateItemPools() {
         // TODO
         Tier1ItemPool.Add("Shortsword");
         Tier1ItemPool.Add("Longbow");
+        Tier1ItemPool.Add("TowerShield");
     }
 
-    public static EquipmentItem getRandomItemFromTier1Pool(bool removeFromPool=true){
-        if(Tier1ItemPool.Count < 1) {
+    // Gets a random item from the specified tier (1-3).
+    // By default, the item is removed from the pools.
+    public static EquipmentItem getRandomItemFromPool(int tier, bool removeFromPool=true){
+        List<string> itemPool;
+        switch(tier) {
+            case 1:
+                itemPool = Tier1ItemPool;
+                break;
+            case 2:
+                itemPool = Tier2ItemPool;
+                break;
+            case 3:
+                itemPool = Tier3ItemPool;
+                break;
+            default:
+                Console.WriteLine("ERROR: No Item pool exists for tier "+tier);
+                return new RubberDuck();
+        }
+
+        if(itemPool.Count < 1) {
             Console.WriteLine("WARNING: Item pool is empty. Generating placeholder");
             return new RubberDuck();
         }
         Item? retrievedItem;
         // Generate a random item
-        int randomIndex = rng.Next(0, Tier1ItemPool.Count);
-        string chosenItemName = Tier1ItemPool[randomIndex];
+        int randomIndex = rng.Next(0, itemPool.Count);
+        string chosenItemName = itemPool[randomIndex];
         retrievedItem = DataRegistry.ItemData.getItemByName(chosenItemName);
         if(retrievedItem is EquipmentItem) {
-            if(removeFromPool) Tier1ItemPool.Remove(chosenItemName);
+            if(removeFromPool) {
+                    // Remove from all item pools
+                    Tier1ItemPool.Remove(chosenItemName);
+                    Tier2ItemPool.Remove(chosenItemName);
+                    Tier3ItemPool.Remove(chosenItemName);              
+            }
             return (EquipmentItem)retrievedItem;
         }
         Console.WriteLine("WARNING: Item was null or not equippable");

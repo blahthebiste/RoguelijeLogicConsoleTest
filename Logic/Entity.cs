@@ -176,7 +176,7 @@ public class Entity {
     }
     
     public virtual Attack onReceiveAttack(Attack atk) {
-        foreach(StatusEffect effect in EffectList) {
+        foreach(StatusEffect effect in EffectList.ToList()) {
             atk = effect.onReceiveAttack(atk); // Handle events for status effects
         }
         int blockedDamage = 0;
@@ -208,6 +208,17 @@ public class Entity {
 
     // Triggered every time an entity acts
     public virtual Action onUseAction(Action actionBeingUsed) {
+        // "Used action" event for all items on the entity
+        foreach(Action act in this.ActionList) {
+            if(act.equippedItem != null) {
+                actionBeingUsed = act.equippedItem.onUseAction(actionBeingUsed);
+                if(act == actionBeingUsed) {
+                    // "Used action" event for the item equipped to the action
+                    act.equippedItem.onUseEquippedAction(actionBeingUsed);
+                }
+            }
+        }
+        // "Used action" event for all status effects on the entity
         foreach(StatusEffect eff in this.EffectList) {
             actionBeingUsed = eff.onUseAction(actionBeingUsed);
         }

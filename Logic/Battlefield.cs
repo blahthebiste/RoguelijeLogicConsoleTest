@@ -22,6 +22,12 @@ public static class Battlefield {
         // Load in player party:
         foreach(PlayerCharacter hero in CurrentRun.Party) {
             PlayerSide.Add(hero);
+            // Start of combat events for actions and their items
+            foreach(Action action in hero.ActionList) {
+                if(action.equippedItem != null) {
+                    action.equippedItem.startOfCombat();
+                }
+            }
         }
         foreach(Enemy enemy in combat.EnemyTroupe) {
             EnemySide.Add(enemy);
@@ -30,6 +36,8 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.enterCombat();
         }
+        playerBlock = 0;
+        enemyBlock = 0;
         turnNumber = 1;
     }
     
@@ -70,7 +78,13 @@ public static class Battlefield {
     }
 
     public static void endTurn() {
-        enemyBlock = 0;
+        // Reset block:
+        int permaBlockAmount = 0;
+        foreach(Enemy enemy in EnemySide) {
+            StatusEffect? permaBlock = enemy.GetStatusEffect("PermaBlock");
+            if(permaBlock != null) permaBlockAmount += permaBlock.amount;
+        }
+        enemyBlock = (enemyBlock <= permaBlockAmount) ? enemyBlock : permaBlockAmount;
         // Enemies all take their turn:
         foreach(Enemy enemy in EnemySide) {
             enemy.takeTurn();
@@ -85,6 +99,23 @@ public static class Battlefield {
         turnNumber++;
     }
     public static void startTurn() {
+
+        // Reset block:
+        int permaBlockAmount = 0;
+        foreach(PlayerCharacter hero in PlayerSide) {
+            StatusEffect? permaBlock = hero.GetStatusEffect("PermaBlock");
+            if(permaBlock != null) {
+                Console.WriteLine(hero.name+" had PermaBlock; amount is "+permaBlock.amount);
+                permaBlockAmount += permaBlock.amount;
+            }
+        }
+        Console.WriteLine("Total PermaBlock amount is "+permaBlockAmount);
+        playerBlock = (playerBlock <= permaBlockAmount) ? playerBlock : permaBlockAmount;
+        
+        // New hand
+        CardManager.discardHand();
+        CardManager.drawHand();
+        
         // Run startOfTurn events:
         foreach(PlayerCharacter hero in PlayerSide) {
             hero.startOfTurn();
@@ -92,11 +123,8 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.startOfTurn();
         }
-
-        // Now reset everything:
-        playerBlock = 0;
-        CardManager.discardHand();
-        CardManager.drawHand();
+        
+        // Remove exhaustion from the previous turn
         foreach(PlayerCharacter hero in PlayerSide) {
             hero.exhausted = false;
         }
@@ -136,7 +164,12 @@ public static class Battlefield {
             hero.currentHP = hero.maxHP;
             foreach(Action action in hero.ActionList) {
                 action.endOfCombat();
+                if(action.hasLimitedUses) {
+                    action.uses = action.maxUses;
+                }
             }
+            // Wipe status effects
+            hero.EffectList = new List<StatusEffect>();
         }
         if(playerWon) {
             Console.WriteLine("VICTORY!");
