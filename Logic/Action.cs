@@ -201,4 +201,6 @@ public class Action {
     public virtual void endOfCombat(){
         
     }
+
+	
 }

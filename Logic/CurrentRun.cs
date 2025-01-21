@@ -571,6 +571,10 @@ public static class CurrentRun {
         Tier1ItemPool.Add("Shortsword");
         Tier1ItemPool.Add("Longbow");
         Tier1ItemPool.Add("TowerShield");
+        Tier1ItemPool.Add("Dagger");
+
+        // For debugging items:
+        Inventory.Add(new Dagger());
     }
 
     // Gets a random item from the specified tier (1-3).

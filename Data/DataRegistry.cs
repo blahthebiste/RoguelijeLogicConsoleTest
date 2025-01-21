@@ -219,6 +219,8 @@ public static class DataRegistry {
                     return new Longbow();
                 case "towershield":
                     return new TowerShield();
+                case "dagger":
+                    return new Dagger();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

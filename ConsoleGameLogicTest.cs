@@ -156,7 +156,6 @@ void printHelp() {
         Console.WriteLine("1,2,3,4... <hero> [target] -- plays the card at that position in your hand");
         Console.WriteLine("draw -- prints out your current draw pile");
         Console.WriteLine("discard -- prints out your current discard pile");
-        Console.WriteLine("hero <name> -- prints out details about the player character you named");
         Console.WriteLine("enemy <name> -- prints out details about the enemy you named");
         Console.WriteLine("end -- end your turn");
         Console.WriteLine("combat -- prints out the current combat situation");
@@ -172,6 +171,7 @@ void printHelp() {
     Console.WriteLine("deck -- prints out your current deck");
     Console.WriteLine("collection -- prints out your entire card collection");
     Console.WriteLine("inventory -- prints out your inventory");
+    Console.WriteLine("hero <name> -- prints out details about the player character you named");
     Console.WriteLine("equip <item> <hero> -- equip an item to a hero (takes hero's action)");
     Console.WriteLine("unequip <item> <hero> -- unequip an item from a hero (takes hero's action)");
     if(nextZoneID == ZoneID.HUB && CurrentRun.Party.Count < CurrentRun.PartySize) {
@@ -417,7 +417,7 @@ void getPartyInfo() {
 
 
 void printCharacterInfoFromName(string heroName) {
-    foreach(PlayerCharacter hero in Battlefield.PlayerSide) {
+    foreach(PlayerCharacter hero in CurrentRun.Party) {
         if(heroName.ToLower() == hero.name.ToLower()) {
             printCharacterInfo(hero);
             return;
@@ -973,13 +973,14 @@ void editMasterDeck() {
 
 // Compares two strings.
 // Ignores all whitespace and capitalization.
+/*
 static bool StringsMatchIgnoreWhitespaceLower(string str1, string str2) {
     string strippedStr1 = string.Concat(str1.Split(null)); // Split on whitespace, then reform, to remove all whitespace
     string strippedStr2 = string.Concat(str2.Split(null)); // Split on whitespace, then reform, to remove all whitespace
     string loweredStr1 = strippedStr1.ToLower();
     string loweredStr2 = strippedStr2.ToLower();
     return loweredStr1 == loweredStr2;
-}
+}*/
 
 
 Console.WriteLine("Exited Roguelije game logic test.");

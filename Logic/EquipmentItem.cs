@@ -3,6 +3,10 @@ public class EquipmentItem : Item {
     public ActionType slot = ActionType.ANY;
 
     public Action? parentAction = null;
+    
+    // These are only used for items that replace actions
+    public Action? oldAction;
+    int actionIndex = -1;
 
         // Useful for printing what would be shown to the player
 	public override string ToString() {
@@ -157,6 +161,50 @@ public class EquipmentItem : Item {
             }
         }
         return matches;
+    }
+
+    // Replaces an action in-place in the equipped action's owner's action list
+    public void replaceAction(Action newAction) {
+        if(this.parentAction == null) {
+            Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null parentAction!");
+            return;
+        }
+        if(this.getOwner() == null) {
+            Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null owner!");
+            return;
+        }
+        this.oldAction = this.parentAction!;
+        this.actionIndex = this.getOwner()!.ActionList.IndexOf(this.oldAction); // Keep the index in the action list
+        if(actionIndex == -1) {
+            Console.WriteLine("ERROR: "+this.name+" could not find an index for the old action!");
+            return;
+        }
+        this.getOwner()!.ActionList[this.actionIndex] = newAction;
+    }
+
+    // Restores the original action
+    public void restoreOriginalAction(bool emptyOriginalActionsItemSlot=true) {
+        if(this.oldAction == null) {
+            Console.WriteLine("ERROR: "+this.name+" cannot restore old action; old action is null!");
+            return;
+        }
+        if(this.getOwner() == null) {
+            Console.WriteLine("ERROR: "+this.name+" cannot restore old action -- null owner!");
+            return;
+        }
+        if(actionIndex == -1) {
+            Console.WriteLine("ERROR: "+this.name+" could not find an index for the old action!");
+            return;
+        }
+        if(emptyOriginalActionsItemSlot) {
+            // Useful, since this is usually only called when unequipping the item anyway
+            // Necessary, because the item will remember what was equipped to it
+            this.oldAction.equippedItem = null;
+        } 
+        this.getOwner()!.ActionList[this.actionIndex] = this.oldAction;
+        // Reset values
+        this.actionIndex = -1;
+        this.oldAction = null;
     }
 
     public bool isEquipped(){
