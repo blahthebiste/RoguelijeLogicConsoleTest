@@ -7,6 +7,7 @@ public class Shortsword : EquipmentItem {
         this.name = "Shortsword";
         this.description = "You have Strike [Deal 6 damage] as an additional Attack action option.";
         this.slot = ActionType.ATTACK;
+        this.price = 65;
     }
 
     public override void onEquip() {

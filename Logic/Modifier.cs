@@ -1,4 +1,4 @@
-public class Modifier {
+public class Modifier : Item {
 
 
 }

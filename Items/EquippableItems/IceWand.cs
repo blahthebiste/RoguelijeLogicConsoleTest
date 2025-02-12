@@ -1,13 +1,13 @@
-public class Dagger : EquipmentItem {
+public class IceWand : EquipmentItem {
 
-    Stab stabInstance;
+    IceWall iceWallInstance;
 
-    public Dagger() {
-        this.stabInstance = new Stab();
-        this.stabInstance.equippedItem = this; // Still show dagger as equipped
-        this.name = "Dagger";
+    public IceWand() {
+        this.iceWallInstance = new IceWall();
+        this.iceWallInstance.equippedItem = this;
+        this.name = "Ice Wand";
         this.description = "Replace your Defend action with Stab [Deal 5 damage].";
-        this.slot = ActionType.DEFEND;
+        this.slot = ActionType.SPELL;
         this.price = 65;
     }
 
@@ -16,9 +16,9 @@ public class Dagger : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        stabInstance.owner = this.getOwner();
-        // Replace parent action in action list with Stab
-        this.replaceAction(this.stabInstance);
+        iceWallInstance.owner = this.getOwner();
+        // Replace parent action in action list with Ice Wall
+        this.replaceAction(this.iceWallInstance);
     }
 
 

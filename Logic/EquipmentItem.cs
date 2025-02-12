@@ -3,6 +3,8 @@ public class EquipmentItem : Item {
     public ActionType slot = ActionType.ANY;
 
     public Action? parentAction = null;
+
+    public int? price; // A baseline price the item is usually sold for at shops
     
     // These are only used for items that replace actions
     public Action? oldAction;

@@ -202,6 +202,10 @@ public static class DataRegistry {
                     return new Zap();
                 case "pickpocket":
                     return new Pickpocket();
+                case "climb":
+                    return new Climb();
+                case "icewall":
+                    return new IceWall();
                 default:
                     Console.WriteLine("ERROR: no action registered under the name "+actionName);
                     return null;
@@ -221,6 +225,12 @@ public static class DataRegistry {
                     return new TowerShield();
                 case "dagger":
                     return new Dagger();
+                case "leatherboots":
+                    return new LeatherBoots();
+                case "rope":
+                    return new Rope();
+                case "icewand":
+                    return new IceWand();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

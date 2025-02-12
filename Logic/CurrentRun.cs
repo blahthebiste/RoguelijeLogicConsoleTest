@@ -360,6 +360,10 @@ public static class CurrentRun {
             EventPool.Add(new CardDraft());
         }
         for(int i = 0; i < 10; i++) {
+            // Add 10x shop event
+            EventPool.Add(new Shop());
+        }
+        for(int i = 0; i < 10; i++) {
             // Add 10x plunder event
             EventPool.Add(new Plunder());
         }
@@ -373,6 +377,22 @@ public static class CurrentRun {
     public static void GenerateEvents() {
         // Shuffle the pool so that the first 3 are random:
         Shuffle(EventPool);
+        // Reroll duplicates (should the mysery event always be non-duplicate too?)
+        while(EventPool[1]!.name == EventPool[0]!.name) {
+            Event dupeEvent = EventPool[1];
+            // Move to the bottom of the list
+            EventPool.RemoveAt(1);
+            EventPool.Add(dupeEvent);
+        }
+        while(EventPool[2]!.name == EventPool[1]!.name || EventPool[2]!.name == EventPool[0]!.name) {
+            Event dupeEvent = EventPool[2];
+            // Move to the bottom of the list
+            EventPool.RemoveAt(2);
+            EventPool.Add(dupeEvent);
+        }
+        // The pool should always be large enough that there are 3 unique events, and thus the de-duping code should always resolve.
+        // The player never exhausts all events in the pool during a Zone.
+
         // Display the first 3
         while(true) {
             Console.WriteLine("Choose one of the following events to visit, by entering its number:\n");
@@ -419,6 +439,8 @@ public static class CurrentRun {
     public static void SetZone(ZoneID newZoneID) {
         CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
+        EventPool = new List<Event>(); // Reset event pool
+        PopulateEventPool();
     }
 
     
@@ -572,9 +594,12 @@ public static class CurrentRun {
         Tier1ItemPool.Add("Longbow");
         Tier1ItemPool.Add("TowerShield");
         Tier1ItemPool.Add("Dagger");
+        Tier1ItemPool.Add("LeatherBoots");
+        Tier1ItemPool.Add("Rope");
+        Tier1ItemPool.Add("IceWand");
 
         // For debugging items:
-        Inventory.Add(new Dagger());
+        Inventory.Add(new IceWand());
     }
 
     // Gets a random item from the specified tier (1-3).

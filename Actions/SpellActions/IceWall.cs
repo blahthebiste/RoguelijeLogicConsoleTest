@@ -1,14 +1,14 @@
-public class Zap : Action {
+public class IceWall : Action {
 
-    public Zap() {
-        this.name = "Zap";
-        this.description = "Deal 9 damage.";
+    public IceWall() {
+        this.name = "Ice Wall";
+        this.description = "Generate 18 Block.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 9;
+        this.magicNumber = 18;
         this.hasLimitedUses = true;
-        this.uses = 3;
+        this.uses = 2;
         this.maxUses = this.uses;
-        this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.targetting = TargetCategory.NONE;
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
@@ -18,10 +18,9 @@ public class Zap : Action {
                 magicNumber += charge.amount;
                 owner.EffectList.Remove(charge);
             }
-            // Deal damage to the target.
-            Attack atk = new Attack(magicNumber, this.owner!, target!);
-            //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
-            target!.onReceiveAttack(atk);
+            // Generate Block. (Don't trigger onGainBlock since this is a spell?)
+            Console.WriteLine("Generated "+this.magicNumber+" Block.");
+            Battlefield.addBlock(this.magicNumber, true);
             return true;
         }
         return false;

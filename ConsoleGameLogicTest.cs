@@ -884,7 +884,7 @@ void unequipItem(string itemName, string heroName) {
     }
     // Find the action in the hero's action list that has the item equipped:
     foreach(Action action in heroToUnequip.ActionList) {
-        if(action.equippedItem != null && action.equippedItem.name.ToLower().Trim() == itemName) {
+        if(action.equippedItem != null && action.equippedItem.name.ToLower().Trim().Replace(' ','_') == itemName) {
             action.Unequip();
             Console.WriteLine(heroName+" unequipped "+itemName+".");
             return;

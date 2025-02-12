@@ -1,0 +1,33 @@
+public class Rope : EquipmentItem {
+
+    Climb climbInstance;
+
+    public Rope() {
+        this.climbInstance = new Climb();
+        this.name = "Rope";
+        this.description = "You have Climb [Draw 2 cards] as an additional Skill action option.";
+        this.slot = ActionType.SKILL;
+        this.price = 65;
+    }
+
+    public override void onEquip() {
+        base.onEquip();
+        // Add Climb action to owners action list
+        if(this.getOwner() == null) {
+            return;
+        }
+        climbInstance.owner = this.getOwner();
+        this.getOwner()!.ActionList.Add(climbInstance);
+    }
+
+
+    public override void onUnequip() {
+        base.onUnequip();
+        if(this.getOwner() == null) {
+            return;
+        }
+        // Remove Climb action to owners action list
+        this.getOwner()!.ActionList.Remove(climbInstance);
+    }
+
+}
