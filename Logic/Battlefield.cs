@@ -180,7 +180,7 @@ public static class Battlefield {
             CurrentRun.DistributeCombatRewards();
         }
         CurrentRun.ZoneProgress += 1;
-        if(CurrentRun.ZoneProgress > 3) {
+        if(CurrentRun.ZoneProgress == 4) {
             // After act 1 of the zone, shops are more common
             for(int i = 0; i < 10; i++) {
                 // Add 10x bonus shop event

@@ -231,6 +231,10 @@ public static class DataRegistry {
                     return new Rope();
                 case "icewand":
                     return new IceWand();
+                case "medkit":
+                    return new Medkit();
+                case "dreamcatcher":
+                    return new Dreamcatcher();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;
