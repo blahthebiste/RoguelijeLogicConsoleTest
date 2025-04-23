@@ -248,6 +248,10 @@ void depart() {
 // Or, allow them to choose between a couple of combat encounters, if they just came from an event.
 // If they have already been to an event and selected their next combat, enter combat.
 void nextNode(){
+    if(CurrentRun.InCombat) {
+        Console.WriteLine("ERROR: must complete combat to proceed!");
+        return;
+    }
     if(CurrentRun.Party.Count < 1) {
         Console.WriteLine("ERROR: must have at least 1 hero in your party to proceed!");
         return;

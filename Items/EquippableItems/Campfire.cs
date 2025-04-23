@@ -1,9 +1,9 @@
-public class Dreamcatcher : EquipmentItem {
+public class Campfire : EquipmentItem {
 
 
-    public Dreamcatcher() {
-        this.name = "Dreamcatcher";
-        this.description = "Your Rest action also removes all debuffs.";
+    public Campfire() {
+        this.name = "Campfire";
+        this.description = "Your Rest action also affects all allies.";
         this.slot = ActionType.REST;
         this.price = 65;
     }

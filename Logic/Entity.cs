@@ -188,8 +188,10 @@ public class Entity {
             blockedDamage = Math.Min(atk.damage, Battlefield.enemyBlock);
             Battlefield.enemyBlock -= blockedDamage;
         }
-        Console.WriteLine(blockedDamage+" damage was blocked.");
-        atk.damage -= blockedDamage;
+        if(blockedDamage > 0) {
+            Console.WriteLine(blockedDamage+" damage was blocked.");
+            atk.damage -= blockedDamage;
+        }
         Console.WriteLine(this.name+" was hit for "+atk.damage+" damage.");
         changeHP(-atk.damage);
         return atk;

@@ -12,7 +12,11 @@ public class Zap : Action {
     }
 
     public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {           
+        if(base.use(target, modifier)) {
+            if(owner!.HasStatusEffect("Spell Power")) {
+                StatusEffect power = owner.GetStatusEffect("Spell Power")!;
+                magicNumber += power.amount;
+            }
             if(owner!.HasStatusEffect("Charged")) {
                 StatusEffect charge = owner.GetStatusEffect("Charged")!;
                 magicNumber += charge.amount;

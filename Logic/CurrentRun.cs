@@ -599,9 +599,14 @@ public static class CurrentRun {
         Tier1ItemPool.Add("IceWand");
         Tier1ItemPool.Add("Medkit");
         Tier1ItemPool.Add("Dreamcatcher");
+        Tier1ItemPool.Add("Pavise");
+        Tier1ItemPool.Add("Tomawhawk");
+        Tier1ItemPool.Add("Quarterstaff");
+        Tier1ItemPool.Add("Sapphire");
+        Tier1ItemPool.Add("Robes");
 
         // For debugging items:
-        Inventory.Add(new Dreamcatcher());
+        Inventory.Add(new Robes());
     }
 
     // Gets a random item from the specified tier (1-3).

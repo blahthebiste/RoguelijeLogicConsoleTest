@@ -235,6 +235,16 @@ public static class DataRegistry {
                     return new Medkit();
                 case "dreamcatcher":
                     return new Dreamcatcher();
+                case "pavise":
+                    return new Pavise();
+                case "tomahawk":
+                    return new Tomahawk();
+                case "quarterstaff":
+                    return new Quarterstaff();
+                case "sapphire":
+                    return new Sapphire();
+                case "robes":
+                    return new Robes();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;
