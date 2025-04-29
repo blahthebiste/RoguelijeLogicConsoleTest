@@ -12,21 +12,13 @@ public class Pickpocket : Action {
         this.targetting = TargetCategory.NONE;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Generate a random item (not removed from the pool)
-            EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromPool(1, false);
-            pickpocketedItems.Add(pickpocketedItem);
-            CurrentRun.Inventory.Add(pickpocketedItem);
-            Console.WriteLine("Got a(n) "+pickpocketedItem.name+".");
-            return true;
-        }
-        return false;
+    public override bool useOnce(Modifier? modifier) {
+        // Generate a random item (not removed from the pool)
+        EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromPool(1, false);
+        pickpocketedItems.Add(pickpocketedItem);
+        CurrentRun.Inventory.Add(pickpocketedItem);
+        Console.WriteLine("Got "+pickpocketedItem.name+".");
+        return true;
     }
 
     // Remove all items created by this spell at the end of combat.

@@ -8,18 +8,10 @@ public class Climb : Action {
         this.targetting = TargetCategory.NONE;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Draw 2
-            Console.WriteLine("Drew 2 cards.");
-            CardManager.drawCard(this.magicNumber);
-            return true;
-        }
-        return false;
+    public override bool useOnce(Modifier? modifier) {
+        // Draw 2
+        Console.WriteLine("Drew 2 cards.");
+        CardManager.drawCard(this.magicNumber);
+        return true;
     }
 }

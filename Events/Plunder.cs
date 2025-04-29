@@ -13,6 +13,6 @@ public class Plunder : Event {
         // Get the next one
         EquipmentItem plunderedItem = CurrentRun.getRandomItemFromPool(1, true);
         CurrentRun.Inventory.Add(plunderedItem);
-        Console.WriteLine("Got a "+plunderedItem.name);
+        Console.WriteLine("Got "+plunderedItem.name);
     }
 }

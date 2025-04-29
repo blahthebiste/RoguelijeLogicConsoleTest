@@ -8,9 +8,11 @@ public class Action {
     public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
     public bool ignoresTaunt = false;
+    public bool freeAction = false; // The action does not exhaust the entity using it
 	public Entity? owner; // The entity that is using the action
 
 	public TargetCategory targetting = TargetCategory.NONE;
+	public List<Entity> targetList = new List<Entity>();
 	// Negative 1 means unlimited uses.
 	public int uses = -1; // The number of times this action can be used per combat. Usually reserved for spells.
 	public int maxUses = -1; // The most uses the action can gain.
@@ -27,7 +29,9 @@ public class Action {
 		description = "MISSING DESCRIPTION";
 	}
     
-    // Whether this action can be used right now. Most actions should override this.
+    // Whether this action can be used right now.
+	// Most actions should override this, but utilize this base version as well.
+	// Checks uses and valid targets.
     public virtual bool canUse(Entity? target, Modifier? modifier) {
 		if(hasLimitedUses && uses == 0) {
 			Console.WriteLine("No uses left.");
@@ -62,29 +66,153 @@ public class Action {
 		return true;
 	}
     
-    // The meat and potatoes of the action.
-    // Each action should override this. Modifier often null.
-    public virtual bool use(Entity? target, Modifier? modifier) {
-		if(this.canUse(target, modifier)) {
-			if(target == null) {
-				Console.WriteLine(owner!.name+" used "+this.name+"!");
+
+	// Manages automatic targeting, action uses, events, etc
+	// Relies on useOnTarget to be implemented by the child class, otherwise the action will fail
+    public bool use(Entity? mainTarget, Modifier? modifier) {
+		bool anySuccess = false; // Used to track whether the action was ever used successfully
+		targetList = new List<Entity>(); // Reset the target list
+		if(mainTarget == null) {
+			this.setTargets(); // Set starting target list if the target passed in was null
+		}
+		else {
+			this.targetList.Add(mainTarget); // If we were passed a target, just use it
+		}
+		this.owner!.onUseAction(this); // Trigger event; this can modify the target list
+		if(this.targetList != null) {
+			foreach(Entity target in this.targetList) {
+				if(this.canUse(target, modifier)) {
+					if(target == null) {
+						Console.WriteLine(owner!.name+" attempting to use "+this.name+"!");
+					}
+					else {
+						Console.WriteLine(owner!.name+" attempting to use "+this.name+" on "+target!.name+"!");
+					}
+					anySuccess = this.useOnTarget(target, modifier) || anySuccess;
+				}
+				else {
+					// Invalid target
+				}
 			}
-			else {
-				Console.WriteLine(owner!.name+" used "+this.name+" on "+target!.name+"!");
-			}
+		}
+		// Run the action code that does not target anyone
+		anySuccess = this.useOnce(modifier) || anySuccess;
+		if(anySuccess) { // Action succeeded (at least in some capacity)
 			this.owner!.previousAction = this; // Update previous action.
-			if(hasLimitedUses) {
+			if(hasLimitedUses) { // Decrement uses if the action has limited uses
 				uses--;
 				Console.WriteLine(this.uses+" use(s) remaining.");
 			}
-			owner!.exhausted = true;
-			owner!.onUseAction(this); // Trigger event			
-			return true;
+			if(!this.freeAction) {
+				this.owner!.exhausted = true; // Exhaust owner
+			}
 		}
-		else {
+		else { // Action never went through; don't exhaust, don't use up uses
+			Console.WriteLine("Action could not be used!");
+		}
+		return anySuccess;
+	}
 
-		}
+    // The meat and potatoes of the action.
+    // Each action should override this, unless it is NONE type targetting.
+	// Modifier often null.
+	public virtual bool useOnTarget(Entity? target, Modifier? modifier) {
 		return false;
+	}
+
+    // Some parts of an action only trigger once.
+    // Actions with NONE targetting should always override this with their main effect.
+	public virtual bool useOnce(Modifier? modifier) {
+		return false;
+	}
+
+
+	// Gets a target list based on the current targeting type of the action
+	// List will be empty for target categories that cannot get a list automatically.
+	public List<Entity>? getTargets(TargetCategory category) {
+		if(this.owner == null) {
+			Console.WriteLine("ERROR: Action has no owner.");
+			return null;
+		}
+		if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
+			Console.WriteLine("ERROR: not in combat.");
+			return null;
+		}
+		List<Entity> targets = new List<Entity>();
+		switch(category) {
+			case TargetCategory.NONE:
+				Console.WriteLine("Action target category is NONE.");
+				return targets;
+			case TargetCategory.SELF:
+				targets.Add(this.owner);
+				return targets;
+			case TargetCategory.ALL_ENEMIES:
+				if(this.owner.hostile) {
+					foreach(Entity ent in Battlefield.PlayerSide) {
+						targets.Add(ent);
+					}
+				}
+				else {
+					foreach(Entity ent in Battlefield.EnemySide) {
+						targets.Add(ent);
+					}
+				}				
+				return targets;
+			case TargetCategory.ALL_ALLIES:
+				if(this.owner.hostile) {
+					foreach(Entity ent in Battlefield.EnemySide) {
+						targets.Add(ent);
+					}
+				}
+				else {
+					foreach(Entity ent in Battlefield.PlayerSide) {
+						targets.Add(ent);
+					}
+				}				
+				return targets;
+			case TargetCategory.EVERYONE:
+				foreach(Entity ent in Battlefield.EnemySide) {
+					targets.Add(ent);
+				}
+				foreach(Entity ent in Battlefield.PlayerSide) {
+					targets.Add(ent);
+				}
+				return targets;
+			case TargetCategory.SINGLE_ALLY:
+			case TargetCategory.SINGLE_ENEMY:
+			case TargetCategory.SINGLE_ANY:
+				Console.WriteLine("Action target category requires player to choose target.");
+				return null;
+			default:
+				Console.WriteLine("ERROR: unknown Action target category");
+				return null;
+		}
+	}
+
+	// Default overload uses the action's normal targetting
+	public List<Entity>? getTargets() {
+		return getTargets(targetting);
+	}
+
+	// Uses getTargets as a baseline, and then adds the extra targets if they do not exist in the list.
+	public void setTargets(List<Entity> extraTargets) {
+		this.targetList = getTargets();
+		foreach(Entity extraTarget in extraTargets) {
+			if(!this.targetList.Contains(extraTarget)) {
+				// Add it
+				this.targetList.Add(extraTarget);
+			}
+		}
+	}
+
+	// Uses getTargets as a baseline, substituting the given target category.
+	public void setTargets(TargetCategory category) {
+		this.targetList = getTargets(category);
+	}
+
+	// Uses getTargets as a baseline, with the default targetting for the action.
+	public void setTargets() {
+		this.targetList = getTargets();
 	}
 
 	// Useful for printing what would be shown to the player
@@ -112,12 +240,10 @@ public class Action {
 		switch(this.targetting)
 		{
 			case TargetCategory.NONE:
-			case TargetCategory.ALL_ENEMIES:
-			case TargetCategory.ALL_ALLIES:
-			case TargetCategory.EVERYONE:
 				return false;
 			case TargetCategory.SELF:
 				return target == owner;
+			case TargetCategory.ALL_ENEMIES:
 			case TargetCategory.SINGLE_ENEMY:
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = (owner.playerControlled != target.playerControlled);
@@ -135,9 +261,11 @@ public class Action {
 					}	
 				}
 				return opposingTeams;
+			case TargetCategory.ALL_ALLIES:
 			case TargetCategory.SINGLE_ALLY:
 				// If they are on the same team, they can target with this action
 				return (owner.playerControlled == target.playerControlled);
+			case TargetCategory.EVERYONE:
 			case TargetCategory.SINGLE_ANY:
 				// Always valid
 				return true;
@@ -148,26 +276,10 @@ public class Action {
 		}
 	}
 
-	public bool hasTarget() {
-		if(this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY || this.targetting == TargetCategory.SINGLE_ANY) {
-			return true;
-		}
-		return false;
-	}
-
-	
+	// All target categories require a target to operate on except for NONE
     public bool requiresTarget(){
-        switch(this.targetting) {
-            case TargetCategory.SINGLE_ENEMY:
-            case TargetCategory.SINGLE_ALLY:
-            case TargetCategory.SINGLE_ANY:
-                return true;
-            default:
-                return false;
-        }
+        return this.targetting != TargetCategory.NONE;
     }
-
-
 
 	//==========================ITEM OPERATIONS=========================
 	

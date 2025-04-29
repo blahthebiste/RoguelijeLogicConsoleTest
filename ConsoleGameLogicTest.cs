@@ -558,7 +558,7 @@ void printCombatSituation() {
             string nextEnemyTarget = "";
             if(enemyFilled[i]!.ActionList.Count > 0) {
                 nextEnemyAction = enemyFilled[i]!.getNextAction().description;
-                if(enemyFilled[i]!.getNextAction().hasTarget()) {
+                if(enemyFilled[i]!.getNextTargetName() != null) {
                     nextEnemyTarget = enemyFilled[i]!.getNextTargetName();
                 }
             }

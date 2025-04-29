@@ -10,14 +10,8 @@ public class Campfire : EquipmentItem {
 
     // Triggers whenever the action that the item is equipped to is used
     public override Action onUseEquippedAction(Action actionBeingUsed) {
-        if(this.getOwner() != null) {
-            foreach(StatusEffect eff in this.getOwner()!.EffectList) {
-                if(eff.isDebuff) {
-                    this.getOwner()!.EffectList.Remove(eff);
-                }
-            }
-            Console.WriteLine("Dreamcatcher purged all debuffs!");
-        }
+        actionBeingUsed.targetting = TargetCategory.ALL_ALLIES;
+        actionBeingUsed.setTargets(TargetCategory.ALL_ALLIES);
         return actionBeingUsed;
     }
 }

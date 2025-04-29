@@ -5,20 +5,12 @@ public class Whirl : Action {
         this.description = "Next attack also hits adjacent targets.";
         this.actionType = ActionType.SKILL;
         this.magicNumber = 1;
-        this.targetting = TargetCategory.NONE;
+        this.targetting = TargetCategory.SELF;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Apply the Whirl status effect
-            owner!.AddStatusEffect(new Whirling(magicNumber, owner));
-            return true;
-        }
-        return false;
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Apply the Whirl status effect
+        target!.AddStatusEffect(new Whirling(magicNumber, target));
+        return true;
     }
 }

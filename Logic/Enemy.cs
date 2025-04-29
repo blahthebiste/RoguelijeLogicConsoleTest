@@ -100,6 +100,7 @@ public class Enemy : Entity {
                 return null;
         }
     }
+    
     public string getNextTargetName() {
         if(ActionList.Count < 1) {
             return "None";

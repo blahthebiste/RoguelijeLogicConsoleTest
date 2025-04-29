@@ -8,20 +8,12 @@ public class Inflame : Action {
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
-        this.targetting = TargetCategory.NONE;
+        this.targetting = TargetCategory.SELF;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Apply the strength buff
-            owner!.AddStatusEffect(new Strength(magicNumber, owner));
-            return true;
-        }
-        return false;
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Apply the strength buff
+        target!.AddStatusEffect(new Strength(magicNumber, target));
+        return true;
     }
 }

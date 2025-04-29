@@ -6,22 +6,19 @@ public class Recover : Action {
         this.actionType = ActionType.REST;
         this.healing = 5;
         this.magicNumber = 3;
-        this.targetting = TargetCategory.NONE;
+        this.targetting = TargetCategory.SELF;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Restore HP.
+        target!.ReceiveHealing(healing);
+        return true;
     }
 
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Restore HP.
-            owner!.ReceiveHealing(healing);
-            // Draw cards.
-            CardManager.drawCard(3);
-            return true;
-        }
-        return false;
+    public override bool useOnce(Modifier? modifier){
+        // Draw cards.
+        Console.WriteLine("Drawing 3 cards");
+        CardManager.drawCard(3);
+        return true;
     }
 }

@@ -83,8 +83,7 @@ public class ActionCard {
     
     // Whether this card can be played on that action.
     public virtual bool actionCanBeUsed(Action hoveredAction) {
-        if(hoveredAction.actionType == this.actionType || hoveredAction.actionType == ActionType.ANY) return true;
-        else return false;
+        return (hoveredAction.actionType == this.actionType || hoveredAction.actionType == ActionType.ANY);
     }
     
     // Whether this card can be played on that entity.
@@ -93,7 +92,10 @@ public class ActionCard {
             Console.WriteLine("Unit is exhausted and cannot act.");
             return false;
         }
-        if(!entityToUseAction.playerControlled) return false;
+        if(!entityToUseAction.playerControlled) {
+            Console.WriteLine("Unit is not under player control.");
+            return false;
+        }
         return true;
     }
     

@@ -8,11 +8,6 @@ public class Backstab : Action {
         this.magicNumber = 8;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
     public override bool CanTarget(Entity target) {
         if(target.currentHP > 8) {
             Console.WriteLine("That target has too much HP!");
@@ -21,12 +16,9 @@ public class Backstab : Action {
         return base.CanTarget(target);
     }
 
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Kill them
-            target!.die();
-            return true;
-        }
-        return false;
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Kill them
+        target!.die();
+        return true;
     }
 }

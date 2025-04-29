@@ -8,11 +8,6 @@ public class Daze : Action {
         this.magicNumber = 1;
     }
 
-    // For now, nothing special.
-    public override bool canUse(Entity? target, Modifier? modifier) {
-        return base.canUse(target, modifier);
-    }
-
     public override bool CanTarget(Entity target) {
         if(Battlefield.BeenDazed.Contains(target)) {
             Console.WriteLine("That target has already been Dazed!");
@@ -21,13 +16,10 @@ public class Daze : Action {
         return base.CanTarget(target);
     }
 
-    public override bool use(Entity? target, Modifier? modifier) {
-        if(base.use(target, modifier)) {
-            // Apply the Stun status effect
-            target!.AddStatusEffect(new Stun(magicNumber, target));
-            Battlefield.BeenDazed.Add(target);
-            return true;
-        }
-        return false;
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Apply the Stun status effect
+        target!.AddStatusEffect(new Stun(magicNumber, target));
+        Battlefield.BeenDazed.Add(target);
+        return true;
     }
 }

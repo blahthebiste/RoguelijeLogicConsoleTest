@@ -105,7 +105,7 @@ public class Shop : Event {
                                 
                                 CurrentRun.Inventory.Add(chosenItem);
                                 CurrentRun.Money -= (int)chosenItem.price!;
-                                Console.WriteLine("Got a "+chosenItem.name);
+                                Console.WriteLine("Got "+chosenItem.name);
                                 offeredItems.Remove(chosenItem);
                                 break;
                             }
@@ -130,7 +130,7 @@ public class Shop : Event {
                                 
                                 CurrentRun.DraftCard(0);
                                 CurrentRun.Money -= cardPrice;
-                                Console.WriteLine("Got a "+chosenCard.name);
+                                Console.WriteLine("Got "+chosenCard.name);
                                 offeredCard = null;
                                 break;
                             }
@@ -155,7 +155,7 @@ public class Shop : Event {
                                 
                                 CurrentRun.Inventory.Add(chosenModifier);
                                 CurrentRun.Money -= modifierPrice;
-                                Console.WriteLine("Got a "+chosenModifier.name);
+                                Console.WriteLine("Got "+chosenModifier.name);
                                 offeredModifier = null;
                                 break;
                             }
