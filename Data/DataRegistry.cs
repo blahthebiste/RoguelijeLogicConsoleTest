@@ -247,6 +247,8 @@ public static class DataRegistry {
                     return new Robes();
                 case "campfire":
                     return new Campfire();
+                case "ironhelm":
+                    return new IronHelm();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

@@ -824,7 +824,7 @@ void equipItem(string itemName, string heroName) {
         if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
             // If they entered a valid number for action selection, equip the item to the action:
             if(actionSelection <= matchingActions.Count && actionSelection > 0) {
-                itemToEquip.Equip(matchingActions[actionSelection]);
+                itemToEquip.Equip(matchingActions[actionSelection-1]);
             }
         }
         // Return afterwards regardless.

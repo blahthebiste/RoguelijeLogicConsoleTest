@@ -28,6 +28,8 @@ public static class Battlefield {
                     action.equippedItem.startOfCombat();
                 }
             }
+            hero.exhausted = false;
+            hero.currentHP = hero.maxHP;
         }
         foreach(Enemy enemy in combat.EnemyTroupe) {
             EnemySide.Add(enemy);
@@ -160,8 +162,6 @@ public static class Battlefield {
         CurrentRun.InCombat = false;
         CurrentRun.NextCombatEncounter = null;
         foreach(Entity hero in PlayerSide) {
-            hero.exhausted = false;
-            hero.currentHP = hero.maxHP;
             foreach(Action action in hero.ActionList) {
                 action.endOfCombat();
                 if(action.hasLimitedUses) {
@@ -170,6 +170,8 @@ public static class Battlefield {
             }
             // Wipe status effects
             hero.EffectList = new List<StatusEffect>();
+            hero.exhausted = false;
+            hero.currentHP = hero.maxHP;
         }
         if(playerWon) {
             Console.WriteLine("VICTORY!");

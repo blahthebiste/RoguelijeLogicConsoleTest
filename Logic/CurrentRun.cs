@@ -605,9 +605,10 @@ public static class CurrentRun {
         Tier1ItemPool.Add("Sapphire");
         Tier1ItemPool.Add("Robes");
         Tier1ItemPool.Add("Campfire");
+        Tier1ItemPool.Add("IronHelm");
 
         // For debugging items:
-        Inventory.Add(new Campfire());
+        Inventory.Add(new IronHelm());
     }
 
     // Gets a random item from the specified tier (1-3).
