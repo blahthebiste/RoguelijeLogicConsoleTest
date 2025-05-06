@@ -27,8 +27,9 @@ public class Entity {
     }
 
     public bool isAlive() {
-        return currentHP != 0;
+        return currentHP > 0;
     }
+
 
     // Fills in the 'owner' field for all actions in the ActionList to be this entity
     public void assignActionOwnership() {
@@ -48,10 +49,14 @@ public class Entity {
         }
         this.currentHP += delta;
         if(this.currentHP > this.maxHP) this.currentHP = this.maxHP; // Cap healing
-        if(this.currentHP <= 0) this.die(); // Trigger death
     }
 
-
+    // Should always be used instead of direct max HP operations
+    // No events associated with changes to max HP for now.
+    public void changeMaxHP(int delta){
+        this.maxHP += delta;
+        if(this.currentHP > this.maxHP) this.currentHP = this.maxHP; // Cap healing
+    }
 
     public virtual void ReceiveHealing(int healing) {
         Console.WriteLine(this.name+" was healed for "+healing+" HP.");

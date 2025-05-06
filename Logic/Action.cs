@@ -96,7 +96,9 @@ public class Action {
 			}
 		}
 		// Run the action code that does not target anyone
-		anySuccess = this.useOnce(modifier) || anySuccess;
+		if(this.canUse(null, modifier)) {
+			anySuccess = this.useOnce(modifier) || anySuccess;
+		}
 		if(anySuccess) { // Action succeeded (at least in some capacity)
 			this.owner!.previousAction = this; // Update previous action.
 			if(hasLimitedUses) { // Decrement uses if the action has limited uses
@@ -110,6 +112,7 @@ public class Action {
 		else { // Action never went through; don't exhaust, don't use up uses
 			Console.WriteLine("Action could not be used!");
 		}
+		Battlefield.resolveDeath();
 		return anySuccess;
 	}
 

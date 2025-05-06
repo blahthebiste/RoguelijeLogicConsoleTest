@@ -6,7 +6,7 @@ public class Medkit : EquipmentItem {
         this.tendInstance = new Tend();
         this.tendInstance.equippedItem = this; // Still show medkit as equipped
         this.name = "Medkit";
-        this.description = "Replace your Rest action with Tend [Heal 4 HP].";
+        this.description = "Replace your Rest action with '"+tendInstance+"'.";
         this.slot = ActionType.REST;
         this.price = 65;
     }

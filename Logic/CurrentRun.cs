@@ -600,15 +600,19 @@ public static class CurrentRun {
         Tier1ItemPool.Add("Medkit");
         Tier1ItemPool.Add("Dreamcatcher");
         Tier1ItemPool.Add("Pavise");
-        Tier1ItemPool.Add("Tomawhawk");
+        Tier1ItemPool.Add("Tomahawk");
         Tier1ItemPool.Add("Quarterstaff");
         Tier1ItemPool.Add("Sapphire");
         Tier1ItemPool.Add("Robes");
         Tier1ItemPool.Add("Campfire");
         Tier1ItemPool.Add("IronHelm");
+        Tier1ItemPool.Add("Chainmail");
+        Tier1ItemPool.Add("HealthPotion");
+        Tier1ItemPool.Add("ManaPotion");
+        Tier1ItemPool.Add("PoisonPotion");
 
         // For debugging items:
-        Inventory.Add(new IronHelm());
+        Inventory.Add(new PoisonPotion());
     }
 
     // Gets a random item from the specified tier (1-3).

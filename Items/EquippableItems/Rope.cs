@@ -5,7 +5,7 @@ public class Rope : EquipmentItem {
     public Rope() {
         this.climbInstance = new Climb();
         this.name = "Rope";
-        this.description = "You have Climb [Draw 2 cards] as an additional Skill action option.";
+        this.description = "Gain the '"+climbInstance+"' action.";
         this.slot = ActionType.SKILL;
         this.price = 65;
     }

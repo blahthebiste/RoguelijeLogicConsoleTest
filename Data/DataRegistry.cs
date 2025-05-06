@@ -249,6 +249,14 @@ public static class DataRegistry {
                     return new Campfire();
                 case "ironhelm":
                     return new IronHelm();
+                case "chainmail":
+                    return new Chainmail();
+                case "healthPotion":
+                    return new HealthPotion();
+                case "manaPotion":
+                    return new ManaPotion();
+                case "poisonPotion":
+                    return new PoisonPotion();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

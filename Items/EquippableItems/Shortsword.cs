@@ -5,7 +5,7 @@ public class Shortsword : EquipmentItem {
     public Shortsword() {
         this.strikeInstance = new Strike();
         this.name = "Shortsword";
-        this.description = "You have Strike [Deal 6 damage] as an additional Attack action option.";
+        this.description = "Gain the '"+strikeInstance+"' action.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
     }

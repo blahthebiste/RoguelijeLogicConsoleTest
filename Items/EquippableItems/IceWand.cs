@@ -6,7 +6,7 @@ public class IceWand : EquipmentItem {
         this.iceWallInstance = new IceWall();
         this.iceWallInstance.equippedItem = this;
         this.name = "Ice Wand";
-        this.description = "Replace your Defend action with Stab [Deal 5 damage].";
+        this.description = "Replace your Spell action with '"+iceWallInstance+"'.";
         this.slot = ActionType.SPELL;
         this.price = 65;
     }

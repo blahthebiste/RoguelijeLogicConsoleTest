@@ -6,7 +6,7 @@ public class Dagger : EquipmentItem {
         this.stabInstance = new Stab();
         this.stabInstance.equippedItem = this; // Still show dagger as equipped
         this.name = "Dagger";
-        this.description = "Replace your Defend action with Stab [Deal 5 damage].";
+        this.description = "Replace your Defend action with '"+stabInstance+"'.";
         this.slot = ActionType.DEFEND;
         this.price = 65;
     }

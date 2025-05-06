@@ -5,7 +5,7 @@ public class Quarterstaff : EquipmentItem {
     public Quarterstaff() {
         this.parryInstance = new Parry();
         this.name = "Quarterstaff";
-        this.description = "You have Parry [Generate 4 Block] as an additional Defend action option.";
+        this.description = "Gain the '"+parryInstance+"' action.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
     }

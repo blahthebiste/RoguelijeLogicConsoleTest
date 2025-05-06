@@ -80,6 +80,10 @@ public static class Battlefield {
     }
 
     public static void endTurn() {
+        if(!CurrentRun.InCombat) {
+            Console.WriteLine("Not in combat. Skipping endTurn resoltuion");
+            return;
+        }
         // Reset block:
         int permaBlockAmount = 0;
         foreach(Enemy enemy in EnemySide) {
@@ -98,9 +102,14 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.endOfTurn();
         }
+        resolveDeath();
         turnNumber++;
     }
     public static void startTurn() {
+        if(!CurrentRun.InCombat) {
+            Console.WriteLine("Not in combat. Skipping startTurn resoltuion");
+            return;
+        }
 
         // Reset block:
         int permaBlockAmount = 0;
@@ -133,6 +142,7 @@ public static class Battlefield {
         foreach(Enemy enemy in EnemySide) {
             enemy.exhausted = false;
         }
+        resolveDeath();
     }
 
     public static bool playerCharactersAllExhausted(){
@@ -140,6 +150,22 @@ public static class Battlefield {
             if(!hero.exhausted) return false;
         }
         return true;
+    }
+
+
+    // Entities do not immediately die upon losing all HP; instead, they die at predefined checkpoints,
+    // after resolving an action or trigger.
+    public static void resolveDeath() {
+        for (int i = EnemySide.Count - 1; i >= 0; i--) {
+            if (!EnemySide[i].isAlive()) {
+                EnemySide[i].die();
+            }
+        }
+        for (int i = PlayerSide.Count - 1; i >= 0; i--) {
+            if (!PlayerSide[i].isAlive()) {
+                PlayerSide[i].die();
+            }
+        }
     }
 
     public static void RemoveEntity(Entity entity) {
