@@ -67,6 +67,64 @@ public class Action {
 	}
     
 
+	// Uses an action directly, for when an action is used without the player playing a card.
+	// Asks the player to select a target if necessary. Returns false if the action was not used.
+	// Also returns false if the action was untargetted, and failed.
+	public virtual bool promptUse() {
+		if(this.targetting == TargetCategory.SINGLE_ANY || this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY) {
+			// Prompt the player for a target.
+			while(true) {
+				Console.WriteLine("Enter a target for "+this.name+" (or 'skip' to not use the action):");
+				Console.Write("\n> ");
+                string? feedback = Console.ReadLine();
+				Entity? target = null;
+				string? actionTarget;
+				actionTarget = feedback.ToLower().Trim();
+				if(actionTarget == "skip") {
+					Console.WriteLine("Skipping action.");
+					return false;
+				}
+				foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+					// Check if target is here, if we were given one.:
+					if(hero.name.ToLower().Trim() == actionTarget) {
+						target = hero;
+						break;
+					}
+				}
+				foreach(Enemy enemy in Battlefield.EnemySide){
+					// Check if target is here, if we were given one.:
+					if(enemy.name.ToLower().Trim() == actionTarget) {
+						target = enemy;
+						break;
+					}
+				}
+				// If the target is still null, error:
+				if(target == null) {
+					Console.WriteLine("No target with the name "+actionTarget+" exists in this battle.");
+					continue;
+				}
+				// Check if the target is valid:
+				if(this.CanTarget(target)) {
+					if(this.use(target, null)) {
+						return true;
+					}
+					else {
+						Console.WriteLine("Failed to use "+this.name+" on "+target+"!");
+						continue;
+					}
+				}
+				else {
+					Console.WriteLine("Invalid target!");
+					continue;
+				}
+			}
+		}
+		else {
+			// Action does not require the player to choose a target; automatically select targets and attempt the action.
+			return this.use(null, null);
+		}
+	}
+
 	// Manages automatic targeting, action uses, events, etc
 	// Relies on useOnTarget to be implemented by the child class, otherwise the action will fail
     public bool use(Entity? mainTarget, Modifier? modifier) {
@@ -96,7 +154,7 @@ public class Action {
 			}
 		}
 		// Run the action code that does not target anyone
-		if(this.canUse(null, modifier)) {
+		if(!this.requiresTarget() && this.canUse(null, modifier)) {
 			anySuccess = this.useOnce(modifier) || anySuccess;
 		}
 		if(anySuccess) { // Action succeeded (at least in some capacity)
@@ -281,7 +339,7 @@ public class Action {
 
 	// All target categories require a target to operate on except for NONE
     public bool requiresTarget(){
-        return this.targetting != TargetCategory.NONE;
+        return (this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY || this.targetting == TargetCategory.SINGLE_ANY);
     }
 
 	//==========================ITEM OPERATIONS=========================

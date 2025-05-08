@@ -610,9 +610,11 @@ public static class CurrentRun {
         Tier1ItemPool.Add("HealthPotion");
         Tier1ItemPool.Add("ManaPotion");
         Tier1ItemPool.Add("PoisonPotion");
+        Tier1ItemPool.Add("Grog");
+        Tier1ItemPool.Add("HairTrigger");
 
         // For debugging items:
-        Inventory.Add(new PoisonPotion());
+        Inventory.Add(new HairTrigger());
     }
 
     // Gets a random item from the specified tier (1-3).

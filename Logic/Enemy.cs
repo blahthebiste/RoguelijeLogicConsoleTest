@@ -32,7 +32,7 @@ public class Enemy : Entity {
     // Many enemies will override this
     public void takeTurn() {
         Entity? nextTarget = getNextTarget();
-        getNextAction().use(nextTarget, null); // Null modifier for now
+        getNextAction().use(nextTarget, null); // Null modifier, enemies don't use cards
         nextActionIndex++;
         if(nextActionIndex >= ActionList.Count) {
             nextActionIndex = 0;
@@ -89,11 +89,13 @@ public class Enemy : Entity {
                 if(Battlefield.PlayerSide.Count <= nextTargetPosition) {
                     return null;
                 }
+                Console.WriteLine("Target for "+this.getNextAction().name+" is "+Battlefield.PlayerSide[nextTargetPosition].name);
                 return Battlefield.PlayerSide[nextTargetPosition];
             case TargetCategory.SINGLE_ALLY:
                 if(Battlefield.EnemySide.Count <= nextTargetPosition) {
                     return null;
                 }
+                Console.WriteLine("Target for "+this.getNextAction().name+" is "+Battlefield.EnemySide[nextTargetPosition].name);
                 return Battlefield.EnemySide[nextTargetPosition];
             default:
                 Console.WriteLine("Next action does not use targeting.");

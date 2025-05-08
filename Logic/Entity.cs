@@ -64,6 +64,10 @@ public class Entity {
     }
 
     public virtual void AddStatusEffect(StatusEffect newEffect) {
+        if(this.hasItem(new Grog()) && newEffect.isDebuff && newEffect.amount > 0) {
+            Console.WriteLine("Grog reduced debuff!");
+            newEffect.amount -= 1;
+        }
         string newEffectName = newEffect.name;
         Console.WriteLine(this.name+" gained new effect: "+newEffectName+" with value "+newEffect.amount+".");
         foreach(StatusEffect existingEffect in EffectList) {
@@ -124,6 +128,15 @@ public class Entity {
 
     // Kill this entity and remove it from combat.
     public virtual void die() {
+        // Trigger events for death
+        foreach(Action act in this.ActionList) {
+            if(act.equippedItem != null) {
+                act.equippedItem.onDeath();
+            }
+        }
+        foreach(StatusEffect eff in EffectList) {
+            eff.onDeath();
+        }
         Console.WriteLine(this.name+" has been slain!");
         Battlefield.RemoveEntity(this);
     }
@@ -230,5 +243,15 @@ public class Entity {
             actionBeingUsed = eff.onUseAction(actionBeingUsed);
         }
         return actionBeingUsed;
+    }
+
+    // Determines whether an entity has the given item equipped (slot irrelevant)
+    public bool hasItem(EquipmentItem item) {
+        foreach(Action act in this.ActionList) {
+            if(act.equippedItem != null && act.equippedItem.name == item.name) {
+                return true;
+            }
+        }
+        return false;
     }
 }

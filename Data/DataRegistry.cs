@@ -257,6 +257,10 @@ public static class DataRegistry {
                     return new ManaPotion();
                 case "poisonPotion":
                     return new PoisonPotion();
+                case "grog":
+                    return new Grog();
+                case "hairTrigger":
+                    return new HairTrigger();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

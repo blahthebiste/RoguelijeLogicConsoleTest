@@ -73,6 +73,10 @@ public class StatusEffect {
         return block;
     }
 
+    public virtual void onDeath() {
+        
+    }
+
     // Triggered every time the owner of this effect acts
     public virtual Action onUseAction(Action actionBeingUsed) {
         return actionBeingUsed;

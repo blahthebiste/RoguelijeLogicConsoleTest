@@ -230,6 +230,10 @@ public class EquipmentItem : Item {
         
     }
 
+    public virtual void onDeath(){
+        
+    }
+
     // Triggers whenever the action that the item is equipped to is used
     public virtual Action onUseEquippedAction(Action actionBeingUsed) {
         return actionBeingUsed;
