@@ -49,12 +49,10 @@ public class Action {
             Console.WriteLine("ERROR: no target for action!");
             return false;
         }
-		// Iterate through effect list. If stunned, cannot use non-rest actions
-		foreach(StatusEffect effect in owner.EffectList) {
-			if(effect is Stun && this.actionType != ActionType.REST) {
-				Console.WriteLine("Cannot use non-rest actions while stunned!");
-				return false;
-			}
+		// If stunned, cannot use non-rest actions
+		if(owner.HasStatusEffect("Stun") && this.actionType != ActionType.REST) {
+			Console.WriteLine("Cannot use non-rest actions while stunned!");
+			return false;
 		}
 		if(this.requiresTarget()) {
 			// Check if target is valid:
@@ -246,6 +244,9 @@ public class Action {
 			case TargetCategory.SINGLE_ALLY:
 			case TargetCategory.SINGLE_ENEMY:
 			case TargetCategory.SINGLE_ANY:
+			case TargetCategory.DEAD_ALLY:
+			case TargetCategory.DEAD_ENEMY:
+			case TargetCategory.DEAD_ANY:
 				Console.WriteLine("Action target category requires player to choose target.");
 				return null;
 			default:
@@ -313,7 +314,7 @@ public class Action {
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = (owner.playerControlled != target.playerControlled);
 				// Check for Taunt as well:
-				if(this.ignoresTaunt || !Battlefield.Taunters.Contains(target)) {
+				if(!this.ignoresTaunt && !Battlefield.Taunters.Contains(target)) {
 					// If the target does not have taunt, need to check if their allies do:
 					if(Battlefield.Taunters.Count > 0) {
 						foreach(Entity taunter in Battlefield.Taunters) {
@@ -325,11 +326,34 @@ public class Action {
 						}
 					}	
 				}
+				// Check for invisibility:
+				if(target.HasStatusEffect("Invisibility")) {
+					// If they are not last on their team, they cannot be targeted
+					if(target.playerControlled && Battlefield.PlayerSide.Count > 1) {
+						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
+						return false;
+					}
+					else if(!target.playerControlled && Battlefield.EnemySide.Count > 1) {
+						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
+						return false;
+					}
+				}
 				return opposingTeams;
 			case TargetCategory.ALL_ALLIES:
 			case TargetCategory.SINGLE_ALLY:
 				// If they are on the same team, they can target with this action
 				return (owner.playerControlled == target.playerControlled);
+			case TargetCategory.DEAD_ALLY:
+				// If they are on the same team, but the target is dead, they can target with this action
+				return (Battlefield.DeadHeroes.Contains(target) && owner.playerControlled) 
+				|| (Battlefield.DeadEnemies.Contains(target) && !owner.playerControlled);
+			case TargetCategory.DEAD_ENEMY:
+				// If they are on opposite teams, but the target is dead, they can target with this action
+				return (Battlefield.DeadHeroes.Contains(target) && !owner.playerControlled) 
+				|| (Battlefield.DeadEnemies.Contains(target) && owner.playerControlled);
+			case TargetCategory.DEAD_ANY:
+				// If the target is dead, they can target with this action
+				return Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target);
 			case TargetCategory.EVERYONE:
 			case TargetCategory.SINGLE_ANY:
 				// Always valid

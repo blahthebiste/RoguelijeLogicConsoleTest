@@ -273,12 +273,24 @@ public static class DataRegistry {
                     return new Banner();
                 case "whiteflag":
                     return new WhiteFlag();
+                case "revivepotion":
+                    return new RevivePotion();
                 case "phoenixwand":
                     return new PhoenixWand();
                 case "grapplinghook":
                     return new GrapplingHook();
                 case "mastersword":
                     return new MasterSword();
+                case "elderwand":
+                    return new ElderWand();
+                case "resurrectionstone":
+                    return new ResurrectionStone();
+                case "invisibilitycloak":
+                    return new InvisibilityCloak();
+                case "heavyarmor":
+                    return new HeavyArmor();
+                case "fortressshield":
+                    return new FortressShield();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

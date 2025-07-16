@@ -7,6 +7,10 @@ public static class Battlefield {
     // Used to keep track of who is currently taunting. Used for targeting restrictions.
     public static List<Entity> Taunters = new List<Entity>();
 
+    // Used to keep track of who has died in combat (and maybe resurrect them)
+    public static List<PlayerCharacter> DeadHeroes = new List<PlayerCharacter>();
+    public static List<Enemy> DeadEnemies = new List<Enemy>();
+
      // Used for Dazed logic
     public static List<Entity> BeenDazed = new List<Entity>();
     public static int turnNumber = 0;
@@ -28,10 +32,6 @@ public static class Battlefield {
         foreach(Enemy enemy in combat.EnemyTroupe.ToList()) {
             EnemySide.Add(enemy);
         }
-        // Have enemies choose their targets:
-        foreach(Enemy enemy in EnemySide.ToList()) {
-            enemy.enterCombat();
-        }
         // Start of combat events for actions and their items
         foreach(PlayerCharacter hero in CurrentRun.Party.ToList()) {
             foreach(Action action in hero.ActionList.ToList()) {
@@ -41,6 +41,10 @@ public static class Battlefield {
             }
             hero.exhausted = false;
         }
+        // Have enemies choose their targets:
+        foreach(Enemy enemy in EnemySide.ToList()) {
+            enemy.enterCombat();
+        }
         // Start of combat events for enemies
         foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.startOfCombat();
@@ -48,6 +52,8 @@ public static class Battlefield {
         playerBlock = 0;
         enemyBlock = 0;
         turnNumber = 1;
+        Console.WriteLine("Beginning of turn "+Battlefield.turnNumber);
+        startTurn();
     }
     
     public static void ResetCombat() {
@@ -88,7 +94,7 @@ public static class Battlefield {
 
     public static void endTurn() {
         if(!CurrentRun.InCombat) {
-            Console.WriteLine("Not in combat. Skipping endTurn resoltuion");
+            Console.WriteLine("Not in combat. Skipping endTurn resolution");
             return;
         }
         // Reset block:
@@ -116,7 +122,7 @@ public static class Battlefield {
     
     public static void startTurn() {
         if(!CurrentRun.InCombat) {
-            Console.WriteLine("Not in combat. Skipping startTurn resoltuion");
+            Console.WriteLine("Not in combat. Skipping startTurn resolution");
             return;
         }
 
@@ -125,11 +131,11 @@ public static class Battlefield {
         foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             StatusEffect? permaBlock = hero.GetStatusEffect("PermaBlock");
             if(permaBlock != null) {
-                Console.WriteLine(hero.name+" had PermaBlock; amount is "+permaBlock.amount);
+                Console.WriteLine(hero.name+" had Perma-Block; amount is "+permaBlock.amount);
                 permaBlockAmount += permaBlock.amount;
             }
         }
-        Console.WriteLine("Total PermaBlock amount is "+permaBlockAmount);
+        if(permaBlockAmount > 0) Console.WriteLine("Total Perma-Block amount is "+permaBlockAmount);
         playerBlock = (playerBlock <= permaBlockAmount) ? playerBlock : permaBlockAmount;
         
         // New hand
@@ -201,6 +207,50 @@ public static class Battlefield {
                 endCombat(true);
             }
         }
+    }
+
+    // Returns false if the hero was not found in the Dead Heroes list.
+    public static bool ReviveHero(string heroName, bool toFullHP = true, bool exhausted = true) {
+        foreach(PlayerCharacter hero in DeadHeroes.ToList()) {
+            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                Console.WriteLine("Reviving "+hero.name+"!");
+                DeadHeroes.Remove(hero);
+                PlayerSide.Add(hero);
+                if(toFullHP) {
+                    hero.currentHP = hero.maxHP;
+                }
+                else {
+                    hero.currentHP = 1;
+                }
+                hero.previousAction = null;
+                hero.exhausted = exhausted;
+                // Do not wipe their status effects or debuffs?
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Returns false if the hero was not found in the Dead Heroes list.
+    public static bool ReviveEnemy(string enemyName, bool toFullHP = true, bool exhausted = true) {
+        foreach(Enemy enemy in DeadEnemies.ToList()) {
+            if(enemy.name.ToLower().Trim() == enemyName.ToLower().Trim()) {
+                Console.WriteLine(enemy.name+" was revived!");
+                DeadEnemies.Remove(enemy);
+                EnemySide.Add(enemy);
+                if(toFullHP) {
+                    enemy.currentHP = enemy.maxHP;
+                }
+                else {
+                    enemy.currentHP = 1;
+                }
+                enemy.previousAction = null;
+                enemy.exhausted = exhausted;
+                // Do not wipe their status effects or debuffs?
+                return true;
+            }
+        }
+        return false;
     }
     
     public static void endCombat(bool playerWon) {

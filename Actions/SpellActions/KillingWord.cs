@@ -1,11 +1,14 @@
-public class Backstab : Action {
+public class KillingWord : Action {
 
-    public Backstab() {
-        this.name = "Backstab";
-        this.description = "Kill an enemy with 8 HP or less.";
-        this.actionType = ActionType.SKILL;
+    public KillingWord() {
+        this.name = "Killing Word";
+        this.description = "Kill an enemy with 20 HP or less.";
+        this.actionType = ActionType.SPELL;
+        this.magicNumber = 20;
+        this.hasLimitedUses = true;
+        this.uses = 1;
+        this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
-        this.magicNumber = 8;
     }
 
     public override bool CanTarget(Entity target) {

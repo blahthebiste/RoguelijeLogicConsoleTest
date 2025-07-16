@@ -24,7 +24,12 @@ public class Taunting : StatusEffect {
     }
 
     public override void onRemoved() {
-        // Add owner to Taunters list:
+        // Remove owner from Taunters list:
+        Battlefield.Taunters.Remove(owner!);
+    }
+
+    public override void onDeath() {
+        // Remove owner from Taunters list:
         Battlefield.Taunters.Remove(owner!);
     }
 

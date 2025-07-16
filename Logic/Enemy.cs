@@ -50,7 +50,16 @@ public class Enemy : Entity {
         int newTargetIndex;
         switch(this.getNextAction().targetting){
             case TargetCategory.SINGLE_ENEMY:
-                newTargetIndex = CurrentRun.rng.Next(0, Battlefield.PlayerSide.Count);
+                while(true) { // Possibly laggy logic for invisibility
+                    newTargetIndex = CurrentRun.rng.Next(0, Battlefield.PlayerSide.Count);
+                    if(Battlefield.PlayerSide.Count > 1 && Battlefield.PlayerSide[newTargetIndex].HasStatusEffect("Invisibility")) {
+                        Console.WriteLine(Battlefield.PlayerSide[newTargetIndex]+" was invisible; rerolling target");
+                    }
+                    else {
+                        Console.WriteLine("Selected random target.");
+                        break;
+                    }
+                }
                 setNextTarget(newTargetIndex, true);
                 break;
             case TargetCategory.SINGLE_ALLY:

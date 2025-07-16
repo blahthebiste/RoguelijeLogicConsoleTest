@@ -3,7 +3,7 @@ public class TowerShield : EquipmentItem {
 
     public TowerShield() {
         this.name = "Tower Shield";
-        this.description = "At the start of combat, gain PermaBlock equal to the Block of your Defend action.";
+        this.description = "At the start of combat, gain Perma-Block equal to the Block of your Defend action.";
         this.slot = ActionType.DEFEND;
         this.price = 65;
     }

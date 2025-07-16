@@ -7,5 +7,8 @@ public enum TargetCategory
     SINGLE_ANY,
     ALL_ENEMIES,
     ALL_ALLIES,
-    EVERYONE
+    EVERYONE,
+    DEAD_ALLY,
+    DEAD_ENEMY,
+    DEAD_ANY
 }

@@ -559,9 +559,9 @@ public static class CurrentRun {
         }
         Console.WriteLine("Entering combat...");
         LastEncounterWasEvent = false;
+        InCombat = true;
         Battlefield.LoadCombat(NextCombatEncounter);
         CardManager.beginCombat();
-        InCombat = true;
     }
 
     // Tries to get <numEncountersRequested> random combat encounters from the given list.
@@ -621,12 +621,17 @@ public static class CurrentRun {
         Tier2ItemPool.Add("WhiteFlag");
         Tier2ItemPool.Add("PhoenixWand");
         Tier2ItemPool.Add("GrapplingHook");
+        Tier2ItemPool.Add("RevivePotion");
 
         Tier3ItemPool.Add("MasterSword");
+        Tier3ItemPool.Add("ElderWand");
+        Tier3ItemPool.Add("ResurrectionStone");
+        Tier3ItemPool.Add("InvisibilityCloak");
+        Tier3ItemPool.Add("HeavyArmor");
+        Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        Inventory.Add(new Shortsword());
-        Inventory.Add(new MasterSword());
+        Inventory.Add(new FortressShield());
     }
 
     // Gets a random item from the specified tier (1-3).

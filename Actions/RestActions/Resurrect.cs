@@ -1,0 +1,15 @@
+public class Resurrect : Action {
+
+    public Resurrect() {
+        this.name = "Resurrect";
+        this.description = "Resurrect an ally to full HP.";
+        this.actionType = ActionType.REST;
+        this.targetting = TargetCategory.DEAD_ALLY;
+    }
+
+
+    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        // Bring them back into the fight
+        return Battlefield.ReviveHero(target.name, true, true);
+    }
+}

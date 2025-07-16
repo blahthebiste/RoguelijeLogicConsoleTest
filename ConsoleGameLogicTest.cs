@@ -123,7 +123,7 @@ void commandLoop() {
                 editMasterDeck();
                 break;
             default:
-                // If the first word is a number, and that number is less than 10, then the user is playing a card.
+                // If the first word is a number, and that number is equal to or less than current hand count, then the user is playing a card.
                 if(int.TryParse(cmd.ToLower().Trim().Split()[0], out int n)) {
                     if(n <= CardManager.Hand.Count && n > 0) {
                         playCard(cmd);
@@ -654,17 +654,35 @@ void playCard(string cmd) {
     // If the command included a third argument, that is the players intended target for this action.
     if(cmd.ToLower().Trim().Split().Length > 2) {
         actionTarget = cmd.ToLower().Trim().Split()[2];
+        bool targetIsDead = false;
         foreach(PlayerCharacter hero in Battlefield.PlayerSide){
-            // Check if target is here, if we were given one.:
+            // Check if target is here, if we were given one.
             if(hero.name.ToLower().Trim() == actionTarget) {
                 target = hero;
                 break;
             }
         }
         foreach(Enemy enemy in Battlefield.EnemySide){
-            // Check if target is here, if we were given one.:
+            // Check if target is here, if we were given one.
             if(enemy.name.ToLower().Trim() == actionTarget) {
                 target = enemy;
+                break;
+            }
+        }
+        // Check dead entities, just in case:
+        foreach(PlayerCharacter hero in Battlefield.DeadHeroes){
+            // Check if target is here, if we were given one.
+            if(hero.name.ToLower().Trim() == actionTarget) {
+                target = hero;
+                targetIsDead = true;
+                break;
+            }
+        }
+        foreach(Enemy enemy in Battlefield.DeadEnemies){
+            // Check if target is here, if we were given one.
+            if(enemy.name.ToLower().Trim() == actionTarget) {
+                target = enemy;
+                targetIsDead = true;
                 break;
             }
         }

@@ -139,6 +139,12 @@ public class Entity {
         }
         Console.WriteLine(this.name+" has been slain!");
         Battlefield.RemoveEntity(this);
+        if(this is PlayerCharacter) {
+            Battlefield.DeadHeroes.Add((PlayerCharacter)this);
+        }
+        else if(this is Enemy) {
+            Battlefield.DeadEnemies.Add((Enemy)this);
+        }        
     }
 
     //====================EVENTS====================
@@ -147,14 +153,24 @@ public class Entity {
     }
 
     public virtual void startOfTurn() {
-        foreach(StatusEffect effect in EffectList) {
+        foreach(StatusEffect effect in EffectList.ToList()) {
             effect.startOfTurn(); // Handle events for status effects
+        }
+        foreach(Action action in this.ActionList.ToList()) {
+            if(action.equippedItem != null) {
+                action.equippedItem.startOfTurn();
+            }
         }
     }
 
     public virtual void endOfTurn() {
         foreach(StatusEffect effect in EffectList.ToList()) {
             effect.endOfTurn(); // Handle events for status effects
+        }
+        foreach(Action action in this.ActionList.ToList()) {
+            if(action.equippedItem != null) {
+                action.equippedItem.endOfTurn();
+            }
         }
     }
     

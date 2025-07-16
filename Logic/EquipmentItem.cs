@@ -237,6 +237,14 @@ public class EquipmentItem : Item {
         
     }
 
+    public virtual void startOfTurn() {
+
+    }
+
+    public virtual void endOfTurn() {
+
+    }
+
     public virtual void onDeath(){
         
     }
