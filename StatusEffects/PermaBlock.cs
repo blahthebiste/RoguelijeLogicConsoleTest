@@ -3,7 +3,7 @@ public class PermaBlock : StatusEffect {
 
     public PermaBlock(int amount, Entity owner) {
         this.amount = amount;
-        this.name = "PermaBlock";
+        this.name = "Perma-Block";
         this.description = "Keep that much unused block each turn.";
         this.owner = owner;
     }

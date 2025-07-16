@@ -142,6 +142,10 @@ public class Entity {
     }
 
     //====================EVENTS====================
+    public virtual void startOfCombat(){
+        
+    }
+
     public virtual void startOfTurn() {
         foreach(StatusEffect effect in EffectList) {
             effect.startOfTurn(); // Handle events for status effects

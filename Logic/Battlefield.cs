@@ -22,13 +22,6 @@ public static class Battlefield {
         // Load in player party:
         foreach(PlayerCharacter hero in CurrentRun.Party) {
             PlayerSide.Add(hero);
-            // Start of combat events for actions and their items
-            foreach(Action action in hero.ActionList) {
-                if(action.equippedItem != null) {
-                    action.equippedItem.startOfCombat();
-                }
-            }
-            hero.exhausted = false;
             hero.currentHP = hero.maxHP;
         }
         foreach(Enemy enemy in combat.EnemyTroupe) {
@@ -37,6 +30,19 @@ public static class Battlefield {
         // Have enemies choose their targets:
         foreach(Enemy enemy in EnemySide) {
             enemy.enterCombat();
+        }
+        // Start of combat events for actions and their items
+        foreach(PlayerCharacter hero in CurrentRun.Party) {
+            foreach(Action action in hero.ActionList) {
+                if(action.equippedItem != null) {
+                    action.equippedItem.startOfCombat();
+                }
+            }
+            hero.exhausted = false;
+        }
+        // Start of combat events for enemies
+        foreach(Enemy enemy in EnemySide) {
+            enemy.startOfCombat();
         }
         playerBlock = 0;
         enemyBlock = 0;
@@ -103,6 +109,7 @@ public static class Battlefield {
             enemy.endOfTurn();
         }
         resolveDeath();
+        resolveFleeing();
         turnNumber++;
     }
     public static void startTurn() {
@@ -143,6 +150,7 @@ public static class Battlefield {
             enemy.exhausted = false;
         }
         resolveDeath();
+        resolveFleeing();
     }
 
     public static bool playerCharactersAllExhausted(){
@@ -164,6 +172,15 @@ public static class Battlefield {
         for (int i = PlayerSide.Count - 1; i >= 0; i--) {
             if (!PlayerSide[i].isAlive()) {
                 PlayerSide[i].die();
+            }
+        }
+    }
+    
+    // Used mainly for Piety
+    public static void resolveFleeing() {
+        for (int i = EnemySide.Count - 1; i >= 0; i--) {
+            if (EnemySide[i].fleeing) {
+                EnemySide[i].flee();
             }
         }
     }

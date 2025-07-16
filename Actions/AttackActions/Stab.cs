@@ -11,7 +11,7 @@ public class Stab : Action {
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
         // Deal damage to the target.
-        Attack atk = new Attack(damage, this.owner!, target!);
+        Attack atk = new Attack(damage, this.owner!, target!, this.hitsAbove, this.hitsBelow);
         atk = owner!.onAttack(atk);
         target!.onReceiveAttack(atk);
         return true;

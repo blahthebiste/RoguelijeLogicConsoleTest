@@ -8,16 +8,20 @@ public class Attack {
     public Entity target;
 
     // Normal constructor
-    public Attack(int damage, Entity source, Entity target) {
+    public Attack(int damage, Entity source, Entity target, bool hitsAbove = false, bool hitsBelow = false) {
         this.damage = damage;
         this.source = source;
         this.target = target;
+        this.hitsAbove = hitsAbove;
+        this.hitsBelow = hitsBelow;
     }
     
     // Copy constructor
     public Attack(Attack atk, Entity newTarget) {
         this.damage = atk.damage;
         this.target = atk.target;
+        this.hitsAbove = atk.hitsAbove;
+        this.hitsBelow = atk.hitsBelow;
         this.source = newTarget;
     }
 }

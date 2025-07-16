@@ -12,17 +12,18 @@ public class Restore : Action {
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        if(owner!.HasStatusEffect("SpellPower")) {
-            StatusEffect power = owner.GetStatusEffect("SpellPower")!;
-            magicNumber += power.amount;
+        int power = magicNumber;
+        if(owner!.HasStatusEffect("Spell Power")) {
+            StatusEffect spell_power = owner.GetStatusEffect("Spell Power")!;
+            power += spell_power.amount;
         }
         if(owner!.HasStatusEffect("Charged")) {
             StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            magicNumber += charge.amount;
+            power += charge.amount;
             owner.EffectList.Remove(charge);
         }
         // Apply healing
-        target!.ReceiveHealing(magicNumber);
+        target!.ReceiveHealing(power);
         return true;
     }
 }

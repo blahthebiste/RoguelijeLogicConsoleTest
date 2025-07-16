@@ -6,6 +6,8 @@ public class Enemy : Entity {
     
     public int nextTargetPosition = 0; // 0 is the top player character, 2 is the bottom
     
+    public bool fleeing = false;
+    
     // Default Constructor
     public Enemy() {
         playerControlled = false;
@@ -133,6 +135,21 @@ public class Enemy : Entity {
 
     public override void startOfTurn(){
         base.startOfTurn();
+        // Check heroes for Piety, leave peacefully if HP < max piety
+        foreach(PlayerCharacter hero in Battlefield.PlayerSide) {
+            if(hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety").amount >= this.currentHP) {
+                Console.WriteLine(hero.name+" is too pious!");
+                this.fleeing = true;
+                return;
+            }
+        }
         chooseNextTarget();
+    }
+
+    // Don't kill this entity, but do remove it from combat.
+    public void flee() {
+        // Does not trigger events for death
+        Console.WriteLine(this.name+" has exited combat!");
+        Battlefield.RemoveEntity(this);
     }
 }

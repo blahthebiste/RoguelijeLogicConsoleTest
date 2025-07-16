@@ -12,14 +12,19 @@ public class IceWall : Action {
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
+        int power = magicNumber;
+        if(owner!.HasStatusEffect("Spell Power")) {
+            StatusEffect spell_power = owner.GetStatusEffect("Spell Power")!;
+            power += spell_power.amount;
+        }
         if(owner!.HasStatusEffect("Charged")) {
             StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            magicNumber += charge.amount;
+            power += charge.amount;
             owner.EffectList.Remove(charge);
         }
         // Generate Block. (Don't trigger onGainBlock since this is a spell?)
-        Console.WriteLine("Generated "+this.magicNumber+" Block.");
-        Battlefield.addBlock(this.magicNumber, (this.owner!.playerControlled));
+        Console.WriteLine("Generated "+power+" Block.");
+        Battlefield.addBlock(power, (this.owner!.playerControlled));
         return true;
     }
 }

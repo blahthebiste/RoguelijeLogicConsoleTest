@@ -251,16 +251,30 @@ public static class DataRegistry {
                     return new IronHelm();
                 case "chainmail":
                     return new Chainmail();
-                case "healthPotion":
+                case "healthpotion":
                     return new HealthPotion();
-                case "manaPotion":
+                case "manapotion":
                     return new ManaPotion();
-                case "poisonPotion":
+                case "poisonpotion":
                     return new PoisonPotion();
                 case "grog":
                     return new Grog();
-                case "hairTrigger":
+                case "hairtrigger":
                     return new HairTrigger();
+                case "timeturner":
+                    return new TimeTurner();
+                case "platearmor":
+                    return new PlateArmor();
+                case "battleaxe":
+                    return new Battleaxe();
+                case "banner":
+                    return new Banner();
+                case "whiteflag":
+                    return new WhiteFlag();
+                case "phoenixwand":
+                    return new PhoenixWand();
+                case "grapplinghook":
+                    return new GrapplingHook();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

@@ -90,7 +90,7 @@ public class EquipmentItem : Item {
         // Unequip the item.
         this.onUnequip();
         if(action.owner != null) {
-            Console.WriteLine("Unequipping "+this.name+" from "+this.parentAction!.owner!.name);
+            Console.WriteLine("Unequipping "+this.name+" from "+action.owner.name);
             // Exhaust the hero who equipped/unequipped this in combat
             if(CurrentRun.InCombat) {
                 action.owner.exhausted = true;

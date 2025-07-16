@@ -55,6 +55,45 @@ public static class CardManager {
 		Hand.Remove(card);
 	}
 
+	// Prompts the player to choose a card in their discard pile.
+	// Puts the chosen card into their hand.
+	// Returns false if the discard pile was empty, or the player cancelled.
+	public static bool retrieveCard() {
+		if(DiscardPile.Count == 0) {
+			Console.WriteLine("Your discard pile is empty!");
+			return false;
+		}
+		while(true) {
+			Console.WriteLine("Choose a card to return to your hand:");
+			int cardCount = 0;
+			foreach(ActionCard card in DiscardPile) {
+                cardCount++;
+				Console.WriteLine("\t[Card "+cardCount+"] "+card.ToString()+"\n");
+			}
+			Console.Write("\n> ");
+            string? cmd = Console.ReadLine();
+            if(cmd == null) continue;
+            if(cmd.ToLower().Trim() == "exit" || cmd.ToLower().Trim() == "quit" || cmd.ToLower().Trim() == "cancel" || cmd.ToLower().Trim() == "back") {
+                Console.WriteLine("");
+                Console.WriteLine("Cancelling card retrieval.");
+                return false;
+            }
+            if(int.TryParse(cmd.ToLower().Trim(), out int cardSelection)) {
+				if(cardSelection <= cardCount && cardSelection > 0) {
+					ActionCard chosenCard = DiscardPile[cardSelection - 1];
+					Console.WriteLine("Returned "+chosenCard.name+" to your hand.");
+					DiscardPile.Remove(chosenCard);
+					Hand.Add(chosenCard);
+					return true;
+				}
+                else {
+                    Console.WriteLine("Must enter a number between 1 and "+cardCount+".\n");
+                }
+			}
+		}
+
+	}
+
 	public static void discardHand() {
 		foreach(ActionCard card in Hand) {
 			DiscardPile.Add(card); // Put all cards from hand into discard pile

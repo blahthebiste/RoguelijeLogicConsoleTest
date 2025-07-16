@@ -8,6 +8,8 @@ public class Action {
     public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
     public bool ignoresTaunt = false;
+    public bool hitsAbove = false;
+    public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
 	public Entity? owner; // The entity that is using the action
 

@@ -1,14 +1,15 @@
-public class Zap : Action {
+public class LivingFlame : Action {
 
-    public Zap() {
-        this.name = "Zap";
-        this.description = "Deal 9 damage.";
+    public LivingFlame() {
+        this.name = "Living Flame";
+        this.description = "Deal 3 damage to all enemies. Gain 1 Spell Power.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 9;
+        this.magicNumber = 3; // Base damage
+        this.magicNumber2 = 1; // Spell power gain
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
-        this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.targetting = TargetCategory.ALL_ENEMIES;
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
@@ -22,10 +23,18 @@ public class Zap : Action {
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
-        // Deal damage to the target.
+        // Deal damage to all enemies.
         Attack atk = new Attack(power, this.owner!, target!);
         //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
         target!.onReceiveAttack(atk);
+        return true;
+    }
+
+    public override bool useOnce(Modifier? modifier){
+        if(this.owner != null) {
+            //Console.WriteLine("Drawing 3 cards");
+            this.owner.AddStatusEffect(new SpellPower(magicNumber2, this.owner));
+        }
         return true;
     }
 }
