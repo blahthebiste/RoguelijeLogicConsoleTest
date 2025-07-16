@@ -261,6 +261,8 @@ public static class DataRegistry {
                     return new Grog();
                 case "hairtrigger":
                     return new HairTrigger();
+                case "heartcrystal":
+                    return new HeartCrystal();
                 case "timeturner":
                     return new TimeTurner();
                 case "platearmor":

@@ -6,11 +6,15 @@ public class Poison : StatusEffect {
         this.name = "Poison";
         this.description = "Lose this much HP at the start of each turn.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Remove HP at the start of every turn
     public override void startOfTurn() {
-        if(this.owner != null) this.owner.changeHP(-this.amount);
+        if(this.owner != null){
+            Console.WriteLine("Poison saps "+this.amount+" HP!");
+            this.owner.changeHP(-this.amount);
+        }
     }
 
     // Remove poison when resting

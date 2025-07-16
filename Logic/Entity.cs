@@ -9,7 +9,7 @@ public class Entity {
     public bool exhausted = false;
     public List<Action> ActionList = new List<Action>(); // Equipment is tied to actions.
     public List<StatusEffect> EffectList = new List<StatusEffect>(); // All status effects currently on the entity.
-    public Action previousAction = new Idle();
+    public Action? previousAction = null;
     
     // Default constuctor
     public Entity() {
@@ -65,14 +65,14 @@ public class Entity {
 
     public virtual void AddStatusEffect(StatusEffect newEffect) {
         if(this.hasItem(new Grog()) && newEffect.isDebuff && newEffect.amount > 0) {
-            Console.WriteLine("Grog reduced debuff!");
+            Console.WriteLine("Grog reduced incoming "+newEffect.name+"!");
             newEffect.amount -= 1;
         }
         string newEffectName = newEffect.name;
         Console.WriteLine(this.name+" gained new effect: "+newEffectName+" with value "+newEffect.amount+".");
         foreach(StatusEffect existingEffect in EffectList) {
             string existingEffectName = existingEffect.name;
-            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            //Console.WriteLine("Comparing to '"+existingEffectName+"'...");
             if(existingEffectName == newEffectName) {
                 // If the entity already has the effect, just add to it
                 existingEffect.amount += newEffect.amount;
@@ -90,7 +90,7 @@ public class Entity {
         Console.WriteLine("Removing effect named '"+effectName+"'.");
         foreach(StatusEffect existingEffect in EffectList.ToList()) {
             string existingEffectName = existingEffect.name;
-            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            //Console.WriteLine("Comparing to '"+existingEffectName+"'...");
             if(existingEffectName == effectName) {
                 // If the entity has the effect, remove it
                 existingEffect.onRemoved();
@@ -107,7 +107,7 @@ public class Entity {
     public StatusEffect? GetStatusEffect(string effectName) {
         foreach(StatusEffect existingEffect in EffectList) {
             string existingEffectName = existingEffect.name;
-            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            //Console.WriteLine("Comparing to '"+existingEffectName+"'...");
             if(existingEffectName == effectName) {
                 return existingEffect;
             }
@@ -118,7 +118,7 @@ public class Entity {
     public bool HasStatusEffect(string effectName) {
         foreach(StatusEffect existingEffect in EffectList) {
             string existingEffectName = existingEffect.name;
-            Console.WriteLine("Comparing to '"+existingEffectName+"'...");
+            //Console.WriteLine("Comparing to '"+existingEffectName+"'...");
             if(existingEffectName == effectName) {
                 return true;
             }

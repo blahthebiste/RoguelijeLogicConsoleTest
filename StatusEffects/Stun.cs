@@ -6,6 +6,7 @@ public class Stun : StatusEffect {
         this.name = "Stun";
         this.description = "Cannot take actions other than Rest actions for that many turns.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Decrement every turn

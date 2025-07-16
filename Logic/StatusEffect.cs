@@ -1,6 +1,7 @@
 public class StatusEffect {
     public bool isDebuff = false;
     public bool hidden = false;
+    public bool canBeZero = false;
     public int amount = 0;
 
     public string name = "MISSING NAME";
@@ -14,16 +15,10 @@ public class StatusEffect {
 		return effectString;
 	}
 
-    // Probably the best time to check for effects with amount 0?
+
     public virtual void Decrease(int amountDecrease) {
         this.amount -= amountDecrease;
         this.onAmountChanged(-amountDecrease);
-        if(owner != null) {
-            foreach(StatusEffect eff in owner.EffectList.ToList())
-             if(eff.amount == 0){
-                eff.Remove();   
-             }
-        }
     }
 
     
@@ -40,7 +35,13 @@ public class StatusEffect {
     }
 
     // Run whenever a status effect amount is modified
+    // Probably the best time to remove effects with amount 0
     public virtual void onAmountChanged(int delta) {
+        if(owner != null) {
+            if(!this.canBeZero && this.amount == 0){
+                this.Remove();
+            }
+        }
 
     }
 

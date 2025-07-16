@@ -17,6 +17,26 @@ public class Robes : EquipmentItem {
         this.getOwner().AddStatusEffect(new SpellPower(1, this.getOwner()));
     }
 
+    
+    // Also apply SpellPower on equip if in combat:
+    public override void onEquip() {
+        base.onEquip();
+        if(this.getOwner() == null) {
+            return;
+        }
+        if(CurrentRun.InCombat) {
+            // Add 1 SpellPower:
+            this.getOwner().AddStatusEffect(new SpellPower(1, this.getOwner()));
+        }
+    }
 
+    // Remove 1 SpellPower if in combat
+    public override void onUnequip() {
+        base.onUnequip();
+        if(CurrentRun.InCombat) {
+            // Remove 1 SpellPower:
+            this.getOwner().AddStatusEffect(new SpellPower(-1, this.getOwner()));
+        }
+    }
 
 }

@@ -18,4 +18,25 @@ public class IronHelm : EquipmentItem {
         this.getOwner().AddStatusEffect(new Toughness(1, this.getOwner()));
     }
 
+
+    // Also apply Toughness on equip if in combat:
+    public override void onEquip() {
+        base.onEquip();
+        if(this.getOwner() == null) {
+            return;
+        }
+        if(CurrentRun.InCombat) {
+            // Add 1 Toughness:
+            this.getOwner().AddStatusEffect(new Toughness(1, this.getOwner()));
+        }
+    }
+
+    // Remove 1 Toughness if in combat
+    public override void onUnequip() {
+        base.onUnequip();
+        if(CurrentRun.InCombat) {
+            // Remove 1 Toughness:
+            this.getOwner().AddStatusEffect(new Toughness(-1, this.getOwner()));
+        }
+    }
 }

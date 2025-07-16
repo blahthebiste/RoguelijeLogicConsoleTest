@@ -4,7 +4,7 @@ public class Toughness : StatusEffect {
     public Toughness(int amount, Entity owner) {
         this.amount = amount;
         this.name = "Toughness";
-        this.description = "Reduces incoming damage. Twice as effective after using a Rest action.";
+        this.description = "Reduces incoming damage. Twice as effective after using a Defend action.";
         this.owner = owner;
     }
 
@@ -14,8 +14,8 @@ public class Toughness : StatusEffect {
             return atk;
         }
         atk.damage -= this.amount;
-        if(owner != null) {
-            if(this.owner.previousAction.actionType == ActionType.REST) {
+        if(this.owner != null && this.owner.previousAction != null) {
+            if(this.owner.previousAction.actionType == ActionType.DEFEND) {
                 atk.damage -= this.amount;
             }
         }

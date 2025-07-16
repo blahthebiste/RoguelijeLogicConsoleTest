@@ -612,6 +612,7 @@ public static class CurrentRun {
         Tier1ItemPool.Add("PoisonPotion");
         Tier1ItemPool.Add("Grog");
         Tier1ItemPool.Add("HairTrigger");
+        Tier1ItemPool.Add("HeartCrystal");
         
         Tier2ItemPool.Add("TimeTurner");
         Tier2ItemPool.Add("PlateArmor");
@@ -622,7 +623,9 @@ public static class CurrentRun {
         Tier2ItemPool.Add("GrapplingHook");
 
         // For debugging items:
-        Inventory.Add(new GrapplingHook());
+        Inventory.Add(new HeartCrystal());
+        Inventory.Add(new IronHelm());
+        Inventory.Add(new Robes());
     }
 
     // Gets a random item from the specified tier (1-3).

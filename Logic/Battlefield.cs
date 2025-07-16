@@ -23,6 +23,7 @@ public static class Battlefield {
         foreach(PlayerCharacter hero in CurrentRun.Party) {
             PlayerSide.Add(hero);
             hero.currentHP = hero.maxHP;
+            hero.previousAction = null;
         }
         foreach(Enemy enemy in combat.EnemyTroupe) {
             EnemySide.Add(enemy);
@@ -215,6 +216,7 @@ public static class Battlefield {
             hero.EffectList = new List<StatusEffect>();
             hero.exhausted = false;
             hero.currentHP = hero.maxHP;
+            hero.previousAction = null;
         }
         if(playerWon) {
             Console.WriteLine("VICTORY!");
