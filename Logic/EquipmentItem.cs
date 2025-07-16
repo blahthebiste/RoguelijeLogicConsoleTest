@@ -19,12 +19,19 @@ public class EquipmentItem : Item {
     // Equip this item to the specified action.
     // Boolean return code signifies whether the equip attempt succeeded.
     public bool Equip(Action action) {
+        // Beware of replaced actions:
+        if(action.equippedItem != null && action.equippedItem.oldAction != null) {
+            Console.WriteLine("Attempting to equip item to replacement action. Using old action "+action.equippedItem.oldAction.name+" instead.");
+            action = action.equippedItem.oldAction;
+        }
+        
         if(this.slot != ActionType.ANY && this.slot != action.actionType) {
             Console.WriteLine("ERROR: item does not fit that action type!");
             return false;
         }
         // Before we equip it, check for an item already in that slot. It must be removed first.
         if(action.equippedItem != null) {
+            Console.WriteLine("Unequipping existing item "+action.equippedItem);
             action.Unequip();
         }
         // Finally, equip the item.
@@ -147,7 +154,7 @@ public class EquipmentItem : Item {
         if(this.slot == ActionType.ANY) {
             return true;
         }
-        if(type == this.slot) {
+        if(type == this.slot && action.hasEquipmentSlot) {
             return true;
         }
         // No need to check for DUAL; Actions can never be DUAL, only ActionCards
@@ -158,7 +165,7 @@ public class EquipmentItem : Item {
     public int numberMatchingActions(Entity entityToEquip) {
         int matches = 0;
         foreach(Action action in entityToEquip.ActionList) {
-            if(this.matchesActionType(action)) {
+            if(this.matchesActionType(action) && action.hasEquipmentSlot) {
                 matches++;
             }
         }

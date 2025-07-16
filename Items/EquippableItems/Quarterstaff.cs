@@ -4,6 +4,7 @@ public class Quarterstaff : EquipmentItem {
 
     public Quarterstaff() {
         this.parryInstance = new Parry();
+        this.parryInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Quarterstaff";
         this.description = "Gain the '"+parryInstance+"' action.";
         this.slot = ActionType.ATTACK;

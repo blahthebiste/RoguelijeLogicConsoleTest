@@ -4,6 +4,7 @@ public class GrapplingHook : EquipmentItem {
 
     public GrapplingHook() {
         this.hookInstance = new Hook();
+        this.hookInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Grappling Hook";
         this.description = "Gain the '"+hookInstance+"' action.";
         this.slot = ActionType.SKILL;

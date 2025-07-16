@@ -435,7 +435,10 @@ void printCharacterInfo(PlayerCharacter character) {
     Console.WriteLine("HP: "+character.currentHP+"/"+character.maxHP);
     Console.WriteLine("Actions:");
     foreach(Action action in character.ActionList) {
-        if(action.equippedItem == null) {
+        if(!action.hasEquipmentSlot) {
+            Console.WriteLine(action.ToString());
+        }
+        else if(action.equippedItem == null) {
             Console.WriteLine(action.ToString() + " (No item equipped)");
         }
         else {
@@ -889,7 +892,13 @@ void unequipItem(string itemName, string heroName) {
     // Find the action in the hero's action list that has the item equipped:
     foreach(Action action in heroToUnequip.ActionList) {
         if(action.equippedItem != null && action.equippedItem.name.ToLower().Trim().Replace(' ','_') == itemName) {
-            action.Unequip();
+            // Have to check for replaced actions too
+            if(action.equippedItem.oldAction != null) {
+                action.equippedItem.oldAction.Unequip();
+            }
+            else {
+                action.Unequip();
+            }
             Console.WriteLine(heroName+" unequipped "+itemName+".");
             return;
         }

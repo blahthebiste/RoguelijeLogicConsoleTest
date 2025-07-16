@@ -622,10 +622,11 @@ public static class CurrentRun {
         Tier2ItemPool.Add("PhoenixWand");
         Tier2ItemPool.Add("GrapplingHook");
 
+        Tier3ItemPool.Add("MasterSword");
+
         // For debugging items:
-        Inventory.Add(new HeartCrystal());
-        Inventory.Add(new IronHelm());
-        Inventory.Add(new Robes());
+        Inventory.Add(new Shortsword());
+        Inventory.Add(new MasterSword());
     }
 
     // Gets a random item from the specified tier (1-3).

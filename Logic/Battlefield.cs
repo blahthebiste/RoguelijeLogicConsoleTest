@@ -20,21 +20,21 @@ public static class Battlefield {
         EnemySide = new List<Enemy>();
         PlayerSide = new List<PlayerCharacter>();
         // Load in player party:
-        foreach(PlayerCharacter hero in CurrentRun.Party) {
+        foreach(PlayerCharacter hero in CurrentRun.Party.ToList()) {
             PlayerSide.Add(hero);
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
-        foreach(Enemy enemy in combat.EnemyTroupe) {
+        foreach(Enemy enemy in combat.EnemyTroupe.ToList()) {
             EnemySide.Add(enemy);
         }
         // Have enemies choose their targets:
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.enterCombat();
         }
         // Start of combat events for actions and their items
-        foreach(PlayerCharacter hero in CurrentRun.Party) {
-            foreach(Action action in hero.ActionList) {
+        foreach(PlayerCharacter hero in CurrentRun.Party.ToList()) {
+            foreach(Action action in hero.ActionList.ToList()) {
                 if(action.equippedItem != null) {
                     action.equippedItem.startOfCombat();
                 }
@@ -42,7 +42,7 @@ public static class Battlefield {
             hero.exhausted = false;
         }
         // Start of combat events for enemies
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.startOfCombat();
         }
         playerBlock = 0;
@@ -93,26 +93,27 @@ public static class Battlefield {
         }
         // Reset block:
         int permaBlockAmount = 0;
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             StatusEffect? permaBlock = enemy.GetStatusEffect("PermaBlock");
             if(permaBlock != null) permaBlockAmount += permaBlock.amount;
         }
         enemyBlock = (enemyBlock <= permaBlockAmount) ? enemyBlock : permaBlockAmount;
         // Enemies all take their turn:
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.takeTurn();
         }
         // Run endOfTurn events:
-        foreach(PlayerCharacter hero in PlayerSide) {
+        foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             hero.endOfTurn();
         }
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.endOfTurn();
         }
         resolveDeath();
         resolveFleeing();
         turnNumber++;
     }
+    
     public static void startTurn() {
         if(!CurrentRun.InCombat) {
             Console.WriteLine("Not in combat. Skipping startTurn resoltuion");
@@ -121,7 +122,7 @@ public static class Battlefield {
 
         // Reset block:
         int permaBlockAmount = 0;
-        foreach(PlayerCharacter hero in PlayerSide) {
+        foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             StatusEffect? permaBlock = hero.GetStatusEffect("PermaBlock");
             if(permaBlock != null) {
                 Console.WriteLine(hero.name+" had PermaBlock; amount is "+permaBlock.amount);
@@ -136,18 +137,18 @@ public static class Battlefield {
         CardManager.drawHand();
         
         // Run startOfTurn events:
-        foreach(PlayerCharacter hero in PlayerSide) {
+        foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             hero.startOfTurn();
         }
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.startOfTurn();
         }
         
         // Remove exhaustion from the previous turn
-        foreach(PlayerCharacter hero in PlayerSide) {
+        foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             hero.exhausted = false;
         }
-        foreach(Enemy enemy in EnemySide) {
+        foreach(Enemy enemy in EnemySide.ToList()) {
             enemy.exhausted = false;
         }
         resolveDeath();
@@ -155,7 +156,7 @@ public static class Battlefield {
     }
 
     public static bool playerCharactersAllExhausted(){
-        foreach(PlayerCharacter hero in PlayerSide) {
+        foreach(PlayerCharacter hero in PlayerSide.ToList()) {
             if(!hero.exhausted) return false;
         }
         return true;
@@ -205,8 +206,8 @@ public static class Battlefield {
     public static void endCombat(bool playerWon) {
         CurrentRun.InCombat = false;
         CurrentRun.NextCombatEncounter = null;
-        foreach(Entity hero in PlayerSide) {
-            foreach(Action action in hero.ActionList) {
+        foreach(Entity hero in PlayerSide.ToList()) {
+            foreach(Action action in hero.ActionList.ToList()) {
                 action.endOfCombat();
                 if(action.hasLimitedUses) {
                     action.uses = action.maxUses;

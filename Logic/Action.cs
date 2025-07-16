@@ -5,7 +5,9 @@ public class Action {
     public string name;
     public string description;
     public ActionType actionType;
-    public EquipmentItem? equippedItem;
+	
+    public bool hasEquipmentSlot = true;
+	public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
     public bool ignoresTaunt = false;
     public bool hitsAbove = false;

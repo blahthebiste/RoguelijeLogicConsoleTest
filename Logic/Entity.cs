@@ -129,12 +129,12 @@ public class Entity {
     // Kill this entity and remove it from combat.
     public virtual void die() {
         // Trigger events for death
-        foreach(Action act in this.ActionList) {
+        foreach(Action act in this.ActionList.ToList()) {
             if(act.equippedItem != null) {
                 act.equippedItem.onDeath();
             }
         }
-        foreach(StatusEffect eff in EffectList) {
+        foreach(StatusEffect eff in EffectList.ToList()) {
             eff.onDeath();
         }
         Console.WriteLine(this.name+" has been slain!");

@@ -1,11 +1,15 @@
 public class Shortsword : EquipmentItem {
 
     Strike strikeInstance;
+    TwinSlash twinslashInstance;
 
     public Shortsword() {
         this.strikeInstance = new Strike();
+        this.twinslashInstance = new TwinSlash();
+        this.strikeInstance.equippedItem = this;
+        this.twinslashInstance.equippedItem = this;
         this.name = "Shortsword";
-        this.description = "Gain the '"+strikeInstance+"' action.";
+        this.description = "Replace your attack action with '"+strikeInstance+"'. If the action was already Strike, it becomes Twin Slash.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
     }
@@ -16,18 +20,24 @@ public class Shortsword : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        strikeInstance.owner = this.getOwner();
-        this.getOwner()!.ActionList.Add(strikeInstance);
+        if(this.parentAction.name == "Strike") {
+            // Action was already Strike, make it Twin Slash
+            twinslashInstance.owner = this.getOwner();
+            // Replace parent action in action list with twin slash
+            this.replaceAction(this.twinslashInstance);
+        }
+        else {
+            strikeInstance.owner = this.getOwner();
+            // Replace parent action in action list with strike
+            this.replaceAction(this.strikeInstance);
+        }
     }
 
 
     public override void onUnequip() {
         base.onUnequip();
-        if(this.getOwner() == null) {
-            return;
-        }
-        // Remove Strike action to owners action list
-        this.getOwner()!.ActionList.Remove(strikeInstance);
+        // Replace parent action in action list with the original action that was replaced
+        this.restoreOriginalAction();
     }
 
 }

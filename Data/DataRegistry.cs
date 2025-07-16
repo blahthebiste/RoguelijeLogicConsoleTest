@@ -277,6 +277,8 @@ public static class DataRegistry {
                     return new PhoenixWand();
                 case "grapplinghook":
                     return new GrapplingHook();
+                case "mastersword":
+                    return new MasterSword();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

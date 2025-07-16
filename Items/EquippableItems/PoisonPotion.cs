@@ -4,6 +4,7 @@ public class PoisonPotion : EquipmentItem {
 
     public PoisonPotion() {
         this.usePoisonPotionInstance = new UsePoisonPotion();
+        this.usePoisonPotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Poison Potion";
         this.description = "Gain the '"+usePoisonPotionInstance+"' action.";
         this.slot = ActionType.ANY;

@@ -4,6 +4,7 @@ public class Rope : EquipmentItem {
 
     public Rope() {
         this.climbInstance = new Climb();
+        this.climbInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Rope";
         this.description = "Gain the '"+climbInstance+"' action.";
         this.slot = ActionType.SKILL;
