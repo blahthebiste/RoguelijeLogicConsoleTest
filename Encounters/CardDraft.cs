@@ -1,11 +1,11 @@
-public class CardDraft : RandomEvent {
+public class CardDraft : Encounter {
 
     public CardDraft() {
         this.name = "Card Draft";
         this.description = "Choose 1 of 3 cards to add to your collection.";
     }
 
-    // This function contains the bulk of the event code, where the player actually goes through it.
+    // This function contains the bulk of the Encounter code, where the player actually goes through it.
     public override void execute() {
         // Shuffle the pool so that the first 3 are random:
         CurrentRun.Shuffle(CurrentRun.DraftableCardPool);

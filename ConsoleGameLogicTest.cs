@@ -244,9 +244,9 @@ void depart() {
     CurrentRun.GenerateNextCombat();
 }
 
-// Allow the player to choose between a couple of events, if they were just in combat;
-// Or, allow them to choose between a couple of combat encounters, if they just came from an event.
-// If they have already been to an event and selected their next combat, enter combat.
+// Allow the player to choose between a couple of Encounters, if they were just in combat;
+// Or, allow them to choose between a couple of combat encounters, if they just came from an Encounter.
+// If they have already been to an Encounter and selected their next combat, enter combat.
 void nextNode(){
     if(CurrentRun.InCombat) {
         Console.WriteLine("ERROR: must complete combat to proceed!");
@@ -260,18 +260,18 @@ void nextNode(){
         Console.WriteLine("ERROR: must have at least "+CurrentRun.MinimumDeckSize+" cards in your deck to proceed!");
         return;
     }
-    // Determine if the next node is an event or combat:
-    if(!CurrentRun.LastEncounterWasEvent) {
-        Console.WriteLine("Which event would you like to go to next?");
+    // Determine if the next node is an Encounter or combat:
+    if(!CurrentRun.LastEncounterWasEncounter) {
+        Console.WriteLine("Which Encounter would you like to go to next?");
         // Present multiple options, let player choose 1
-        CurrentRun.GenerateEvents();
+        CurrentRun.GenerateEncounters();
     }
     else if(CurrentRun.NextCombatEncounter == null) {
-        // Player has already done an event, but has not yet selected combat
+        // Player has already done an Encounter, but has not yet selected combat
         CurrentRun.GenerateNextCombat();
     }
     else {
-        // Event is completed, and next combat is selected; enter combat
+        // Encounter is completed, and next combat is selected; enter combat
         CurrentRun.EnterCombat();
         printCombatSituation();
     }

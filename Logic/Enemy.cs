@@ -16,12 +16,44 @@ public class Enemy : Entity {
         hostile = true;
     }
 
+    // Constructor from data
+    public Enemy(string characterID)
+    {
+        EnemyData? data = DataRegistry.CharacterData.getEnemyDataByName(characterID);
+        if (data == null)
+        {
+            Console.WriteLine("Could not generate enemy; ID not found.");
+            return;
+        }
+        foreach (string actionName in data.ActionList)
+        {
+            Action? newAction = DataRegistry.ActionData.getActionByName(actionName);
+            if (newAction == null)
+            {
+                Console.WriteLine("Could not generate enemy; action not found.");
+                return;
+            }
+            newAction.owner = this;
+            ActionList.Add(newAction);
+        }
+        name = data.Name;
+        description = data.Description;
+        maxHP = data.HP;
+        playerControlled = false;
+        hostile = true;
+        exhausted = false;
+        currentHP = maxHP;
+        this.assignActionOwnership();
+    }
+
     // Prints out full details about the enemy
-    public override string ToString(){
+    public override string ToString()
+    {
         string str = this.name;
-        str += "\nHP: "+this.currentHP+"/"+this.maxHP;
-        str = str +"\nActions:";
-        for(int i = 0; i < this.ActionList.Count; i++) {
+        str += "\nHP: " + this.currentHP + "/" + this.maxHP;
+        str = str + "\nActions:";
+        for (int i = 0; i < this.ActionList.Count; i++)
+        {
             Action action = ActionList[i];
             str += "\n\t";
             str += action.ToString();

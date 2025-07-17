@@ -1,11 +1,11 @@
-public class Plunder : RandomEvent {
+public class Plunder : Encounter {
 
     public Plunder() {
         this.name = "Plunder";
         this.description = "Gain a random tier 1 item.";
     }
 
-    // This function contains the bulk of the event code, where the player actually goes through it.
+    // This function contains the bulk of the Encounter code, where the player actually goes through it.
     public override void execute() {
         Console.WriteLine(this.name);
         Console.WriteLine(this.description);

@@ -174,8 +174,8 @@ public static class Battlefield
             // After act 1 of the zone, shops are more common
             for (int i = 0; i < 10; i++)
             {
-                // Add 10x bonus shop event
-                CurrentRun.EventPool.Add(new Shop());
+                // Add 10x bonus shop Encounter
+                CurrentRun.EncounterPool.Add(new Shop());
             }
         }
     }

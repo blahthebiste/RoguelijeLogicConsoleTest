@@ -21,13 +21,13 @@ public static class CurrentRun {
     public static List<Zone> CompletedZones;
     public static bool InARun;
     public static bool InCombat;
-    public static bool LastEncounterWasEvent; // Signifies whether the player has completed their event yet.
+    public static bool LastEncounterWasEncounter; // Signifies whether the player has completed their Encounter yet.
 
     public static List<string> Tier1ItemPool; 
     public static List<string> Tier2ItemPool; 
     public static List<string> Tier3ItemPool; 
     
-    public static List<RandomEvent> EventPool; // Resets after each act
+    public static List<Encounter> EncounterPool; // Resets after each act
     
     public static int NUMDRAFTABLEBASICCARDS = 10;
     public static List<ActionCard> DraftableCardPool; // Pool of cards that the player can draft. Starts full of basic action cards.
@@ -52,7 +52,7 @@ public static class CurrentRun {
         Money = 0; // Subject to change
         LevelCap = 1; // Player cannot level anyone up until they acquire a Chaos Tome.
         PartySize = 3; // Also increases later via Chaos Tomes.
-        MinimumDeckSize = 15; // Can be changed during a run through events
+        MinimumDeckSize = 15; // Can be changed during a run through Encounters
         DrawPerTurn = 4; // Also increases later via Chaos Tomes.
         Party = new List<PlayerCharacter>(); // Decided shortly, but not yet
         Bench = new List<PlayerCharacter>(); // Starts empty.
@@ -79,17 +79,17 @@ public static class CurrentRun {
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
         InCombat = false;
-        LastEncounterWasEvent = true; // Starts true so that the player goes to combat first
+        LastEncounterWasEncounter = true; // Starts true so that the player goes to combat first
         Tier1ItemPool = new List<string>();
         Tier2ItemPool = new List<string>();
         Tier3ItemPool = new List<string>();
         DraftableCardPool = new List<ActionCard>();
         ComplexCardPool = new List<ActionCard>();
-        EventPool = new List<RandomEvent>();
+        EncounterPool = new List<Encounter>();
         PopulateItemPools();
         PopulateDraftPool();
         PopulateComplexDraftPool();
-        PopulateEventPool();
+        PopulateEncounterPool();
     }
     //===
     //===
@@ -310,7 +310,7 @@ public static class CurrentRun {
 
 
 
-    //==============================EVENT FUNCTIONS==============================
+    //==============================ENCOUNTER FUNCTIONS==============================
     //===
     //===
     //===
@@ -354,59 +354,59 @@ public static class CurrentRun {
     }
 
     // TODO: fill out
-    public static void PopulateEventPool() {
+    public static void PopulateEncounterPool() {
         for(int i = 0; i < 25; i++) {
-            // Add 25x card draft event
-            EventPool.Add(new CardDraft());
+            // Add 25x card draft Encounter
+            EncounterPool.Add(new CardDraft());
         }
         for(int i = 0; i < 10; i++) {
-            // Add 10x shop event
-            EventPool.Add(new Shop());
+            // Add 10x shop Encounter
+            EncounterPool.Add(new Shop());
         }
         for(int i = 0; i < 10; i++) {
-            // Add 10x plunder event
-            EventPool.Add(new Plunder());
+            // Add 10x plunder Encounter
+            EncounterPool.Add(new Plunder());
         }
-        Console.WriteLine("Populated event pool.");
+        Console.WriteLine("Populated Encounter pool.");
     }
 
     
-    // Picks 3 valid events from the event pool.
+    // Picks 3 valid Encounters from the Encounter pool.
     // 2 will be shown to the player, 1 will be hidden.
-    // The player will decide which of the 3 events they want to go to.
-    public static void GenerateEvents() {
+    // The player will decide which of the 3 Encounters they want to go to.
+    public static void GenerateEncounters() {
         // Shuffle the pool so that the first 3 are random:
-        Shuffle(EventPool);
-        // Reroll duplicates (should the mysery event always be non-duplicate too?)
-        while(EventPool[1]!.name == EventPool[0]!.name) {
-            RandomEvent dupeEvent = EventPool[1];
+        Shuffle(EncounterPool);
+        // Reroll duplicates (should the mysery Encounter always be non-duplicate too?)
+        while(EncounterPool[1]!.name == EncounterPool[0]!.name) {
+            Encounter dupeEncounter = EncounterPool[1];
             // Move to the bottom of the list
-            EventPool.RemoveAt(1);
-            EventPool.Add(dupeEvent);
+            EncounterPool.RemoveAt(1);
+            EncounterPool.Add(dupeEncounter);
         }
-        while(EventPool[2]!.name == EventPool[1]!.name || EventPool[2]!.name == EventPool[0]!.name) {
-            RandomEvent dupeEvent = EventPool[2];
+        while(EncounterPool[2]!.name == EncounterPool[1]!.name || EncounterPool[2]!.name == EncounterPool[0]!.name) {
+            Encounter dupeEncounter = EncounterPool[2];
             // Move to the bottom of the list
-            EventPool.RemoveAt(2);
-            EventPool.Add(dupeEvent);
+            EncounterPool.RemoveAt(2);
+            EncounterPool.Add(dupeEncounter);
         }
-        // The pool should always be large enough that there are 3 unique events, and thus the de-duping code should always resolve.
-        // The player never exhausts all events in the pool during a Zone.
+        // The pool should always be large enough that there are 3 unique Encounters, and thus the de-duping code should always resolve.
+        // The player never exhausts all Encounters in the pool during a Zone.
 
         // Display the first 3
         while(true) {
-            Console.WriteLine("Choose one of the following events to visit, by entering its number:\n");
-            Console.WriteLine("\t[1] "+EventPool[0]!.name);
-            Console.WriteLine("\t[2] ??? Mystery Event ???");
-            Console.WriteLine("\t[3] "+EventPool[2]!.name);
+            Console.WriteLine("Choose one of the following Encounters to visit, by entering its number:\n");
+            Console.WriteLine("\t[1] "+EncounterPool[0]!.name);
+            Console.WriteLine("\t[2] ??? Mystery Encounter ???");
+            Console.WriteLine("\t[3] "+EncounterPool[2]!.name);
             Console.WriteLine("");
             Console.Write("\n> ");
             string? cmd2 = Console.ReadLine();
             if(cmd2 == null) continue;
-            if(int.TryParse(cmd2.ToLower().Trim(), out int eventSelection)) {
+            if(int.TryParse(cmd2.ToLower().Trim(), out int encounterSelection)) {
                 // If they entered a valid number for card selection, add it to their collection:
-                if(eventSelection <= 3 && eventSelection > 0) {
-                    EnterEvent(eventSelection-1);
+                if(encounterSelection <= 3 && encounterSelection > 0) {
+                    EnterEncounter(encounterSelection-1);
                     return;
                 }
                 else {
@@ -419,18 +419,18 @@ public static class CurrentRun {
         }
     }
 
-    // Execute the event at the specified index of the event pool, and remove it from the pool.
-    public static void EnterEvent(int index) {
-        RandomEvent chosenEvent = EventPool[index];
-        EventPool.Remove(chosenEvent);
-        Console.WriteLine("Entering "+chosenEvent.name+"...\n");
-        chosenEvent.execute();
-        LastEncounterWasEvent = true;
+    // Execute the Encounter at the specified index of the Encounter pool, and remove it from the pool.
+    public static void EnterEncounter(int index) {
+        Encounter chosenEncounter = EncounterPool[index];
+        EncounterPool.Remove(chosenEncounter);
+        Console.WriteLine("Entering "+chosenEncounter.name+"...\n");
+        chosenEncounter.execute();
+        LastEncounterWasEncounter = true;
     }
     //===
     //===
     //===
-    //==============================END EVENT FUNCTIONS==============================
+    //==============================END ENCOUNTER FUNCTIONS==============================
 
     //==============================ZONE FUNCTIONS==============================
     //===
@@ -439,8 +439,8 @@ public static class CurrentRun {
     public static void SetZone(ZoneID newZoneID) {
         CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
-        EventPool = new List<RandomEvent>(); // Reset event pool
-        PopulateEventPool();
+        EncounterPool = new List<Encounter>(); // Reset Encounter pool
+        PopulateEncounterPool();
     }
 
     
@@ -558,7 +558,7 @@ public static class CurrentRun {
             return;
         }
         Console.WriteLine("Entering combat...");
-        LastEncounterWasEvent = false;
+        LastEncounterWasEncounter = false;
         InCombat = true;
         Battlefield.LoadCombat(NextCombatEncounter);
         CardManager.beginCombat();

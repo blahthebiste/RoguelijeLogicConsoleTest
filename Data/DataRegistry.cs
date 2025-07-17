@@ -9,6 +9,8 @@ public static class DataRegistry {
         Console.WriteLine("Loading data...");
         CharacterData.LoadPlayerData();
         Console.WriteLine("Loaded player character data.");
+        CharacterData.LoadEnemyData();
+        Console.WriteLine("Loaded enemy character data.");
         EnemyTroupes.LoadTroupeData();
         Console.WriteLine("Loaded enemy troupe data.");
         // TODO: load item data?
@@ -46,9 +48,11 @@ public static class DataRegistry {
     }
 
     public static class CharacterData {
-        public static string playerDataPath = "Data/PlayerCharacters.json";
+        public static string playerDataPath = "Data/Characters/PlayerCharacters.json";
+        public static string enemyDataPath = "Data/Characters/Enemies.json";
 
         public static List<PlayerData>? PlayerDataList = new List<PlayerData>();
+        public static List<EnemyData>? EnemyDataList = new List<EnemyData>();
 
         public static void LoadPlayerData() {
             string json = File.ReadAllText(playerDataPath);
@@ -58,9 +62,21 @@ public static class DataRegistry {
                 return;
             }
             Console.WriteLine("Loaded "+PlayerDataList.Count+" player characters from json.");
-            // foreach(PlayerData data in PlayerDataList){
-            //     Console.WriteLine("Found "+data.Name);
-            // }
+        }
+        
+        public static void LoadEnemyData()
+        {
+            string json = File.ReadAllText(enemyDataPath);
+            EnemyDataList = JsonSerializer.Deserialize<List<EnemyData>>(json);
+            if (EnemyDataList == null)
+            {
+                Console.WriteLine("Failed to load enemy data.");
+                return;
+            }
+            Console.WriteLine("Loaded " + EnemyDataList.Count + " enemies from json.");
+            foreach(EnemyData data in EnemyDataList){
+                Console.WriteLine("Found "+data.Name);
+            }
         }
 
         public static PlayerData? getPlayerDataByName(string characterName) {
@@ -77,27 +93,31 @@ public static class DataRegistry {
             Console.WriteLine("ERROR: No match found for player character with ID = "+characterName);
             return null;
         }
-
-    }
-
-    public static class EnemyData {
-        // Translates an enemy name into an enemy object. Returns null if none are found.
-        public static Entity? getEnemyByName(string enemyName){ 
-            switch(enemyName.ToLower().Trim()) {
-                case "pengoon":
-                    return new Pengoon();
-                case "mist wolf":
-                    return new MistWolf();
-                default:
-                    Console.WriteLine("ERROR: no enemy registered under the name "+enemyName);
-                    return null;
+        
+        public static EnemyData? getEnemyDataByName(string characterName)
+        {
+            if (EnemyDataList == null)
+            {
+                Console.WriteLine("Cannot get enemy data -- Failed to load.");
+                return null;
             }
+            foreach (EnemyData data in EnemyDataList)
+            {
+                if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
+                {
+                    Console.WriteLine("Found match for enemy with ID = " + characterName);
+                    return data;
+                }
+            }
+            Console.WriteLine("ERROR: No match found for enemy with ID = " + characterName);
+            return null;
         }
+
     }
 
     public static class EnemyTroupes {
 
-        public static string TroupeDataPath = "Data/EnemyTroupes.json";
+        public static string TroupeDataPath = "Data/Characters/EnemyTroupes.json";
 
         public static List<TroupeData>? TroupeDataList = new List<TroupeData>();
 
@@ -109,9 +129,6 @@ public static class DataRegistry {
                 return;
             }
             Console.WriteLine("Loaded "+TroupeDataList.Count+" enemy Troupes from json.");
-            // foreach(TroupeData data in TroupeDataList){
-            //     Console.WriteLine("Found "+data.Name);
-            // }
         }
 
         public static TroupeData? getTroupeDataByName(string troupeName) {

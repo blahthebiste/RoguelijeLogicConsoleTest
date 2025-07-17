@@ -11,9 +11,9 @@ public class CombatEncounter {
             return;
         }
         foreach(string enemyName in data.EnemyList) {
-            Entity? newEnemy = DataRegistry.EnemyData.getEnemyByName(enemyName);
+            Enemy? newEnemy = new Enemy(enemyName);
             if(newEnemy == null) {
-                Console.WriteLine("Could not generate enemy troupe; enemy not found.");
+                Console.WriteLine("Could not generate enemy troupe; enemy '"+enemyName+"' not found.");
                 return;
             }
             EnemyTroupe.Add(newEnemy);

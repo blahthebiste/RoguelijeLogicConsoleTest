@@ -1,4 +1,4 @@
-public class Shop : RandomEvent {
+public class Shop : Encounter {
 
     List<EquipmentItem> offeredItems;
     ActionCard? offeredCard;
@@ -16,7 +16,7 @@ public class Shop : RandomEvent {
         ShopOffers = new Dictionary<int, object>();
     }
 
-    // This function contains the bulk of the event code, where the player actually goes through it.
+    // This function contains the bulk of the Encounter code, where the player actually goes through it.
     public override void execute() {
         // Shuffle the pools
         CurrentRun.Shuffle(CurrentRun.DraftableCardPool);

@@ -1,0 +1,30 @@
+[
+	{
+		"Name": "Pengoon",
+		"Description": "\"What is my purpose?\" \"You are part of the tutorial.\" \"Oh god!\"",
+		"HP": 7,
+		"ActionList": [
+			"Swipe"
+		]
+	},
+	{
+		"Name": "Bat",
+		"Description": "This bat seems bewitched to attack anything its master deems a threat.",
+		"HP": 3,
+		"ActionList": [
+			"Swipe"
+		]
+	},
+	{
+		"Name": "Mist Wolf",
+		"Description": "A vicious denizen of The Blackwood, capable of vanishing into the shadows.",
+		"HP": 30,
+		"ActionList": [
+			"Tough",
+			"Bite",
+			"Vanish",
+			"Ravage",
+			"Devour"
+		]
+	}
+]
