@@ -7,7 +7,6 @@ public class Pengoon : Enemy {
         this.hostile = true;
         this.playerControlled = false;
         this.currentHP = maxHP;
-        this.exhausted = false;
         this.ActionList.Add(new Swipe());
         this.assignActionOwnership();
     }

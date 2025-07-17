@@ -82,7 +82,7 @@ public class Action : Events {
 				Entity? target = null;
 				string? actionTarget;
 				if (feedback == null) feedback = "";
-				actionTarget = feedback.ToLower().Trim();
+				actionTarget = feedback.ToLower().Trim().Replace('_',' ');
 				if(actionTarget == "skip") {
 					Console.WriteLine("Skipping action.");
 					return false;

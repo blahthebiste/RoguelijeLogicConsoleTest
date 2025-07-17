@@ -44,11 +44,6 @@ public static class Battlefield
             hero.startOfCombat();
             hero.exhausted = false;
         }
-        // Have enemies choose their targets:
-        foreach (Enemy enemy in EnemySide.ToList())
-        {
-            enemy.enterCombat();
-        }
         // Start of combat events for enemies, only after all have entered
         foreach (Enemy enemy in EnemySide.ToList())
         {

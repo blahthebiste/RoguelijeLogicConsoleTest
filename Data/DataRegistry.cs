@@ -86,6 +86,8 @@ public static class DataRegistry {
             switch(enemyName.ToLower().Trim()) {
                 case "pengoon":
                     return new Pengoon();
+                case "mist wolf":
+                    return new MistWolf();
                 default:
                     Console.WriteLine("ERROR: no enemy registered under the name "+enemyName);
                     return null;
@@ -156,56 +158,90 @@ public static class DataRegistry {
             switch(actionName.ToLower().Trim()) {
                 case "bash":
                     return new Bash();
+                case "bite":
+                    return new Bite();
+                case "cleave":
+                    return new Cleave();
+                case "ravage":
+                    return new Ravage();
+                case "stab":
+                    return new Stab();
                 case "strike":
                     return new Strike();
                 case "swipe":
                     return new Swipe();
+                case "twinslash":
+                    return new TwinSlash();
                 case "whack":
                     return new Whack();
-                case "stab":
-                    return new Stab();
                 case "block":
                     return new Block();
                 case "cower":
                     return new Cower();
-                case "parry":
-                    return new Parry();
                 case "dodge":
                     return new Dodge();
+                case "parry":
+                    return new Parry();
+                case "vanish":
+                    return new Vanish();
+                case "tough":
+                    return new Tough();
+                case "breathe":
+                    return new Breathe();
+                case "focus":
+                    return new Focus();
+                case "idle":
+                    return new Idle();
                 case "recover":
                     return new Recover();
                 case "rest":
                     return new Rest();
-                case "breathe":
-                    return new Breathe();
-                case "idle":
-                    return new Idle();
-                case "focus":
-                    return new Focus();
+                case "resurrect":
+                    return new Resurrect();
+                case "tend":
+                    return new Tend();
+                case "backstab":
+                    return new Backstab();
+                case "charge":
+                    return new Charge();
+                case "climb":
+                    return new Climb();
+                case "counter":
+                    return new Counter();
                 case "daze":
                     return new Daze();
+                case "devour":
+                    return new Devour();
+                case "hook":
+                    return new Hook();
                 case "taunt":
                     return new Taunt();
                 case "whirl":
                     return new Whirl();
-                case "charge":
-                    return new Charge();
-                case "backstab":
-                    return new Backstab();
                 case "harden":
                     return new Harden();
-                case "inflame":
-                    return new Inflame();
-                case "restore":
-                    return new Restore();
-                case "zap":
-                    return new Zap();
-                case "pickpocket":
-                    return new Pickpocket();
-                case "climb":
-                    return new Climb();
                 case "icewall":
                     return new IceWall();
+                case "inflame":
+                    return new Inflame();
+                case "killingword":
+                    return new KillingWord();
+                case "livingflame":
+                    return new LivingFlame();
+                case "pickpocket":
+                    return new Pickpocket();
+                case "restore":
+                    return new Restore();
+                case "usehealthpotion":
+                    return new UseHealthPotion();
+                case "usemanapotion":
+                    return new UseManaPotion();
+                case "usepoisonpotion":
+                    return new UsePoisonPotion();
+                case "userevivepotion":
+                    return new UseRevivePotion();
+                case "zap":
+                    return new Zap();
                 default:
                     Console.WriteLine("ERROR: no action registered under the name "+actionName);
                     return null;

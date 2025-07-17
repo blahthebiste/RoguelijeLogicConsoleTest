@@ -653,7 +653,7 @@ void playCard(string cmd) {
     string? actionTarget;
     // If the command included a third argument, that is the players intended target for this action.
     if(cmd.ToLower().Trim().Split().Length > 2) {
-        actionTarget = cmd.ToLower().Trim().Split()[2];
+        actionTarget = cmd.Split()[2].ToLower().Trim().Replace('_',' ');
         foreach(PlayerCharacter hero in Battlefield.PlayerSide){
             // Check if target is here, if we were given one.
             if(hero.name.ToLower().Trim() == actionTarget) {

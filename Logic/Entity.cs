@@ -9,6 +9,7 @@ public class Entity : Events
     public int currentHP = 1;
     public bool exhausted = false;
     public List<Action> ActionList = new List<Action>(); // Equipment is tied to actions.
+    public List<Action> ActionListMinusPassives = new List<Action>(); // Used for enemies determining what action to use next
     public List<StatusEffect> EffectList = new List<StatusEffect>(); // All status effects currently on the entity.
     public Action? previousAction = null;
 
@@ -38,9 +39,12 @@ public class Entity : Events
     // Fills in the 'owner' field for all actions in the ActionList to be this entity
     public void assignActionOwnership()
     {
-        foreach (Action action in ActionList)
-        {
-            action.owner = this;
+        foreach (Action act in this.ActionList) {
+            act.owner = this;
+            if (act.actionType != ActionType.PASSIVE)
+            { // Assign ActionListMinusPassives:
+                ActionListMinusPassives.Add(act);
+            }
         }
     }
 

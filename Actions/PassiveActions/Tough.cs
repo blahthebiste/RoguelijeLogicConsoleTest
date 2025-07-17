@@ -7,5 +7,12 @@ public class Tough : Action {
         this.magicNumber = 1;
     }
 
-
+    public override void startOfCombat()
+    {
+        if(this.owner == null) {
+            Console.WriteLine("ERROR: "+this.name+" has null owner!");
+            return;
+        }
+        this.owner!.AddStatusEffect(new Toughness(1, this.owner!));
+    }
 }
