@@ -27,7 +27,7 @@ public static class CurrentRun {
     public static List<string> Tier2ItemPool; 
     public static List<string> Tier3ItemPool; 
     
-    public static List<Event> EventPool; // Resets after each act
+    public static List<RandomEvent> EventPool; // Resets after each act
     
     public static int NUMDRAFTABLEBASICCARDS = 10;
     public static List<ActionCard> DraftableCardPool; // Pool of cards that the player can draft. Starts full of basic action cards.
@@ -85,7 +85,7 @@ public static class CurrentRun {
         Tier3ItemPool = new List<string>();
         DraftableCardPool = new List<ActionCard>();
         ComplexCardPool = new List<ActionCard>();
-        EventPool = new List<Event>();
+        EventPool = new List<RandomEvent>();
         PopulateItemPools();
         PopulateDraftPool();
         PopulateComplexDraftPool();
@@ -379,13 +379,13 @@ public static class CurrentRun {
         Shuffle(EventPool);
         // Reroll duplicates (should the mysery event always be non-duplicate too?)
         while(EventPool[1]!.name == EventPool[0]!.name) {
-            Event dupeEvent = EventPool[1];
+            RandomEvent dupeEvent = EventPool[1];
             // Move to the bottom of the list
             EventPool.RemoveAt(1);
             EventPool.Add(dupeEvent);
         }
         while(EventPool[2]!.name == EventPool[1]!.name || EventPool[2]!.name == EventPool[0]!.name) {
-            Event dupeEvent = EventPool[2];
+            RandomEvent dupeEvent = EventPool[2];
             // Move to the bottom of the list
             EventPool.RemoveAt(2);
             EventPool.Add(dupeEvent);
@@ -421,7 +421,7 @@ public static class CurrentRun {
 
     // Execute the event at the specified index of the event pool, and remove it from the pool.
     public static void EnterEvent(int index) {
-        Event chosenEvent = EventPool[index];
+        RandomEvent chosenEvent = EventPool[index];
         EventPool.Remove(chosenEvent);
         Console.WriteLine("Entering "+chosenEvent.name+"...\n");
         chosenEvent.execute();
@@ -439,7 +439,7 @@ public static class CurrentRun {
     public static void SetZone(ZoneID newZoneID) {
         CurrentZone = DataRegistry.GenerateZone(newZoneID);
         ZoneProgress = 1; // Reset zone progress to area 1.
-        EventPool = new List<Event>(); // Reset event pool
+        EventPool = new List<RandomEvent>(); // Reset event pool
         PopulateEventPool();
     }
 

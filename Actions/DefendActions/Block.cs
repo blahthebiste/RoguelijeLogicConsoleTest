@@ -10,9 +10,12 @@ public class Block : Action {
 
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        int calcedBlock = target!.onGainBlock(block);
+        if (target == null) {
+            Console.WriteLine("ERROR: null target for action '"+this+"'.");
+            return false;
+        }
         // Generate Block.
-        Battlefield.addBlock(calcedBlock, (target!.playerControlled));
+        Battlefield.addBlock(block, target);
         return true;
     }
 }

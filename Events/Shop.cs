@@ -1,4 +1,4 @@
-public class Shop : Event {
+public class Shop : RandomEvent {
 
     List<EquipmentItem> offeredItems;
     ActionCard? offeredCard;

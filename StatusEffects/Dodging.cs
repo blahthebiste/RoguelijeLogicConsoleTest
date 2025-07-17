@@ -10,7 +10,7 @@ public class Dodging : StatusEffect {
 
     // Dodge attacks
     public override Attack onReceiveAttack(Attack atk) {
-        if(owner.HasStatusEffect("Impeded")) {
+        if(owner != null && owner.HasStatusEffect("Impeded")) {
             Console.WriteLine(owner.name+" failed to dodge the attack, because they were Impeded!");
         }
         else {

@@ -14,7 +14,7 @@ public class Robes : EquipmentItem {
             return;
         }
         // Add 1 Spell Power:
-        this.getOwner().AddStatusEffect(new SpellPower(1, this.getOwner()));
+        this.getOwner()!.AddStatusEffect(new SpellPower(1, this.getOwner()!));
     }
 
     
@@ -26,16 +26,19 @@ public class Robes : EquipmentItem {
         }
         if(CurrentRun.InCombat) {
             // Add 1 SpellPower:
-            this.getOwner().AddStatusEffect(new SpellPower(1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new SpellPower(1, this.getOwner()!));
         }
     }
 
     // Remove 1 SpellPower if in combat
     public override void onUnequip() {
+        if(this.getOwner() == null) {
+            return;
+        }
         base.onUnequip();
         if(CurrentRun.InCombat) {
             // Remove 1 SpellPower:
-            this.getOwner().AddStatusEffect(new SpellPower(-1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new SpellPower(-1, this.getOwner()!));
         }
     }
 

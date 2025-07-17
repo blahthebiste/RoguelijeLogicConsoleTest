@@ -1,6 +1,6 @@
 
 // All actions extend this class.
-public class Action {
+public class Action : Events {
     
     public string name;
     public string description;
@@ -81,6 +81,7 @@ public class Action {
                 string? feedback = Console.ReadLine();
 				Entity? target = null;
 				string? actionTarget;
+				if (feedback == null) feedback = "";
 				actionTarget = feedback.ToLower().Trim();
 				if(actionTarget == "skip") {
 					Console.WriteLine("Skipping action.");
@@ -192,14 +193,14 @@ public class Action {
 
 	// Gets a target list based on the current targeting type of the action
 	// List will be empty for target categories that cannot get a list automatically.
-	public List<Entity>? getTargets(TargetCategory category) {
+	public List<Entity> getTargets(TargetCategory category) {
 		if(this.owner == null) {
 			Console.WriteLine("ERROR: Action has no owner.");
-			return null;
+			return new List<Entity>();
 		}
 		if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
 			Console.WriteLine("ERROR: not in combat.");
-			return null;
+			return new List<Entity>();
 		}
 		List<Entity> targets = new List<Entity>();
 		switch(category) {
@@ -248,15 +249,15 @@ public class Action {
 			case TargetCategory.DEAD_ENEMY:
 			case TargetCategory.DEAD_ANY:
 				Console.WriteLine("Action target category requires player to choose target.");
-				return null;
+				return new List<Entity>();
 			default:
 				Console.WriteLine("ERROR: unknown Action target category");
-				return null;
+				return new List<Entity>();
 		}
 	}
 
 	// Default overload uses the action's normal targetting
-	public List<Entity>? getTargets() {
+	public List<Entity> getTargets() {
 		return getTargets(targetting);
 	}
 
@@ -311,6 +312,12 @@ public class Action {
 				return target == owner;
 			case TargetCategory.ALL_ENEMIES:
 			case TargetCategory.SINGLE_ENEMY:
+                // Must be alive
+                if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
+				{
+					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					return false;
+				}
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = (owner.playerControlled != target.playerControlled);
 				// Check for Taunt as well:
@@ -341,8 +348,14 @@ public class Action {
 				return opposingTeams;
 			case TargetCategory.ALL_ALLIES:
 			case TargetCategory.SINGLE_ALLY:
+				// Must be alive
+				if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
+				{
+					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					return false;
+				}
 				// If they are on the same team, they can target with this action
-				return (owner.playerControlled == target.playerControlled);
+				return owner.playerControlled == target.playerControlled;
 			case TargetCategory.DEAD_ALLY:
 				// If they are on the same team, but the target is dead, they can target with this action
 				return (Battlefield.DeadHeroes.Contains(target) && owner.playerControlled) 
@@ -356,7 +369,12 @@ public class Action {
 				return Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target);
 			case TargetCategory.EVERYONE:
 			case TargetCategory.SINGLE_ANY:
-				// Always valid
+				// Must be alive
+				if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
+				{
+					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					return false;
+				}
 				return true;
 			default:
 				Console.WriteLine("Action had no targetting set. This should never happen.");
@@ -395,12 +413,6 @@ public class Action {
 			// Otherwise, it failed, so do nothing.
 			Console.WriteLine("ERROR: Could not unequip item "+this.equippedItem.name+" from action "+this.name);
 		}
-    }
-
-	
-	//=============================EVENTS============================
-    public virtual void endOfCombat(){
-        
     }
 
 	

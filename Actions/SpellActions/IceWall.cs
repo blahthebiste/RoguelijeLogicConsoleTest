@@ -22,9 +22,15 @@ public class IceWall : Action {
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
-        // Generate Block. (Don't trigger onGainBlock since this is a spell?)
+        // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
         Console.WriteLine("Generated "+power+" Block.");
-        Battlefield.addBlock(power, (this.owner!.playerControlled));
+        if (target == null)
+        {
+            Console.WriteLine("ERROR: null target for action '"+this+"'.");
+            return false;
+        }
+        // Generate Block.
+        Battlefield.addBlock(power, target);
         return true;
     }
 }

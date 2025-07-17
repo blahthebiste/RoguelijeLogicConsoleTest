@@ -1,4 +1,4 @@
-public class Event {
+public class RandomEvent {
 
     public String name = "MISSING NAME";
     public String description = "MISSING DESCRIPTION";

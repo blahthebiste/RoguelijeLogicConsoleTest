@@ -10,20 +10,23 @@ public class Sapphire : EquipmentItem {
 
     public override void onEquip() {
         base.onEquip();
-        if(this.getOwner() == null) {
+        if(this.getOwner() == null || this.parentAction == null) {
             return;
         }
         // Add 1 spell use and max spell use for the action:
-        this.parentAction.uses += 1;
-        this.parentAction.maxUses += 1;
+        this.parentAction!.uses += 1;
+        this.parentAction!.maxUses += 1;
     }
 
 
     public override void onUnequip() {
         base.onUnequip();
+        if(this.getOwner() == null || this.parentAction == null) {
+            return;
+        }
         // Remove 1 spell use and max spell use from the action:
         if(this.parentAction.uses > 0) this.parentAction.uses -= 1; // Don't let uses get negative
-        this.parentAction.maxUses -= 1;
+        this.parentAction!.maxUses -= 1;
     }
 
 }

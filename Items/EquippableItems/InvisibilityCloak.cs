@@ -14,7 +14,7 @@ public class InvisibilityCloak : EquipmentItem {
             Console.WriteLine("ERROR: "+this.name+" has null owner!");
             return;
         }
-        this.getOwner().AddStatusEffect(new Invisibility(99, this.getOwner()));
+        this.getOwner()!.AddStatusEffect(new Invisibility(99, this.getOwner()!));
     }
 
 
@@ -26,16 +26,19 @@ public class InvisibilityCloak : EquipmentItem {
         }
         if(CurrentRun.InCombat) {
             // Add 99 Invisibility:
-            this.getOwner().AddStatusEffect(new Invisibility(99, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Invisibility(99, this.getOwner()!));
         }
     }
 
     // Remove 99 Invibility if in combat
     public override void onUnequip() {
+        if(this.getOwner() == null) {
+            return;
+        }
         base.onUnequip();
         if(CurrentRun.InCombat) {
             // Remove 99 Toughness:
-            this.getOwner().AddStatusEffect(new Invisibility(-99, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Invisibility(-99, this.getOwner()!));
         }
     }
 

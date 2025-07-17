@@ -1,4 +1,4 @@
-public class StatusEffect {
+public class StatusEffect : Events {
     public bool isDebuff = false;
     public bool hidden = false;
     public bool canBeZero = false;
@@ -28,9 +28,12 @@ public class StatusEffect {
         if(owner != null) owner.EffectList.Remove(this);
     }
 
-//====================EVENTS====================
+    //====================EVENTS====================
+    // Some unique events for statuses, not included in the Events class
+
     // Run whenever a status effect is applied
-    public virtual void onApplied() {
+    public virtual void onApplied()
+    {
 
     }
 
@@ -48,39 +51,6 @@ public class StatusEffect {
     // Run whenever a status effect wears off
     public virtual void onRemoved() {
 
-    }
-
-    public virtual void startOfTurn() {
-
-    }
-
-    public virtual void endOfTurn() {
-
-    }
-    
-    public virtual Attack onAttack(Attack atk) {
-        return atk;
-    }
-    
-    public virtual Attack onReceiveAttack(Attack atk) {
-        return atk;
-    }
-
-    public virtual int onLoseHP(int HPloss) {
-        return HPloss;
-    }
-
-    public virtual int onGainBlock(int block) {
-        return block;
-    }
-
-    public virtual void onDeath() {
-        
-    }
-
-    // Triggered every time the owner of this effect acts
-    public virtual Action onUseAction(Action actionBeingUsed) {
-        return actionBeingUsed;
     }
     
 

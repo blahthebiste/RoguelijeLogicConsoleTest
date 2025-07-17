@@ -1,4 +1,4 @@
-public class Plunder : Event {
+public class Plunder : RandomEvent {
 
     public Plunder() {
         this.name = "Plunder";

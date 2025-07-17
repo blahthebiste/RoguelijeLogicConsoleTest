@@ -654,7 +654,6 @@ void playCard(string cmd) {
     // If the command included a third argument, that is the players intended target for this action.
     if(cmd.ToLower().Trim().Split().Length > 2) {
         actionTarget = cmd.ToLower().Trim().Split()[2];
-        bool targetIsDead = false;
         foreach(PlayerCharacter hero in Battlefield.PlayerSide){
             // Check if target is here, if we were given one.
             if(hero.name.ToLower().Trim() == actionTarget) {
@@ -662,33 +661,47 @@ void playCard(string cmd) {
                 break;
             }
         }
-        foreach(Enemy enemy in Battlefield.EnemySide){
-            // Check if target is here, if we were given one.
-            if(enemy.name.ToLower().Trim() == actionTarget) {
-                target = enemy;
-                break;
+        if (target == null) // If the target is still null, check enemies
+        {
+            foreach (Enemy enemy in Battlefield.EnemySide)
+            {
+                // Check if target is here, if we were given one.
+                if (enemy.name.ToLower().Trim() == actionTarget)
+                {
+                    target = enemy;
+                    break;
+                }
             }
         }
-        // Check dead entities, just in case:
-        foreach(PlayerCharacter hero in Battlefield.DeadHeroes){
-            // Check if target is here, if we were given one.
-            if(hero.name.ToLower().Trim() == actionTarget) {
-                target = hero;
-                targetIsDead = true;
-                break;
+        if (target == null) // If the target is still null, check dead heroes
+        {
+            // Check dead entities, just in case:
+            foreach (PlayerCharacter hero in Battlefield.DeadHeroes)
+            {
+                // Check if target is here, if we were given one.
+                if (hero.name.ToLower().Trim() == actionTarget)
+                {
+                    target = hero;
+                    break;
+                }
             }
         }
-        foreach(Enemy enemy in Battlefield.DeadEnemies){
-            // Check if target is here, if we were given one.
-            if(enemy.name.ToLower().Trim() == actionTarget) {
-                target = enemy;
-                targetIsDead = true;
-                break;
+        if (target == null) // If the target is still null, check dead enemies
+        {
+            foreach (Enemy enemy in Battlefield.DeadEnemies)
+            {
+                // Check if target is here, if we were given one.
+                if (enemy.name.ToLower().Trim() == actionTarget)
+                {
+                    target = enemy;
+                    break;
+                }
             }
         }
         // If the target is still null, error:
-        if(target == null) {
-            Console.WriteLine("No target with the name "+actionTarget+" exists in this battle.");
+        if (target == null)
+        {
+            Console.WriteLine("No target with the name " + actionTarget + " exists in this battle.");
             return;
         }
     }

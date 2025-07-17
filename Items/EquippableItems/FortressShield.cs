@@ -10,12 +10,11 @@ public class FortressShield : EquipmentItem {
 
     // Gain block
     public override void startOfTurn() {
-        if(this.parentAction != null && this.parentAction.block > 0) {
-            int shieldAmount = this.parentAction.block;
+        if(this.parentAction != null && this.parentAction.owner != null && this.parentAction.block > 0) {
             if(this.parentAction.owner != null) {
-                Console.WriteLine("Fortress Shield blocked for "+shieldAmount+".");
+                Console.WriteLine("Fortress Shield blocked for "+this.parentAction.block+".");
                 // Generate Block.
-                Battlefield.addBlock(shieldAmount, (this.parentAction.owner!.playerControlled));    
+                Battlefield.addBlock(this.parentAction.block, this.parentAction.owner);    
             }
         }
     }

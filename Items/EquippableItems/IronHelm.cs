@@ -15,7 +15,7 @@ public class IronHelm : EquipmentItem {
             Console.WriteLine("ERROR: "+this.name+" has null owner!");
             return;
         }
-        this.getOwner().AddStatusEffect(new Toughness(1, this.getOwner()));
+        this.getOwner()!.AddStatusEffect(new Toughness(1, this.getOwner()!));
     }
 
 
@@ -27,16 +27,19 @@ public class IronHelm : EquipmentItem {
         }
         if(CurrentRun.InCombat) {
             // Add 1 Toughness:
-            this.getOwner().AddStatusEffect(new Toughness(1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Toughness(1, this.getOwner()!));
         }
     }
 
     // Remove 1 Toughness if in combat
     public override void onUnequip() {
         base.onUnequip();
+        if(this.getOwner() == null) {
+            return;
+        }
         if(CurrentRun.InCombat) {
             // Remove 1 Toughness:
-            this.getOwner().AddStatusEffect(new Toughness(-1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Toughness(-1, this.getOwner()!));
         }
     }
 }

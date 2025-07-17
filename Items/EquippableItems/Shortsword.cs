@@ -16,18 +16,18 @@ public class Shortsword : EquipmentItem {
 
     public override void onEquip() {
         base.onEquip();
-        // Add Strike action to owners action list
-        if(this.getOwner() == null) {
+        if(this.getOwner() == null || this.parentAction == null) {
             return;
         }
-        if(this.parentAction.name == "Strike") {
+        // Add Strike action to owners action list
+        if(this.parentAction!.name == "Strike") {
             // Action was already Strike, make it Twin Slash
-            twinslashInstance.owner = this.getOwner();
+            twinslashInstance.owner = this.getOwner()!;
             // Replace parent action in action list with twin slash
             this.replaceAction(this.twinslashInstance);
         }
         else {
-            strikeInstance.owner = this.getOwner();
+            strikeInstance.owner = this.getOwner()!;
             // Replace parent action in action list with strike
             this.replaceAction(this.strikeInstance);
         }

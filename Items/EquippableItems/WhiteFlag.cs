@@ -12,7 +12,7 @@ public class WhiteFlag : EquipmentItem {
     public override Action onUseEquippedAction(Action actionBeingUsed) {
         if(this.getOwner() != null) {
             // Apply the piety buff
-            this.getOwner().AddStatusEffect(new Piety(1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Piety(1, this.getOwner()!));
             Console.WriteLine("White Flag gained 1 Piety!");
         }
         return actionBeingUsed;

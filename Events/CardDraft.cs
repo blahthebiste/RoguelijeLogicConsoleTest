@@ -1,4 +1,4 @@
-public class CardDraft : Event {
+public class CardDraft : RandomEvent {
 
     public CardDraft() {
         this.name = "Card Draft";

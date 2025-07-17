@@ -1,5 +1,5 @@
 // Extended by EquipmentItem, ModifierItem, etc
-public class Item {
+public class Item : Events {
     public string name = "MISSING NAME";
     public string description = "MISSING DESCRIPTION";
 

@@ -14,7 +14,7 @@ public class HeartCrystal : EquipmentItem {
             return;
         }
         // Add 1 regen:
-        this.getOwner().AddStatusEffect(new Regen(1, this.getOwner()));
+        this.getOwner()!.AddStatusEffect(new Regen(1, this.getOwner()!));
     }
 
     // Also apply regen on equip if in combat:
@@ -25,16 +25,19 @@ public class HeartCrystal : EquipmentItem {
         }
         if(CurrentRun.InCombat) {
             // Add 1 regen:
-            this.getOwner().AddStatusEffect(new Regen(1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Regen(1, this.getOwner()!));
         }
     }
 
     // Remove 1 regen if in combat
     public override void onUnequip() {
         base.onUnequip();
+        if(this.getOwner() == null) {
+            return;
+        }
         if(CurrentRun.InCombat) {
             // Remove 1 regen:
-            this.getOwner().AddStatusEffect(new Regen(-1, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Regen(-1, this.getOwner()!));
         }
     }
 

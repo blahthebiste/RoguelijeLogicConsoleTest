@@ -14,7 +14,7 @@ public class HeavyArmor : EquipmentItem {
             Console.WriteLine("ERROR: "+this.name+" has null owner!");
             return;
         }
-        this.getOwner().AddStatusEffect(new Impeded(99, this.getOwner()));
+        this.getOwner()!.AddStatusEffect(new Impeded(99, this.getOwner()!));
     }
 
 
@@ -27,7 +27,7 @@ public class HeavyArmor : EquipmentItem {
         this.getOwner()!.changeMaxHP(12);
         if(CurrentRun.InCombat) {
             // Add 99 Impeded:
-            this.getOwner().AddStatusEffect(new Impeded(99, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Impeded(99, this.getOwner()!));
         }
     }
 
@@ -41,7 +41,7 @@ public class HeavyArmor : EquipmentItem {
         this.getOwner()!.changeMaxHP(-12);
         if(CurrentRun.InCombat) {
             // Remove 99 Impeded:
-            this.getOwner().AddStatusEffect(new Impeded(-99, this.getOwner()));
+            this.getOwner()!.AddStatusEffect(new Impeded(-99, this.getOwner()!));
         }
     }
 

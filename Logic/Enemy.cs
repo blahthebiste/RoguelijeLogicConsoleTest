@@ -146,7 +146,7 @@ public class Enemy : Entity {
         base.startOfTurn();
         // Check heroes for Piety, leave peacefully if HP < max piety
         foreach(PlayerCharacter hero in Battlefield.PlayerSide) {
-            if(hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety").amount >= this.currentHP) {
+            if(hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= this.currentHP) {
                 Console.WriteLine(hero.name+" is too pious!");
                 this.fleeing = true;
                 return;
