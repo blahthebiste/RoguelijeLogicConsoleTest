@@ -456,7 +456,7 @@ void printCharacterInfo(PlayerCharacter character) {
 
 void printEnemyInfoFromName(string enemyName) {
     foreach(Enemy enemy in Battlefield.EnemySide) {
-        if(enemyName.ToLower() == enemy.name.ToLower()) {
+        if(enemyName.ToLower().Replace('_',' ') == enemy.name.ToLower()) {
             printEnemyInfo(enemy);
             return;
         }
@@ -470,9 +470,9 @@ void printEnemyInfo(Enemy enemy) {
     Console.WriteLine("Actions:");
     foreach(Action action in enemy.ActionList) {
         if(action.equippedItem == null) {
-            Console.WriteLine(action.ToString() + " (No item equipped)");
+            Console.WriteLine(action.ToString());
         }
-        else {
+        else { // Unnecessary: enemies never use items
             Console.WriteLine(action.ToString() + action.equippedItem.ToString());
         }
     }
@@ -590,10 +590,8 @@ void printCombatSituation() {
 }
 
 void endPlayerTurn() {
-    Console.WriteLine("Ending turn.");
     Battlefield.endTurn();
-    Console.WriteLine("Beginning of turn "+Battlefield.turnNumber);
-    Battlefield.startTurn();
+    Battlefield.startRound();
     printCombatSituation();
 }
 

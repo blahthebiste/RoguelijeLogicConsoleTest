@@ -201,6 +201,12 @@ public static class DataRegistry {
                     return new Parry();
                 case "vanish":
                     return new Vanish();
+                case "assertive":
+                    return new Assertive();
+                case "conniving":
+                    return new Conniving();
+                case "onguard":
+                    return new OnGuard();
                 case "tough":
                     return new Tough();
                 case "breathe":
@@ -231,6 +237,8 @@ public static class DataRegistry {
                     return new Devour();
                 case "hook":
                     return new Hook();
+                case "subtlepoison":
+                    return new SubtlePoison();
                 case "taunt":
                     return new Taunt();
                 case "whirl":

@@ -21,12 +21,22 @@ public class Events
 
     }
 
+    public virtual void startOfRound()
+    {// Triggers before start of player turn
+
+    }
+
     public virtual void startOfTurn()
-    {//
+    {// Enemy start of turn is after player end of turn
 
     }
 
     public virtual void endOfTurn()
+    {//
+
+    }
+
+    public virtual void endOfRound()
     {//
 
     }

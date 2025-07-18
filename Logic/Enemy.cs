@@ -4,7 +4,7 @@ public class Enemy : Entity {
     // For most enemies, just increments by 1 until it hits a usable action each turn.
     public int nextActionIndex = 0;
     
-    public int nextTargetPosition = 0; // 0 is the top player character, 2 is the bottom
+    public Entity? nextTarget; // The next entity that will be targeted. Can be null for actions that do not require a target
     
     public bool fleeing = false;
     
@@ -33,7 +33,6 @@ public class Enemy : Entity {
                 Console.WriteLine("Could not generate enemy; action not found.");
                 return;
             }
-            newAction.owner = this;
             ActionList.Add(newAction);
         }
         name = data.Name;
@@ -68,9 +67,18 @@ public class Enemy : Entity {
         // Loop through actions until we find a usable one
         for (int failedActions = 0; failedActions < ActionListMinusPassives.Count; failedActions++)
         {
-            if (chooseNextTarget())
+            // Some actions do not require a target, but still need to be checked for usability:
+            if (!getNextAction().requiresTarget() && getNextAction().canUse(null, null))
             {
-                break;
+                setNextTarget(null);
+                return;
+            }
+            // For actions that do require a target, validate that we can find a valid target:
+            Entity? chosenTarget = chooseNextTarget(getNextAction());
+            if (chosenTarget != null)
+            {
+                setNextTarget(chosenTarget);
+                return;
             }
             // That action could not find a valid target. Move onto the next.
             nextActionIndex++;
@@ -86,7 +94,6 @@ public class Enemy : Entity {
     // Many enemies will override this
     public void takeTurn()
     {
-        Entity? nextTarget = getNextTarget();
         getNextAction().use(nextTarget, null); // Null modifier, enemies don't use cards
         nextActionIndex++;
         if (nextActionIndex >= ActionListMinusPassives.Count)
@@ -95,21 +102,15 @@ public class Enemy : Entity {
         }
     }
 
-    // Figures out who the next action should target.
+    // Figures out who the given action should target.
     // Selects a random target index from the appropriate side of combat.
-    // If no valid target could be found, returns false.
-    // If the entity has no actions, or their next action does not require a target, returns true.
-    public bool chooseNextTarget()
+    // If no valid target could be found, returns null.
+    // If the entity has no actions, or their next action does not require a target, returns null.
+    public Entity? chooseNextTarget(Action act)
     {
-        if (ActionListMinusPassives.Count < 1)
-        {
-            Console.WriteLine("Entity has no actions.");
-            return true;
-        }
-        List<int> InvalidActionIndices = new List<int>(); // Indices of Actions that cannot find a valid target
         // Get random order for targetting priority:
         List<int> targetPriorityList = new List<int>();
-        switch (this.getNextAction().targetting)
+        switch (act.targetting)
         {
             case TargetCategory.SINGLE_ENEMY:
                 for (int i = 0; i < Battlefield.PlayerSide.Count; i++)
@@ -120,15 +121,14 @@ public class Enemy : Entity {
                 foreach (int targetIndex in targetPriorityList)
                 {
                     // Try each target in order.
-                    if (getNextAction().canUse(Battlefield.PlayerSide[targetIndex], null))
+                    if (act.canUse(Battlefield.PlayerSide[targetIndex], null))
                     {
-                        Console.WriteLine("Action " + getNextAction() + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
-                        setNextTarget(targetIndex, true);
-                        return true;
+                        Console.WriteLine("Action " + act + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
+                        return Battlefield.PlayerSide[targetIndex];
                     }
                 }
                 Console.WriteLine("Action has no valid targets.");
-                return false;
+                return null;
             case TargetCategory.SINGLE_ALLY:
                 for (int i = 0; i < Battlefield.EnemySide.Count; i++)
                 {
@@ -138,121 +138,72 @@ public class Enemy : Entity {
                 foreach (int targetIndex in targetPriorityList)
                 {
                     // Try each target in order.
-                    if (getNextAction().canUse(Battlefield.EnemySide[targetIndex], null))
+                    if (act.canUse(Battlefield.EnemySide[targetIndex], null))
                     {
-                        Console.WriteLine("Action " + getNextAction() + " can be used on " + Battlefield.EnemySide[targetIndex] + "!");
-                        setNextTarget(targetIndex, false);
-                        return true;
+                        Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex] + "!");
+                        return Battlefield.EnemySide[targetIndex];
                     }
                 }
                 Console.WriteLine("Action has no valid targets.");
-                return false;
+                return null;
             default:
                 Console.WriteLine("Next action does not use targeting.");
-                return true;
+                return null;
         }
     }
 
-    // Uses the selected target position and side to set the nextTarget object.
-    public void setNextTarget(int newTargetPosition, bool onPlayerSide = true)
+    // Set the nextTarget object.
+    // Can be null for actions that do not require a target.
+    public void setNextTarget(Entity? target)
     {
-        // Check if there is a valid target for the next action at the new target position
-        Entity? nextTarget;
-        if (onPlayerSide)
-        {
-            nextTarget = Battlefield.PlayerSide[newTargetPosition];
-        }
-        else
-        {
-            nextTarget = Battlefield.EnemySide[newTargetPosition];
-        }
-        // Check if the next action can target them
-        if (this.getNextAction().CanTarget(nextTarget))
-        {
-            this.nextTargetPosition = newTargetPosition;
-        }
-        else
-        {
-            Console.WriteLine("Entity at position " + newTargetPosition + " is not a valid target for " + this.getNextAction().name);
-        }
+        nextTarget = target;
     }
 
 
     // Returns the currently selected next target.
     public Entity? getNextTarget()
     {
-        if (ActionListMinusPassives.Count < 1)
-        {
-            Console.WriteLine("Entity has no actions.");
-            return null;
-        }
-        switch (this.getNextAction().targetting)
-        {
-            case TargetCategory.SINGLE_ENEMY:
-                if (Battlefield.PlayerSide.Count <= nextTargetPosition)
-                {
-                    return null;
-                }
-                Console.WriteLine("Target for " + this.getNextAction().name + " is " + Battlefield.PlayerSide[nextTargetPosition].name);
-                return Battlefield.PlayerSide[nextTargetPosition];
-            case TargetCategory.SINGLE_ALLY:
-                if (Battlefield.EnemySide.Count <= nextTargetPosition)
-                {
-                    return null;
-                }
-                Console.WriteLine("Target for " + this.getNextAction().name + " is " + Battlefield.EnemySide[nextTargetPosition].name);
-                return Battlefield.EnemySide[nextTargetPosition];
-            default:
-                Console.WriteLine("Next action does not use targeting.");
-                return null;
-        }
+        return nextTarget;
     }
     
-    // Returns the name of the currently selected next target.
+    // Returns the name of the currently selected next target,
+    // or 'None' for actions that do not have a target.
     public string getNextTargetName()
     {
-        if (ActionListMinusPassives.Count < 1)
+        if (nextTarget == null)
         {
             return "None";
         }
-        switch (this.getNextAction().targetting)
-        {
-            case TargetCategory.SINGLE_ENEMY:
-                if (Battlefield.PlayerSide.Count <= nextTargetPosition)
-                {
-                    return "None";
-                }
-                return Battlefield.PlayerSide[nextTargetPosition].name;
-            case TargetCategory.SINGLE_ALLY:
-                if (Battlefield.EnemySide.Count <= nextTargetPosition)
-                {
-                    return "None";
-                }
-                return Battlefield.EnemySide[nextTargetPosition].name;
-            default:
-                return "None";
-        }
+        return nextTarget.name;
     }
     
     public Action getNextAction() {
         if(ActionListMinusPassives.Count < 1) {
-            Console.WriteLine("ERROR: action list of "+this.getNextTargetName()+" was empty! Returning Idle for next action");
+            Console.WriteLine("ERROR: action list of "+getNextTargetName()+" was empty! Returning Idle for next action");
             return new Idle();
         }
-        return this.ActionListMinusPassives[this.nextActionIndex];
+        return this.ActionListMinusPassives[nextActionIndex];
     }
 
-    public override void startOfTurn(){
+    public override void startOfRound()
+    {
+        base.startOfRound();
+        prepareTurn();
+    }
+    
+    public override void startOfTurn()
+    {
         base.startOfTurn();
         // Check heroes for Piety, leave peacefully if HP < max piety
-        foreach(PlayerCharacter hero in Battlefield.PlayerSide) {
-            if(hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= this.currentHP) {
-                Console.WriteLine(hero.name+" is too pious! "+this.name+" leaves combat peacefully.");
-                this.fleeing = true;
+        foreach (PlayerCharacter hero in Battlefield.PlayerSide)
+        {
+            if (hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= this.currentHP)
+            {
+                Console.WriteLine(hero.name + " is too pious! " + this.name + " leaves combat peacefully.");
+                fleeing = true;
                 return;
             }
         }
-        prepareTurn();
     }
 
     // Don't kill this entity, but do remove it from combat.

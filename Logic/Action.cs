@@ -46,7 +46,7 @@ public class Action : Events {
             return false;
 		}
 		if(this.requiresTarget() && target == null) {
-            Console.WriteLine("ERROR: no target for action!");
+            Console.WriteLine("ERROR: no target for action '"+name+"'!");
             return false;
         }
 		// If stunned, cannot use non-rest actions
@@ -54,7 +54,7 @@ public class Action : Events {
 			Console.WriteLine("Cannot use non-rest actions while stunned!");
 			return false;
 		}
-		if(this.requiresTarget()) {
+		if(target != null) {
 			// Check if target is valid:
 			if(CanTarget(target!)) {
 				return true;

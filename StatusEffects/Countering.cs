@@ -7,8 +7,8 @@ public class Countering : StatusEffect {
         this.name = "Countering";
         this.description = "Strike enemies who attack you, for that many turns.";
         this.owner = owner;
-        this.strikeInstance = new Strike();
-        this.strikeInstance.owner = owner;
+        strikeInstance = new Strike();
+        strikeInstance.owner = owner;
     }
 
     // Counter attacks with Strike
@@ -18,7 +18,7 @@ public class Countering : StatusEffect {
     }
 
     // Decrement every turn
-    public override void endOfTurn() {
+    public override void startOfTurn() {
         this.Decrease(1);
     }
 }

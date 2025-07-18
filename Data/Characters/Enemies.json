@@ -26,5 +26,35 @@
 			"Ravage",
 			"Devour"
 		]
+	},
+	{
+		"Name": "Brawny Bandit",
+		"Description": "\"These are our woods, scrub!\"",
+		"HP": 18,
+		"ActionList": [
+			"Assertive",
+			"Bash",
+			"Taunt"
+		]
+	},
+	{
+		"Name": "Masked Marauder",
+		"Description": "\"Yeah, beat it!\"",
+		"HP": 12,
+		"ActionList": [
+			"OnGuard",
+			"Parry",
+			"Strike"
+		]
+	},
+	{
+		"Name": "Conniving Cutpurse",
+		"Description": "\"I'll be taking that gold now.\"",
+		"HP": 7,
+		"ActionList": [
+			"Conniving",
+			"Stab",
+			"SubtlePoison"
+		]
 	}
 ]

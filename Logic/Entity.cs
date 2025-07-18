@@ -211,6 +211,21 @@ public class Entity : Events
 
     }
 
+    public override void startOfRound()
+    {
+        foreach (StatusEffect effect in EffectList.ToList())
+        {
+            effect.startOfRound();
+        }
+        foreach (Action action in this.ActionList.ToList())
+        {
+            action.startOfRound();
+            if (action.equippedItem != null)
+            {
+                action.equippedItem.startOfRound();
+            }
+        }
+    }
     public override void startOfTurn()
     {
         foreach (StatusEffect effect in EffectList.ToList())
@@ -242,17 +257,32 @@ public class Entity : Events
             }
         }
     }
+    public override void endOfRound()
+    {
+        foreach (StatusEffect effect in EffectList.ToList())
+        {
+            effect.endOfRound();
+        }
+        foreach (Action action in this.ActionList.ToList())
+        {
+            action.endOfRound();
+            if (action.equippedItem != null)
+            {
+                action.equippedItem.endOfRound();
+            }
+        }
+    }
 
     // Triggered every time an entity acts
     public override Action onUseAction(Action actionBeingUsed)
     {
         // "Used action" event for all status effects on the entity
-        foreach (StatusEffect eff in this.EffectList)
+        foreach (StatusEffect eff in this.EffectList.ToList())
         {
             actionBeingUsed = eff.onUseAction(actionBeingUsed);
         }
         // "Used action" event for all items on the entity
-        foreach (Action act in this.ActionList)
+        foreach (Action act in this.ActionList.ToList())
         {
             act.onUseAction(actionBeingUsed);
             if (act.equippedItem != null)
@@ -270,7 +300,7 @@ public class Entity : Events
 
     public override Attack onAttack(Attack atk)
     {
-        foreach (StatusEffect effect in EffectList)
+        foreach (StatusEffect effect in EffectList.ToList())
         {
             atk = effect.onAttack(atk);
         }
@@ -325,11 +355,11 @@ public class Entity : Events
 
     public override Attack onReceiveAttack(Attack atk)
     {
-        foreach (StatusEffect effect in EffectList.ToList())
+        foreach (StatusEffect effect in EffectList.ToList().ToList())
         {
             atk = effect.onReceiveAttack(atk); // Handle events
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in this.ActionList.ToList().ToList())
         {
             atk = action.onReceiveAttack(atk);
             if (action.equippedItem != null)
@@ -360,7 +390,7 @@ public class Entity : Events
 
     public override int onGainBlock(int block)
     {
-        foreach (StatusEffect effect in EffectList)
+        foreach (StatusEffect effect in EffectList.ToList())
         {
             block = effect.onGainBlock(block); // Handle events
         }
@@ -377,7 +407,7 @@ public class Entity : Events
 
     public override int onHPChange(int HPdelta)
     {
-        foreach (StatusEffect effect in EffectList)
+        foreach (StatusEffect effect in EffectList.ToList())
         {
             HPdelta = effect.onHPChange(HPdelta); // Handle events
         }

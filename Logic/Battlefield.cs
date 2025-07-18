@@ -22,6 +22,8 @@ public static class Battlefield
     //========================================COMBAT GAMEPLAY LOOP========================================
     public static void LoadCombat(CombatEncounter combat)
     {
+        playerBlock = 0;
+        enemyBlock = 0;
         CurrentEncounter = combat;
         EnemySide = new List<Enemy>();
         PlayerSide = new List<PlayerCharacter>();
@@ -34,6 +36,7 @@ public static class Battlefield
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
+        // Load in enemies:
         foreach (Enemy enemy in combat.EnemyTroupe.ToList())
         {
             EnemySide.Add(enemy);
@@ -42,27 +45,33 @@ public static class Battlefield
         foreach (PlayerCharacter hero in CurrentRun.Party.ToList())
         {
             hero.startOfCombat();
-            hero.exhausted = false;
         }
-        // Start of combat events for enemies, only after all have entered
+        // Start of combat events for enemies
         foreach (Enemy enemy in EnemySide.ToList())
         {
             enemy.startOfCombat();
         }
-        playerBlock = 0;
-        enemyBlock = 0;
         turnNumber = 1;
         Console.WriteLine("Beginning of turn " + Battlefield.turnNumber);
-        startTurn();
+        startRound();
     }
 
-    public static void startTurn()
+    // Start of each round after everything from the previous round has resolved.
+    // 1. Reset block for players
+    // 2. Draw a new hand
+    // 3. Trigger start of round events for players
+    // 4. Trigger start of round events for enemies
+    // 5. Reset exhaustion for both teams
+    // 6. startOfTurn events for players
+    // 7. Resolve unresolved death or fleeing
+    public static void startRound()
     {
         if (!CurrentRun.InCombat)
         {
-            Console.WriteLine("Not in combat. Skipping startTurn resolution");
+            Console.WriteLine("Not in combat, cannot start round.");
             return;
         }
+        Console.WriteLine("Beginning of turn "+turnNumber);
 
         // Reset block:
         int permaBlockAmount = 0;
@@ -82,14 +91,14 @@ public static class Battlefield
         CardManager.discardHand();
         CardManager.drawHand();
 
-        // Run startOfTurn events:
+        // Run startOfRound events:
         foreach (PlayerCharacter hero in PlayerSide.ToList())
         {
-            hero.startOfTurn();
+            hero.startOfRound();
         }
         foreach (Enemy enemy in EnemySide.ToList())
         {
-            enemy.startOfTurn();
+            enemy.startOfRound();
         }
 
         // Remove exhaustion from the previous turn
@@ -101,16 +110,36 @@ public static class Battlefield
         {
             enemy.exhausted = false;
         }
+        // Run startOfTurn events for players:
+        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        {
+            hero.startOfTurn();
+        }
         resolveDeath();
         resolveFleeing();
     }
 
+    // All the stuff that resolves once the player hits 'end turn'.
+    // 1. endOfTurn events for player characters
+    // 2. Reset enemy block
+    // 3. startOfTurn events for enemies
+    // 4. Enemies take their turns
+    // 5. endOfTurn events for enemies
+    // 6. endOfRound events for both players and enemies
+    // 7. Resolve unresolved death or fleeing
+    // 8. Tick up the turn counter
     public static void endTurn()
     {
         if (!CurrentRun.InCombat)
         {
-            Console.WriteLine("Not in combat. Skipping endTurn resolution");
+            Console.WriteLine("Not in combat, cannot end rurn.");
             return;
+        }
+        Console.WriteLine("Ending turn.");
+        // Run endOfTurn events for heroes:
+        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        {
+            hero.endOfTurn();
         }
         // Reset block:
         int permaBlockAmount = 0;
@@ -120,19 +149,30 @@ public static class Battlefield
             if (permaBlock != null) permaBlockAmount += permaBlock.amount;
         }
         enemyBlock = (enemyBlock <= permaBlockAmount) ? enemyBlock : permaBlockAmount;
+
+        // Run startOfTurn events for enemies:
+        foreach (Enemy enemy in EnemySide.ToList())
+        {
+            enemy.startOfTurn();
+        }
         // Enemies all take their turn:
         foreach (Enemy enemy in EnemySide.ToList())
         {
             enemy.takeTurn();
         }
-        // Run endOfTurn events:
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
-        {
-            hero.endOfTurn();
-        }
+        // End of turn events for enemies
         foreach (Enemy enemy in EnemySide.ToList())
         {
             enemy.endOfTurn();
+        }
+        // End of round events for both players and enemies
+        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        {
+            hero.endOfRound();
+        }
+        foreach (Enemy enemy in EnemySide.ToList())
+        {
+            enemy.endOfRound();
         }
         resolveDeath();
         resolveFleeing();

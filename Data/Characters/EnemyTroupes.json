@@ -21,9 +21,9 @@
 		"Description": "A band of outlaws, known around these parts for preying upon unprepared travelers.",
 		"Difficulty": 2,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Brawny Bandit",
+			"Masked Marauder",
+			"Conniving Cutpurse"
 		]
 	},
 	{
@@ -31,8 +31,8 @@
 		"Description": "An immortal agent of chaos, armed with brews and hexes.",
 		"Difficulty": 4,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
+			"Bat",
+			"Bat",
 			"Pengoon",
 			"Pengoon"
 		]
