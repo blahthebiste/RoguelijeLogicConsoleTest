@@ -7,6 +7,10 @@ public class Enemy : Entity {
     public Entity? nextTarget; // The next entity that will be targeted. Can be null for actions that do not require a target
     
     public bool fleeing = false;
+
+    public Action idle = new Idle();
+
+    public string? master; // Used by minions
     
 
     // Default Constructor
@@ -35,6 +39,7 @@ public class Enemy : Entity {
             }
             ActionList.Add(newAction);
         }
+        idle.owner = this;
         name = data.Name;
         description = data.Description;
         maxHP = data.HP;
@@ -42,6 +47,7 @@ public class Enemy : Entity {
         hostile = true;
         exhausted = false;
         currentHP = maxHP;
+        master = data.Master;
         this.assignActionOwnership();
     }
 
@@ -179,8 +185,8 @@ public class Enemy : Entity {
     
     public Action getNextAction() {
         if(ActionListMinusPassives.Count < 1) {
-            Console.WriteLine("ERROR: action list of "+getNextTargetName()+" was empty! Returning Idle for next action");
-            return new Idle();
+            //Console.WriteLine("ERROR: action list of "+getNextTargetName()+" was empty! Returning Idle for next action");
+            return idle;
         }
         return this.ActionListMinusPassives[nextActionIndex];
     }

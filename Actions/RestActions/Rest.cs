@@ -8,9 +8,13 @@ public class Rest : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Restore HP.
-        target!.ReceiveHealing(healing);
+        this.owner.ReceiveHealing(healing);
         return true;
     }
 }

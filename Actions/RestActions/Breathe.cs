@@ -1,16 +1,22 @@
-public class Breathe : Action {
+public class Breathe : Action
+{
 
-    public Breathe() {
+    public Breathe()
+    {
         this.name = "Breathe";
         this.description = "Recover 2 HP.";
         this.actionType = ActionType.REST;
         this.healing = 2;
         this.targetting = TargetCategory.SELF;
     }
-
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Restore HP.
-        target!.ReceiveHealing(healing);
+        this.owner.ReceiveHealing(healing);
         return true;
     }
 }

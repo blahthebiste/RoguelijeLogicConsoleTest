@@ -11,10 +11,13 @@ public class Vanish : Action
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
-    {
-        // Apply the Dodge status effect
-        target!.AddStatusEffect(new Vanished(magicNumber, target));
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
+        // Apply the Vanished status effect
+        this.owner.AddStatusEffect(new Vanished(magicNumber, this.owner));
         return true;
     }
 }

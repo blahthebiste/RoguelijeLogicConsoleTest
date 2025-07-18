@@ -9,9 +9,13 @@ public class Counter : Action {
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Apply the Counter status effect
-        target!.AddStatusEffect(new Countering(magicNumber, target));
+        this.owner.AddStatusEffect(new Countering(magicNumber, this.owner));
         return true;
     }
     

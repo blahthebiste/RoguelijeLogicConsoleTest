@@ -11,9 +11,13 @@ public class Harden : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        // Apply the damage resistance buff
-        target!.AddStatusEffect(new Toughness(magicNumber, target));
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
+        // Apply toughness status effect
+        this.owner.AddStatusEffect(new Toughness(magicNumber, this.owner));
         return true;
     }
 }

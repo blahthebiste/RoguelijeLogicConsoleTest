@@ -173,6 +173,7 @@ public static class DataRegistry {
         // Translates an action name into an action object. Returns null if none are found.
         public static Action? getActionByName(string actionName) {
             switch(actionName.ToLower().Trim()) {
+                //==========ATTACKS==========
                 case "bash":
                     return new Bash();
                 case "bite":
@@ -191,6 +192,7 @@ public static class DataRegistry {
                     return new TwinSlash();
                 case "whack":
                     return new Whack();
+                //==========DEFENDS==========
                 case "block":
                     return new Block();
                 case "cower":
@@ -201,14 +203,26 @@ public static class DataRegistry {
                     return new Parry();
                 case "vanish":
                     return new Vanish();
+
+                //==========HIDDEN PASSIVES==========
+                case "fleeswhenoutofspells":
+                    return new FleesWhenOutOfSpells();
+                case "summonedminion":
+                    return new SummonedMinion();
+
+                //==========PASSIVES==========
                 case "assertive":
                     return new Assertive();
                 case "conniving":
                     return new Conniving();
+                case "everfull":
+                    return new Everfull();
                 case "onguard":
                     return new OnGuard();
                 case "tough":
                     return new Tough();
+
+                //==========RESTS==========
                 case "breathe":
                     return new Breathe();
                 case "focus":
@@ -223,6 +237,8 @@ public static class DataRegistry {
                     return new Resurrect();
                 case "tend":
                     return new Tend();
+
+                //==========SKILLS==========
                 case "backstab":
                     return new Backstab();
                 case "charge":
@@ -243,10 +259,20 @@ public static class DataRegistry {
                     return new Taunt();
                 case "whirl":
                     return new Whirl();
+
+                //==========SPELLS==========
+                case "batswarm":
+                    return new BatSwarm();
+                case "deadlybrew":
+                    return new DeadlyBrew();
                 case "harden":
                     return new Harden();
+                case "hex":
+                    return new Hex();
                 case "icewall":
                     return new IceWall();
+                case "immortalitypotion":
+                    return new ImmortalityPotion();
                 case "inflame":
                     return new Inflame();
                 case "killingword":
@@ -267,6 +293,7 @@ public static class DataRegistry {
                     return new UseRevivePotion();
                 case "zap":
                     return new Zap();
+
                 default:
                     Console.WriteLine("ERROR: no action registered under the name "+actionName);
                     return null;

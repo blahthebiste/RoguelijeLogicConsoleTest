@@ -12,26 +12,30 @@ public class PlayerCharacter : Entity {
     }
 
     // Constructor from data
-    public PlayerCharacter(string characterID) {
+    public PlayerCharacter(string characterID)
+    {
         personalCard = new BasicAttack();
         PlayerData? data = DataRegistry.CharacterData.getPlayerDataByName(characterID);
-        if(data == null) {
+        if (data == null)
+        {
             Console.WriteLine("Could not generate player character; ID not found.");
             return;
         }
         ActionCard? potentialPersonalCard = DataRegistry.CardData.getCardByName(data.PersonalCard);
-        if(potentialPersonalCard == null) {
+        if (potentialPersonalCard == null)
+        {
             Console.WriteLine("Could not generate player character; personal card not found.");
             return;
         }
         personalCard = potentialPersonalCard;
-        foreach(string actionName in data.ActionList) {
+        foreach (string actionName in data.ActionList)
+        {
             Action? newAction = DataRegistry.ActionData.getActionByName(actionName);
-            if(newAction == null) {
+            if (newAction == null)
+            {
                 Console.WriteLine("Could not generate player character; action not found.");
                 return;
             }
-            newAction.owner = this;
             ActionList.Add(newAction);
         }
         name = data.Name;
@@ -41,6 +45,7 @@ public class PlayerCharacter : Entity {
         hostile = false;
         exhausted = false;
         currentHP = maxHP;
+        assignActionOwnership();
     }
     
 }

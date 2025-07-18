@@ -8,9 +8,13 @@ public class Charge : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Apply the Charged status effect
-        target!.AddStatusEffect(new Charged(magicNumber, target));
+        this.owner.AddStatusEffect(new Charged(magicNumber, this.owner));
         return true;
     }
 }

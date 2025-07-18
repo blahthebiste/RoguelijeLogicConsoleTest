@@ -8,14 +8,6 @@
 		]
 	},
 	{
-		"Name": "Bat",
-		"Description": "This bat seems bewitched to attack anything its master deems a threat.",
-		"HP": 3,
-		"ActionList": [
-			"Swipe"
-		]
-	},
-	{
 		"Name": "Mist Wolf",
 		"Description": "A vicious denizen of The Blackwood, capable of vanishing into the shadows.",
 		"HP": 30,
@@ -56,5 +48,37 @@
 			"Stab",
 			"SubtlePoison"
 		]
+	},
+	{
+		"Name": "Bat",
+		"Description": "This bat seems bewitched to attack anything its master deems a threat.",
+		"HP": 3,
+		"ActionList": [
+			"Swipe",
+			"SummonedMinion"
+		],
+		"Master": "Witch"
+	},
+	{
+		"Name": "Witch",
+		"Description": "\"Ye'll be stew by dinnertime!\"",
+		"HP": 50,
+		"ActionList": [
+			"Hex",
+			"BatSwarm",
+			"DeadlyBrew",
+			"ImmortalityPotion",
+			"FleesWhenOutOfSpells"
+		]
+	},
+	{
+		"Name": "Everfull Cauldron",
+		"Description": "The source of the Witch's power.",
+		"HP": 20,
+		"ActionList": [
+			"Everfull",
+			"SummonedMinion"
+		],
+		"Master": "Witch"
 	}
 ]

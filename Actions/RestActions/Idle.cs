@@ -7,7 +7,7 @@ public class Idle : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
         // Do nothing.
         return true;
     }

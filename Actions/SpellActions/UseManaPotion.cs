@@ -10,11 +10,17 @@ public class UseManaPotion : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Restore spell uses.
-        foreach(Action action in target!.ActionList) {
-            if(action != this && action.hasLimitedUses) {
-                Console.WriteLine("Regaining uses for "+action.name+" up to "+action.maxUses);
+        foreach (Action action in this.owner.ActionList)
+        {
+            if (action != this && action.hasLimitedUses)
+            {
+                Console.WriteLine("Regaining uses for " + action.name + " up to " + action.maxUses);
                 action.uses = action.maxUses;
             }
         }

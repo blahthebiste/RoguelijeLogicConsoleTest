@@ -60,9 +60,9 @@ public static class Battlefield
     // 1. Reset block for players
     // 2. Draw a new hand
     // 3. Trigger start of round events for players
-    // 4. Trigger start of round events for enemies
-    // 5. Reset exhaustion for both teams
-    // 6. startOfTurn events for players
+    // 4. startOfTurn events for players
+    // 5. Trigger start of round events for enemies
+    // 6. Reset exhaustion for both teams
     // 7. Resolve unresolved death or fleeing
     public static void startRound()
     {
@@ -71,7 +71,7 @@ public static class Battlefield
             Console.WriteLine("Not in combat, cannot start round.");
             return;
         }
-        Console.WriteLine("Beginning of turn "+turnNumber);
+        Console.WriteLine("Beginning of turn " + turnNumber);
 
         // Reset block:
         int permaBlockAmount = 0;
@@ -96,6 +96,12 @@ public static class Battlefield
         {
             hero.startOfRound();
         }
+        // Run startOfTurn events for players:
+        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        {
+            hero.startOfTurn();
+        }
+        // Choose targets AFTER players' startOfTurn events have resolved
         foreach (Enemy enemy in EnemySide.ToList())
         {
             enemy.startOfRound();
@@ -109,11 +115,6 @@ public static class Battlefield
         foreach (Enemy enemy in EnemySide.ToList())
         {
             enemy.exhausted = false;
-        }
-        // Run startOfTurn events for players:
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
-        {
-            hero.startOfTurn();
         }
         resolveDeath();
         resolveFleeing();
@@ -397,6 +398,48 @@ public static class Battlefield
         turnNumber = 0;
     }
 
+    // Adds a new entity to the battlefield.
+    // playerControlled determines which side.
+    // Currently, can only summon playercharacters to playerside and enemies to enemy side.
+    public static bool SummonEntity(string entityName, bool playerControlled)
+    {
+        if (playerControlled)
+        { // Summoning to the player's side.
+
+            PlayerCharacter? newHero = new PlayerCharacter(entityName);
+            if (newHero == null)
+            {
+                Console.WriteLine("Given name '" + entityName + "' did not match any hero.");
+                // No matching heroes.
+                return false;
+            }
+            else
+            { // Found hero to summon.
+                PlayerSide.Add(newHero);
+                newHero.previousAction = null;
+                Console.WriteLine("Successfully summoned '" + newHero.name + "' to player side.");
+                return true;
+            }
+        }
+        else
+        { // Summoning to the enemy side.
+            Enemy? newEnemy = new Enemy(entityName);
+            if (newEnemy == null)
+            {
+                Console.WriteLine("Given name '" + entityName + "' did not match any enemy.");
+                // No matching enemies.
+                return false;
+            }
+            else
+            { // Found enemy to summon.
+                EnemySide.Add(newEnemy);
+                newEnemy.previousAction = null;
+                Console.WriteLine("Successfully summoned '" + newEnemy.name + "' to enemy side.");
+                return true;
+            }
+        }
+
+    }
 
 
 

@@ -9,13 +9,13 @@ public class Block : Action {
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        if (target == null) {
-            Console.WriteLine("ERROR: null target for action '"+this+"'.");
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
         }
         // Generate Block.
-        Battlefield.addBlock(block, target);
+        Battlefield.addBlock(block, this.owner);
         return true;
     }
 }

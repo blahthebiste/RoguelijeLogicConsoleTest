@@ -196,8 +196,10 @@ void printStartScreen() {
 }
 
 // Starts a run and auto-selects party and encounter
-void tutorial() {
-    if(CurrentRun.InARun) {
+void tutorial()
+{
+    if (CurrentRun.InARun)
+    {
         Console.WriteLine("\nInvalid command -- already in a run");
         return;
     }
@@ -217,7 +219,8 @@ void startRun() {
 }
 
 // Skips the party selection process to start the run immediately
-void setDefaultParty(){
+void setDefaultParty()
+{
     PlayerCharacter newThief = new PlayerCharacter("Thief");
     CurrentRun.Party.Add(newThief);
     PlayerCharacter newHealer = new PlayerCharacter("Healer");
@@ -227,6 +230,7 @@ void setDefaultParty(){
     zoneSelection();
     depart();
 }
+
 
 void depart() {
     if(CurrentRun.PartySize > CurrentRun.Party.Count) {
@@ -241,6 +245,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
+    CurrentRun.ZoneProgress = 3; // For debugging witch
     CurrentRun.GenerateNextCombat();
 }
 
@@ -469,10 +474,17 @@ void printEnemyInfo(Enemy enemy) {
     Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
     Console.WriteLine("Actions:");
     foreach(Action action in enemy.ActionList) {
-        if(action.equippedItem == null) {
+        if (action.hiddenAction)
+        {
+            // Do not show hidden actions.
+            continue;
+        }
+        if (action.equippedItem == null)
+        {
             Console.WriteLine(action.ToString());
         }
-        else { // Unnecessary: enemies never use items
+        else
+        { // Unnecessary: enemies never use items
             Console.WriteLine(action.ToString() + action.equippedItem.ToString());
         }
     }
@@ -590,9 +602,20 @@ void printCombatSituation() {
 }
 
 void endPlayerTurn() {
-    Battlefield.endTurn();
-    Battlefield.startRound();
-    printCombatSituation();
+    if (CurrentRun.InCombat)
+    {
+        Battlefield.endTurn();
+    }
+    // Combat may end with that turn. Only run startRound if it is still going
+    if (CurrentRun.InCombat)
+    {
+        Battlefield.startRound();
+    }
+    // Combat may end during startOfRound triggers. Only run printCombatSituation if it is still going
+    if (CurrentRun.InCombat)
+    {
+        printCombatSituation();
+    }
 }
 
 void printHand() {

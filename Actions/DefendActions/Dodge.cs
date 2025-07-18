@@ -1,6 +1,8 @@
-public class Dodge : Action {
+public class Dodge : Action
+{
 
-    public Dodge() {
+    public Dodge()
+    {
         this.name = "Dodge";
         this.description = "Dodge the next attack this turn.";
         this.actionType = ActionType.DEFEND;
@@ -9,9 +11,13 @@ public class Dodge : Action {
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Apply the Dodge status effect
-        target!.AddStatusEffect(new Dodging(magicNumber, target));
+        this.owner.AddStatusEffect(new Dodging(magicNumber, this.owner));
         return true;
     }
 }

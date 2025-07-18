@@ -9,13 +9,15 @@ public class Recover : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        // Restore HP.
-        target!.ReceiveHealing(healing);
-        return true;
-    }
 
-    public override bool useOnce(Modifier? modifier){
+
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
+        // Restore HP.
+        this.owner.ReceiveHealing(healing);
         // Draw cards.
         Console.WriteLine("Drawing 3 cards");
         CardManager.drawCard(3);

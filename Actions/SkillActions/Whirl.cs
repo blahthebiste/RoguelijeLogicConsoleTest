@@ -8,9 +8,13 @@ public class Whirl : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        // Apply the Whirl status effect
-        target!.AddStatusEffect(new Whirling(magicNumber, target));
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
+        // Apply whirling status effect
+        this.owner.AddStatusEffect(new Whirling(magicNumber, this.owner));
         return true;
     }
 }

@@ -11,9 +11,13 @@ public class Inflame : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        // Apply the strength buff
-        target!.AddStatusEffect(new Strength(magicNumber, target));
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
+        // Apply Strength status effect
+        this.owner.AddStatusEffect(new Strength(magicNumber, this.owner));
         return true;
     }
 }

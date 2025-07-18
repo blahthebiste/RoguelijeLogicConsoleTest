@@ -10,9 +10,13 @@ public class UseHealthPotion : Action {
         this.targetting = TargetCategory.SELF;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Restore HP.
-        target!.ReceiveHealing(target.maxHP);
+        this.owner.ReceiveHealing(this.owner.maxHP);
         return true;
     }
 }

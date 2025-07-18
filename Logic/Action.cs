@@ -13,6 +13,7 @@ public class Action : Events {
     public bool hitsAbove = false;
     public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
+    public bool hiddenAction = false; // The action does not appear in action lists.
 	public Entity? owner; // The entity that is using the action
 
 	public TargetCategory targetting = TargetCategory.NONE;
@@ -45,12 +46,12 @@ public class Action : Events {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
 		}
-		if(this.requiresTarget() && target == null) {
+		if(requiresTarget() && target == null) {
             Console.WriteLine("ERROR: no target for action '"+name+"'!");
             return false;
         }
 		// If stunned, cannot use non-rest actions
-		if(owner.HasStatusEffect("Stun") && this.actionType != ActionType.REST) {
+		if(owner.HasStatusEffect("Stun") && actionType != ActionType.REST) {
 			Console.WriteLine("Cannot use non-rest actions while stunned!");
 			return false;
 		}
@@ -60,7 +61,7 @@ public class Action : Events {
 				return true;
 			}
 			else {
-				Console.WriteLine(owner!.name+" cannot target "+target!.name+" with "+this.name+"!");
+				Console.WriteLine(owner!.name+" cannot target "+target!.name+" with "+name+"!");
 				return false;
 			}
 		}
@@ -124,7 +125,7 @@ public class Action : Events {
 		}
 		else {
 			// Action does not require the player to choose a target; automatically select targets and attempt the action.
-			return this.use(null, null);
+			return use(null, null);
 		}
 	}
 
@@ -134,20 +135,20 @@ public class Action : Events {
 		bool anySuccess = false; // Used to track whether the action was ever used successfully
 		targetList = new List<Entity>(); // Reset the target list
 		if(mainTarget == null) {
-			this.setTargets(); // Set starting target list if the target passed in was null
+			setTargets(); // Set starting target list if the target passed in was null
 		}
 		else {
-			this.targetList.Add(mainTarget); // If we were passed a target, just use it
+			targetList.Add(mainTarget); // If we were passed a target, just use it
 		}
-		this.owner!.onUseAction(this); // Trigger event; this can modify the target list
-		if(this.targetList != null) {
-			foreach(Entity target in this.targetList) {
+		owner!.onUseAction(this); // Trigger event; this can modify the target list
+		if(targetList != null) {
+			foreach(Entity target in targetList) {
 				if(this.canUse(target, modifier)) {
 					if(target == null) {
-						Console.WriteLine(owner!.name+" attempting to use "+this.name+"!");
+						Console.WriteLine(owner!.name+" attempting to use "+name+"!");
 					}
 					else {
-						Console.WriteLine(owner!.name+" attempting to use "+this.name+" on "+target!.name+"!");
+						Console.WriteLine(owner!.name+" attempting to use "+name+" on "+target!.name+"!");
 					}
 					anySuccess = this.useOnTarget(target, modifier) || anySuccess;
 				}
@@ -157,17 +158,17 @@ public class Action : Events {
 			}
 		}
 		// Run the action code that does not target anyone
-		if(!this.requiresTarget() && this.canUse(null, modifier)) {
-			anySuccess = this.useOnce(modifier) || anySuccess;
+		if(!requiresTarget() && canUse(null, modifier)) {
+			anySuccess = useOnce(modifier) || anySuccess;
 		}
 		if(anySuccess) { // Action succeeded (at least in some capacity)
-			this.owner!.previousAction = this; // Update previous action.
+			owner!.previousAction = this; // Update previous action.
 			if(hasLimitedUses) { // Decrement uses if the action has limited uses
 				uses--;
-				Console.WriteLine(this.uses+" use(s) remaining.");
+				Console.WriteLine(uses+" use(s) remaining.");
 			}
-			if(!this.freeAction) {
-				this.owner!.exhausted = true; // Exhaust owner
+			if(!freeAction) {
+				owner!.exhausted = true; // Exhaust owner
 			}
 		}
 		else { // Action never went through; don't exhaust, don't use up uses
@@ -194,7 +195,7 @@ public class Action : Events {
 	// Gets a target list based on the current targeting type of the action
 	// List will be empty for target categories that cannot get a list automatically.
 	public List<Entity> getTargets(TargetCategory category) {
-		if(this.owner == null) {
+		if(owner == null) {
 			Console.WriteLine("ERROR: Action has no owner.");
 			return new List<Entity>();
 		}
@@ -208,10 +209,10 @@ public class Action : Events {
 				Console.WriteLine("Action target category is NONE.");
 				return targets;
 			case TargetCategory.SELF:
-				targets.Add(this.owner);
+				targets.Add(owner);
 				return targets;
 			case TargetCategory.ALL_ENEMIES:
-				if(this.owner.hostile) {
+				if(owner.hostile) {
 					foreach(Entity ent in Battlefield.PlayerSide) {
 						targets.Add(ent);
 					}
@@ -223,7 +224,7 @@ public class Action : Events {
 				}				
 				return targets;
 			case TargetCategory.ALL_ALLIES:
-				if(this.owner.hostile) {
+				if(owner.hostile) {
 					foreach(Entity ent in Battlefield.EnemySide) {
 						targets.Add(ent);
 					}
@@ -383,9 +384,9 @@ public class Action : Events {
 		}
 	}
 
-	// All target categories require a target to operate on except for NONE
-    public bool requiresTarget(){
-        return (this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY || this.targetting == TargetCategory.SINGLE_ANY);
+	// All target categories require a target to operate on except for single_ally, single_enemy, or single_any.
+    public bool requiresTarget() {
+        return targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY || targetting == TargetCategory.SINGLE_ANY;
     }
 
 	//==========================ITEM OPERATIONS=========================
