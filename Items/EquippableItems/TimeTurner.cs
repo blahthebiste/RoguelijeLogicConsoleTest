@@ -1,11 +1,13 @@
 public class TimeTurner : EquipmentItem {
 
 
-    public TimeTurner() {
+    public TimeTurner()
+    {
         this.name = "Time Turner";
         this.description = "Use this action for free at the start of battle.";
         this.slot = ActionType.ANY;
         this.price = 130;
+        this.tier = 2;
     }
 
 

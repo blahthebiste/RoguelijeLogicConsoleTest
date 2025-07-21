@@ -1,11 +1,13 @@
 public class WhiteFlag : EquipmentItem {
 
 
-    public WhiteFlag() {
+    public WhiteFlag()
+    {
         this.name = "White Flag";
         this.description = "Your Rest action also gains 1 Piety.";
         this.slot = ActionType.REST;
         this.price = 130;
+        this.tier = 2;
     }
 
     // Triggers whenever the action that the item is equipped to is used

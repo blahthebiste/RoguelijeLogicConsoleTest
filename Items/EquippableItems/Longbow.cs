@@ -1,11 +1,13 @@
 public class Longbow : EquipmentItem {
 
 
-    public Longbow() {
+    public Longbow()
+    {
         this.name = "Longbow";
         this.description = "Your Attack action ignores Taunt.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

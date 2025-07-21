@@ -1,11 +1,13 @@
 public class InvisibilityCloak : EquipmentItem {
 
 
-    public InvisibilityCloak() {
+    public InvisibilityCloak()
+    {
         this.name = "Invisibility Cloak";
         this.description = "Cannot be targeted by enemies while any allies are alive.";
         this.slot = ActionType.SKILL;
         this.price = 260;
+        this.tier = 3;
     }
 
     // Each combat, gain invisibility

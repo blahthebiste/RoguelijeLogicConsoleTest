@@ -2,13 +2,15 @@ public class ResurrectionStone : EquipmentItem {
 
     Resurrect resurrectInstance;
 
-    public ResurrectionStone() {
+    public ResurrectionStone()
+    {
         this.resurrectInstance = new Resurrect();
         this.resurrectInstance.equippedItem = this; // Still show medkit as equipped
         this.name = "Resurrection Stone";
-        this.description = "Replace your Rest action with '"+resurrectInstance+"'.";
+        this.description = "Replace your Rest action with '" + resurrectInstance + "'.";
         this.slot = ActionType.REST;
         this.price = 260;
+        this.tier = 3;
     }
 
     public override void onEquip() {

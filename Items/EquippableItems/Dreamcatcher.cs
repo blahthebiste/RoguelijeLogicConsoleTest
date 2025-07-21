@@ -1,11 +1,13 @@
 public class Dreamcatcher : EquipmentItem {
 
 
-    public Dreamcatcher() {
+    public Dreamcatcher()
+    {
         this.name = "Dreamcatcher";
         this.description = "Your Rest action also removes all debuffs.";
         this.slot = ActionType.REST;
         this.price = 65;
+        this.tier = 1;
     }
 
     // Triggers whenever the action that the item is equipped to is used

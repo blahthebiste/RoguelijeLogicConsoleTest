@@ -1,11 +1,13 @@
 public class Battleaxe : EquipmentItem {
 
 
-    public Battleaxe() {
+    public Battleaxe()
+    {
         this.name = "Battleaxe";
         this.description = "Your Attack action also hits the enemy below.";
         this.slot = ActionType.ATTACK;
         this.price = 130;
+        this.tier = 2;
     }
 
     public override void onEquip() {

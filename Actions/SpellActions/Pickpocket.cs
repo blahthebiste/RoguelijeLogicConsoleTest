@@ -4,7 +4,7 @@ public class Pickpocket : Action {
 
     public Pickpocket() {
         this.name = "Pickpocket";
-        this.description = "Gain a random level 1 item for this combat only.";
+        this.description = "Generate a random level 1 item for this combat only, and equip it.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 1;
@@ -13,11 +13,16 @@ public class Pickpocket : Action {
     }
 
     public override bool useOnce(Modifier? modifier) {
+        if (this.owner == null) {
+            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
+            return false;
+        }
         // Generate a random item (not removed from the pool)
         EquipmentItem pickpocketedItem = CurrentRun.getRandomItemFromPool(1, false);
         pickpocketedItems.Add(pickpocketedItem);
         CurrentRun.Inventory.Add(pickpocketedItem);
         Console.WriteLine("Got "+pickpocketedItem.name+".");
+        CurrentRun.equipItem(pickpocketedItem.name, this.owner.name);
         return true;
     }
 

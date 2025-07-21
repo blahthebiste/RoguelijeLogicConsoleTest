@@ -2,13 +2,15 @@ public class IceWand : EquipmentItem {
 
     IceWall iceWallInstance;
 
-    public IceWand() {
+    public IceWand()
+    {
         this.iceWallInstance = new IceWall();
         this.iceWallInstance.equippedItem = this;
         this.name = "Ice Wand";
-        this.description = "Replace your Spell action with '"+iceWallInstance+"'.";
+        this.description = "Replace your Spell action with '" + iceWallInstance + "'.";
         this.slot = ActionType.SPELL;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

@@ -337,10 +337,12 @@ public static class Battlefield
 
 
     // Atk object already has the amount, source, and target, among other things.
-    public static void performAttack(Attack atk)
+    // Returns final damage done after block and status effects.
+    public static int performAttack(Attack atk)
     {
         atk = atk.source.onAttack(atk);
         atk = atk.target.onReceiveAttack(atk);
+        return atk.damage;
     }
 
     // Run through all block gain events for the source, then apply it

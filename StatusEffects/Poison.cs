@@ -12,7 +12,7 @@ public class Poison : StatusEffect {
     // Remove HP at the start of every turn
     public override void startOfTurn() {
         if(this.owner != null){
-            Console.WriteLine("Poison saps "+this.amount+" HP!");
+            Console.WriteLine("Poison saps "+this.amount+" HP from "+this.owner.name+"!");
             this.owner.changeHP(-this.amount);
         }
     }

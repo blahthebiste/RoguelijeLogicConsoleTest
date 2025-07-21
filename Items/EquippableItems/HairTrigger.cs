@@ -1,11 +1,13 @@
 public class HairTrigger : EquipmentItem {
 
 
-    public HairTrigger() {
+    public HairTrigger()
+    {
         this.name = "Hair Trigger";
         this.description = "Use this action for free upon death.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
 

@@ -6,6 +6,7 @@ public class LeatherBoots : EquipmentItem {
         this.description = "Your Skill action draws a card.";
         this.slot = ActionType.SKILL;
         this.price = 65;
+        this.tier = 1;
     }
 
     // Triggers whenever the action that the item is equipped to is used

@@ -1,11 +1,13 @@
 public class Campfire : EquipmentItem {
 
 
-    public Campfire() {
+    public Campfire()
+    {
         this.name = "Campfire";
         this.description = "Your Rest action causes all allies to rest.";
         this.slot = ActionType.REST;
         this.price = 65;
+        this.tier = 1;
     }
 
     // Triggers whenever the action that the item is equipped to is used

@@ -2,13 +2,15 @@ public class Quarterstaff : EquipmentItem {
 
     Parry parryInstance;
 
-    public Quarterstaff() {
+    public Quarterstaff()
+    {
         this.parryInstance = new Parry();
         this.parryInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Quarterstaff";
-        this.description = "Gain the '"+parryInstance+"' action.";
+        this.description = "Gain the '" + parryInstance + "' action.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

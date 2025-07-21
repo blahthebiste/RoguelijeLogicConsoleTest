@@ -1,11 +1,13 @@
 public class Chainmail : EquipmentItem {
 
 
-    public Chainmail() {
+    public Chainmail()
+    {
         this.name = "Chainmail";
         this.description = "+3 max HP.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

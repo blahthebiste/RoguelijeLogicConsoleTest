@@ -173,6 +173,7 @@ public static class DataRegistry {
         // Translates an action name into an action object. Returns null if none are found.
         public static Action? getActionByName(string actionName) {
             switch(actionName.ToLower().Trim()) {
+
                 //==========ATTACKS==========
                 case "bash":
                     return new Bash();
@@ -180,6 +181,8 @@ public static class DataRegistry {
                     return new Bite();
                 case "cleave":
                     return new Cleave();
+                case "infect":
+                    return new Infect();
                 case "ravage":
                     return new Ravage();
                 case "stab":
@@ -192,6 +195,7 @@ public static class DataRegistry {
                     return new TwinSlash();
                 case "whack":
                     return new Whack();
+
                 //==========DEFENDS==========
                 case "block":
                     return new Block();
@@ -217,6 +221,8 @@ public static class DataRegistry {
                     return new Conniving();
                 case "everfull":
                     return new Everfull();
+                case "infected":
+                    return new Infected();
                 case "onguard":
                     return new OnGuard();
                 case "tough":
@@ -251,6 +257,8 @@ public static class DataRegistry {
                     return new Daze();
                 case "devour":
                     return new Devour();
+                case "grasp":
+                    return new Grasp();
                 case "hook":
                     return new Hook();
                 case "subtlepoison":

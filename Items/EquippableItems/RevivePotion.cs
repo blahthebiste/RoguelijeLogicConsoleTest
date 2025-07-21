@@ -2,13 +2,15 @@ public class RevivePotion : EquipmentItem {
 
     UseRevivePotion useRevivePotionInstance;
 
-    public RevivePotion() {
+    public RevivePotion()
+    {
         this.useRevivePotionInstance = new UseRevivePotion();
         this.useRevivePotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Revive Potion";
-        this.description = "Gain the '"+useRevivePotionInstance+"' action.";
+        this.description = "Gain the '" + useRevivePotionInstance + "' action.";
         this.slot = ActionType.ANY;
         this.price = 130;
+        this.tier = 2;
     }
 
     public override void onEquip() {

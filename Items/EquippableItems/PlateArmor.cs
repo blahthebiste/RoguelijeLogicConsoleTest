@@ -1,11 +1,13 @@
 public class PlateArmor : EquipmentItem {
 
 
-    public PlateArmor() {
+    public PlateArmor()
+    {
         this.name = "Plate Armor";
         this.description = "+6 max HP.";
         this.slot = ActionType.ANY;
         this.price = 130;
+        this.tier = 2;
     }
 
     public override void onEquip() {

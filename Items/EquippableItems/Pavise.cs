@@ -2,11 +2,13 @@ public class Pavise : EquipmentItem {
 
     public static int damage = 2;
 
-    public Pavise() {
+    public Pavise()
+    {
         this.name = "Pavise";
         this.description = "When you use your Defend action, deal 2 damage to a random enemy.";
         this.slot = ActionType.DEFEND;
         this.price = 65;
+        this.tier = 1;
     }
 
     // On action use:

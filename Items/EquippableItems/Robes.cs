@@ -1,11 +1,13 @@
 public class Robes : EquipmentItem {
 
 
-    public Robes() {
+    public Robes()
+    {
         this.name = "Robes";
         this.description = "+1 Spell Power.";
         this.slot = ActionType.SPELL;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void startOfCombat() {

@@ -2,13 +2,15 @@ public class HealthPotion : EquipmentItem {
 
     UseHealthPotion useHealthPotionInstance;
 
-    public HealthPotion() {
+    public HealthPotion()
+    {
         this.useHealthPotionInstance = new UseHealthPotion();
         this.useHealthPotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Health Potion";
-        this.description = "Gain the '"+useHealthPotionInstance+"' action.";
+        this.description = "Gain the '" + useHealthPotionInstance + "' action.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

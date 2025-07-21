@@ -1,11 +1,13 @@
 public class RubberDuck : EquipmentItem {
 
 
-    public RubberDuck() {
+    public RubberDuck()
+    {
         this.name = "Rubber Duck";
         this.description = "You have exhausted the item pool. Now there are only ducks.";
         this.slot = ActionType.ANY;
         this.price = 5;
+        this.tier = 0;
     }
 
     public override void onEquip() {

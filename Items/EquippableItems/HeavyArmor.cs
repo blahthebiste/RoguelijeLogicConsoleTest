@@ -1,11 +1,13 @@
 public class HeavyArmor : EquipmentItem {
 
 
-    public HeavyArmor() {
+    public HeavyArmor()
+    {
         this.name = "Heavy Armor";
         this.description = "+12 max HP. Cannot dodge.";
         this.slot = ActionType.ANY;
         this.price = 260;
+        this.tier = 3;
     }
 
     // Each combat, gain Impeded

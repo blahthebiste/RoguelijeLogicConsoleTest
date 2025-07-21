@@ -2,12 +2,14 @@ public class Banner : EquipmentItem {
 
     Taunt tauntInstance;
 
-    public Banner() {
+    public Banner()
+    {
         this.name = "Banner";
         this.description = "Your Defend action also performs Taunt.";
         this.slot = ActionType.DEFEND;
         this.price = 130;
         this.tauntInstance = new Taunt();
+        this.tier = 2;
     }
 
     // On action use:

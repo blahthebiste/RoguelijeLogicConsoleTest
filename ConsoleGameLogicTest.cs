@@ -107,7 +107,7 @@ void commandLoop() {
                     continue;
                 }
                 else {
-                    equipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
+                    CurrentRun.equipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
                 }
                 break;
             case "unequip":
@@ -245,7 +245,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    CurrentRun.ZoneProgress = 3; // For debugging witch
+    //CurrentRun.ZoneProgress = 4; // For debugging witch
     CurrentRun.GenerateNextCombat();
 }
 
@@ -775,126 +775,6 @@ void playCard(string cmd) {
     }
     // If we got here, no hero matched.
     Console.WriteLine("No hero with the name "+whoIsUsingTheAction+" exists in this battle.");
-}
-
-// Attempts to equip the specified item to the hero.
-// If multiple action slots are valid options, prompts the user to choose.
-// Errors if the item or hero is not found, or if the hero is exhausted
-void equipItem(string itemName, string heroName) {
-    PlayerCharacter? heroToEquip = null;
-    EquipmentItem? itemToEquip = null;
-    // Works a little differently depending on whether we are in combat or not.
-    if(CurrentRun.InCombat) {
-        // Combat version: only alive heroes who are not on the bench can item swap.
-        // This takes the hero's action.
-
-        // First, find the hero:
-        foreach(PlayerCharacter hero in Battlefield.PlayerSide){
-            // PlayerSide only includes living heroes
-            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
-                heroToEquip = hero;
-            }
-        }
-        // Now find the item:
-        foreach(Item item in CurrentRun.Inventory){
-            if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim()) {
-                if(item is EquipmentItem) {
-                    itemToEquip = (EquipmentItem)item;
-                }
-                else {
-                    Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
-                    return;
-                }
-            }
-        }
-        // Finally, check if the hero can act:
-        if(heroToEquip != null && heroToEquip.exhausted) {
-            Console.WriteLine("ERROR: "+heroName+" cannot swap items because they are exhausted.");
-            return;
-        }
-    }
-    else if(CurrentRun.InARun){
-        // Non-combat version: free swapping for all heroes, bench or not
-        // First, find the hero:
-        foreach(PlayerCharacter hero in CurrentRun.Party){
-            // PlayerSide only includes living heroes
-            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
-                heroToEquip = hero;
-            }
-        }
-        // Also search the benched heroes:
-        foreach(PlayerCharacter hero in CurrentRun.Bench){
-            // PlayerSide only includes living heroes
-            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
-                heroToEquip = hero;
-            }
-        }
-        // Now find the item:
-        foreach(Item item in CurrentRun.Inventory){
-            if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim()) {
-                if(item is EquipmentItem) {
-                    itemToEquip = (EquipmentItem)item;
-                }
-                else {
-                    Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
-                    return;
-                }
-            }
-        }
-        
-    }
-    if(itemToEquip == null) {
-        Console.WriteLine("ERROR: Could not find item with name "+itemName);
-        return;
-    }
-    if(heroToEquip == null) {
-        Console.WriteLine("ERROR: Could not find hero with name "+heroName);
-        return;
-    }
-    int numMatchingActions = itemToEquip.numberMatchingActions(heroToEquip);
-    // If the hero has no matching actions, print an error:
-    if(numMatchingActions == 0) {
-        Console.WriteLine("Item '"+itemName+"' cannot be equipped by "+heroName+"; no actions match item's slot restrictions");
-        return;
-    }
-    // If the hero has multiple matching actions, prompt the player to choose one:
-    if(numMatchingActions > 1) {
-        Console.WriteLine(heroName+" has multiple actions that this item can be equipped to.");
-        Console.WriteLine("Select one from the following by entering its number, or type something else to go back:");
-        Console.WriteLine("");
-        List<Action> matchingActions = new List<Action>();
-        // Find all matching actions from the hero's action list:
-        foreach(Action action in heroToEquip.ActionList) {
-            if(itemToEquip.matchesActionType(action)) {
-                matchingActions.Add(action);
-            }
-        }
-        // Print them out and await selection:
-        for(int i = 0; i < matchingActions.Count; i++) {
-            Console.Write("["+(i+1)+" - "+matchingActions[i].name+"]\t");
-        }
-        Console.Write("\n> ");
-        string? cmd2 = Console.ReadLine();
-        if(cmd2 == null) return;
-        if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
-            // If they entered a valid number for action selection, equip the item to the action:
-            if(actionSelection <= matchingActions.Count && actionSelection > 0) {
-                itemToEquip.Equip(matchingActions[actionSelection-1]);
-            }
-        }
-        // Return afterwards regardless.
-        return;
-    }
-    // If the hero has exactly 1 matching action, equip the item to the action:
-    if(numMatchingActions == 1) {
-        // Find the first matching action from the hero's action list:
-        foreach(Action action in heroToEquip.ActionList) {
-            if(itemToEquip.matchesActionType(action)) {
-                action.Equip(itemToEquip);
-                break;
-            }
-        }
-    }
 }
 
 // Attempts to unequip the specified item from the hero.

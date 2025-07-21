@@ -2,13 +2,15 @@ public class Rope : EquipmentItem {
 
     Climb climbInstance;
 
-    public Rope() {
+    public Rope()
+    {
         this.climbInstance = new Climb();
         this.climbInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Rope";
-        this.description = "Gain the '"+climbInstance+"' action.";
+        this.description = "Gain the '" + climbInstance + "' action.";
         this.slot = ActionType.SKILL;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

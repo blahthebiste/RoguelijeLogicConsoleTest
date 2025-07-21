@@ -1,11 +1,13 @@
 public class HeartCrystal : EquipmentItem {
 
 
-    public HeartCrystal() {
+    public HeartCrystal()
+    {
         this.name = "Heart Crystal";
         this.description = "+1 Regen.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void startOfCombat() {

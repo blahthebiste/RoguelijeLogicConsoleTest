@@ -2,13 +2,15 @@ public class PhoenixWand : EquipmentItem {
 
     LivingFlame livingFlameInstance;
 
-    public PhoenixWand() {
+    public PhoenixWand()
+    {
         this.livingFlameInstance = new LivingFlame();
         this.livingFlameInstance.equippedItem = this;
         this.name = "Phoenix Wand";
-        this.description = "Replace your Spell action with '"+livingFlameInstance+"'.";
+        this.description = "Replace your Spell action with '" + livingFlameInstance + "'.";
         this.slot = ActionType.SPELL;
         this.price = 130;
+        this.tier = 2;
     }
 
     public override void onEquip() {

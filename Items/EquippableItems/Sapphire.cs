@@ -1,11 +1,13 @@
 public class Sapphire : EquipmentItem {
 
 
-    public Sapphire() {
+    public Sapphire()
+    {
         this.name = "Sapphire";
         this.description = "+1 Spell use.";
         this.slot = ActionType.SPELL;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

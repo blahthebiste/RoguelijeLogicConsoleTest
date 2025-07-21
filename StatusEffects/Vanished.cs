@@ -25,7 +25,7 @@ public class Vanished : StatusEffect
     }
 
     // Decrement every turn
-    public override void endOfTurn() {
+    public override void startOfTurn() {
         this.Decrease(1);
     }
 }

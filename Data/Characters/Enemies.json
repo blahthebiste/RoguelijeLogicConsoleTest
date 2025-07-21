@@ -80,5 +80,25 @@
 			"SummonedMinion"
 		],
 		"Master": "Witch"
+	},
+	{
+		"Name": "Infected Peasant",
+		"Description": "\"Braaaaains... Have you seen any?\"",
+		"HP": 8,
+		"ActionList": [
+			"Infected",
+			"Infect",
+			"Grasp"
+		]
+	},
+	{
+		"Name": "\"Infected\" Peasant",
+		"Description": "\"(Act infected, they won't attack other infected!)\"",
+		"HP": 8,
+		"ActionList": [
+			"Infected",
+			"Grasp",
+			"Infect"
+		]
 	}
 ]

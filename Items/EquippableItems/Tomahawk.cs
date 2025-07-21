@@ -3,12 +3,14 @@ public class Tomahawk : EquipmentItem {
     public static int damage = 3;
     public bool used;
 
-    public Tomahawk() {
+    public Tomahawk()
+    {
         this.name = "Tomahawk";
         this.description = "The first time you use your Skill action, deal 3 damage to a random enemy.";
         this.slot = ActionType.SKILL;
         this.price = 65;
         this.used = false;
+        this.tier = 1;
     }
 
     // On action use:

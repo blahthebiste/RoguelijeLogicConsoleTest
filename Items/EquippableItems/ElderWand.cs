@@ -2,13 +2,15 @@ public class ElderWand : EquipmentItem {
 
     KillingWord killingwordInstance;
 
-    public ElderWand() {
+    public ElderWand()
+    {
         this.killingwordInstance = new KillingWord();
         this.killingwordInstance.equippedItem = this;
         this.name = "Elder Wand";
-        this.description = "Replace your Spell action with '"+killingwordInstance+"'.";
+        this.description = "Replace your Spell action with '" + killingwordInstance + "'.";
         this.slot = ActionType.SPELL;
         this.price = 260;
+        this.tier = 3;
     }
 
     public override void onEquip() {

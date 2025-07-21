@@ -42,11 +42,11 @@
 		"Description": "These townsfolk keep following you... None of them have spoken a word.",
 		"Difficulty": 5,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Infected Peasant",
+			"Infected Peasant",
+			"Infected Peasant",
+			"Infected Peasant",
+			"\"Infected\" Peasant"
 		]
 	},
 	{

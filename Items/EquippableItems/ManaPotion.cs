@@ -2,13 +2,15 @@ public class ManaPotion : EquipmentItem {
 
     UseManaPotion useManaPotionInstance;
 
-    public ManaPotion() {
+    public ManaPotion()
+    {
         this.useManaPotionInstance = new UseManaPotion();
         this.useManaPotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Mana Potion";
-        this.description = "Gain the '"+useManaPotionInstance+"' action.";
+        this.description = "Gain the '" + useManaPotionInstance + "' action.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

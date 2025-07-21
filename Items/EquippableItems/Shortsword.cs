@@ -3,15 +3,17 @@ public class Shortsword : EquipmentItem {
     Strike strikeInstance;
     TwinSlash twinslashInstance;
 
-    public Shortsword() {
+    public Shortsword()
+    {
         this.strikeInstance = new Strike();
         this.twinslashInstance = new TwinSlash();
         this.strikeInstance.equippedItem = this;
         this.twinslashInstance.equippedItem = this;
         this.name = "Shortsword";
-        this.description = "Replace your attack action with '"+strikeInstance+"'. If the action was already Strike, it becomes Twin Slash.";
+        this.description = "Replace your attack action with '" + strikeInstance + "'. If the action was already Strike, it becomes Twin Slash.";
         this.slot = ActionType.ATTACK;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

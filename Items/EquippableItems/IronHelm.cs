@@ -1,11 +1,13 @@
 public class IronHelm : EquipmentItem {
 
 
-    public IronHelm() {
+    public IronHelm()
+    {
         this.name = "Iron Helm";
         this.description = "+1 Toughness.";
         this.slot = ActionType.ANY;
         this.price = 65;
+        this.tier = 1;
     }
 
 

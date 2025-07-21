@@ -2,13 +2,15 @@ public class Medkit : EquipmentItem {
 
     Tend tendInstance;
 
-    public Medkit() {
+    public Medkit()
+    {
         this.tendInstance = new Tend();
         this.tendInstance.equippedItem = this; // Still show medkit as equipped
         this.name = "Medkit";
-        this.description = "Replace your Rest action with '"+tendInstance+"'.";
+        this.description = "Replace your Rest action with '" + tendInstance + "'.";
         this.slot = ActionType.REST;
         this.price = 65;
+        this.tier = 1;
     }
 
     public override void onEquip() {

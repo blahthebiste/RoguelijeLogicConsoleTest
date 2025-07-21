@@ -4,7 +4,8 @@ public class MasterSword : EquipmentItem {
     TwinSlash twinslashInstance;
     Counter counterInstance;
 
-    public MasterSword() {
+    public MasterSword()
+    {
         this.cleaveInstance = new Cleave();
         this.twinslashInstance = new TwinSlash();
         this.counterInstance = new Counter();
@@ -12,9 +13,10 @@ public class MasterSword : EquipmentItem {
         this.twinslashInstance.hasEquipmentSlot = false; // Show that the new actions do not come with equipment slots.
         this.counterInstance.hasEquipmentSlot = false; // Show that the new actions do not come with equipment slots.
         this.name = "Master Sword";
-        this.description = "Gain the "+cleaveInstance.name+", "+twinslashInstance.name+", and "+counterInstance+" actions.";
+        this.description = "Gain the " + cleaveInstance.name + ", " + twinslashInstance.name + ", and " + counterInstance + " actions.";
         this.slot = ActionType.ATTACK;
         this.price = 260;
+        this.tier = 3;
     }
 
     public override void onEquip() {
