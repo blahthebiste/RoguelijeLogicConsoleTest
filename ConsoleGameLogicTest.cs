@@ -4,6 +4,7 @@ Console.WriteLine("Initializing console test program for Roguelije game logic...
 string? cmd;
 ZoneID nextZoneID = ZoneID.HUB;
 DataRegistry.LoadData();
+Compendium.Initialize();
 printStartScreen();
 // Enter command loop
 commandLoop();
@@ -731,6 +732,7 @@ void playCard(string cmd) {
     foreach(PlayerCharacter hero in Battlefield.PlayerSide){
         if(hero.name.ToLower().Trim() == whoIsUsingTheAction) {
             ActionCard selectedCard = CardManager.Hand[cardNumber - 1];
+    
             // Found the hero who should use the action.
             int numMatchingActions = selectedCard.numberMatchingActions(hero);
             // If the hero has no matching actions, print an error:

@@ -31,6 +31,9 @@ public static class CurrentRun
     public static List<Encounter> EncounterPool; // Resets after each act
 
     public static int NUMDRAFTABLEBASICCARDS = 10;
+    public static int NUMDRAFTABLEDUALCARDS = 3;
+    public static int NUMDRAFTABLEMOVEMENTCARDS = 2;
+    public static int NUMDRAFTABLEULTIMATECARDS = 2;
     public static List<ActionCard> DraftableCardPool; // Pool of cards that the player can draft. Starts full of basic action cards.
     public static List<ActionCard> ComplexCardPool; // Pool of advanced cards that the player can eventually draft.
 
@@ -75,6 +78,7 @@ public static class CurrentRun
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
+
         Inventory = new List<Item>(); // Starts empty(?).
         CurrentZone = DataRegistry.GenerateZone(ZoneID.HUB); // Party is selected in the Hub world.
         ZoneProgress = 0;
@@ -358,21 +362,41 @@ public static class CurrentRun
     {
         for (int i = 0; i < NUMDRAFTABLEBASICCARDS; i++)
         {
-            DraftableCardPool.Add(new BasicAttack());
-            DraftableCardPool.Add(new BasicDefend());
-            DraftableCardPool.Add(new BasicRest());
-            DraftableCardPool.Add(new BasicSkill());
-            DraftableCardPool.Add(new BasicSpell());
+            foreach (ActionCard card in Compendium.Cards.BasicCards) {
+                ActionCard newCopy = card.makeCopy();
+                DraftableCardPool.Add(newCopy);
+            }
         }
+        // Draft pool will be randomized by the draft encounter each time.
         Console.WriteLine("Populated draftable card pool.");
     }
 
     // Fills the pool of not-quite-yet-draftable cards with complex action cards.
     public static void PopulateComplexDraftPool()
     {
-        ComplexCardPool.Add(new DualAttackDefend());
+        for (int i = 0; i < NUMDRAFTABLEDUALCARDS; i++)
+        {
+            foreach (ActionCard card in Compendium.Cards.DualCards)
+            {
+                ActionCard newCopy = card.makeCopy();
+                ComplexCardPool.Add(newCopy);
+            }
+        }
+        for (int i = 0; i < NUMDRAFTABLEMOVEMENTCARDS; i++)
+        {
+            foreach (ActionCard card in Compendium.Cards.MovementCards)
+            {
+                ActionCard newCopy = card.makeCopy();
+                ComplexCardPool.Add(newCopy);
+            }
+        }
+        for (int i = 0; i < NUMDRAFTABLEULTIMATECARDS; i++)
+        {
+            //ComplexCardPool.Add(new Ultimate());
+        }
+        
         // Randomize the order:
-        Shuffle(ComplexCardPool);
+            Shuffle(ComplexCardPool);
         Console.WriteLine("Populated complex card pool.");
     }
 
@@ -427,12 +451,11 @@ public static class CurrentRun
             // Add 2x removal Encounter
             EncounterPool.Add(new Removal());
         }
-
-        // For debugging:
-        // for (int i = 0; i < 100; i++)
-        // {
-        //     EncounterPool.Add(new Removal());
-        // }
+        for (int i = 0; i < 2; i++)
+        {
+            // Add 2x Transform Encounter
+            EncounterPool.Add(new Transform());
+        }
 
         Console.WriteLine("Populated Encounter pool.");
     }

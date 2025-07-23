@@ -1,0 +1,13 @@
+public class DualSkillSpell : DualActionCard {
+
+    public DualSkillSpell() {
+        this.name = "Skill or Spell";
+        this.description = "Perform a skill or spell action.";
+        this.actionType = ActionType.DUAL;
+        this.actionType1 = ActionType.SKILL;
+        this.actionType2 = ActionType.SPELL;
+        this.owner = null;
+        this.modifier = null;
+    }
+
+}

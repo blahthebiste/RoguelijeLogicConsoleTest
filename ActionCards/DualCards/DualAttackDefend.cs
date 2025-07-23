@@ -1,7 +1,7 @@
 public class DualAttackDefend : DualActionCard {
 
     public DualAttackDefend() {
-        this.name = "Attack or Defend";
+        this.name = "Attack/Defend";
         this.description = "Perform an attack or defend action.";
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.ATTACK;

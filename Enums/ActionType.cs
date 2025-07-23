@@ -8,6 +8,10 @@ public enum ActionType
     SPELL,
     REST,
     PASSIVE,
+    MOVEMENT,
+    ULTIMATE,
+    SUMMON,
+    PERSONAL,
     AILMENT
     
     // // Possible advanced actions:

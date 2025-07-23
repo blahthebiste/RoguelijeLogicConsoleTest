@@ -152,6 +152,8 @@ public static class DataRegistry {
         // Translates a card name into a card object. Returns null if none are found.
         public static ActionCard? getCardByName(string cardName) {
             switch(cardName.ToLower().Trim()) {
+
+                // Basics
                 case "basic attack":
                     return new BasicAttack();
                 case "basic defend":
@@ -162,6 +164,37 @@ public static class DataRegistry {
                     return new BasicSkill();
                 case "basic spell":
                     return new BasicSpell();
+
+                // Dual
+                case "attack/defend":
+                    return new DualAttackDefend();
+                case "attack/skill":
+                    return new DualAttackSkill();
+                case "attack/spell":
+                    return new DualAttackSpell();
+                case "attack/rest":
+                    return new DualAttackRest();
+                case "defend/skill":
+                    return new DualDefendSkill();
+                case "defend/spell":
+                    return new DualDefendSpell();
+                case "defend/rest":
+                    return new DualDefendRest();
+                case "skill/spell":
+                    return new DualSkillSpell();
+                case "skill/rest":
+                    return new DualSkillRest();
+                case "spell/rest":
+                    return new DualSpellRest();
+
+                // Movement
+                case "leap":
+                    return new Leap();
+                case "crouch":
+                    return new Crouch();
+                case "strafe":
+                    return new Strafe();
+                    
                 default:
                     Console.WriteLine("ERROR: no card registered under the name "+cardName);
                     return null;

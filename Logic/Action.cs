@@ -113,7 +113,7 @@ public class Action : Events {
 						return true;
 					}
 					else {
-						Console.WriteLine("Failed to use "+this.name+" on "+target+"!");
+						Console.WriteLine("Failed to use "+name+" on "+target+"!");
 						continue;
 					}
 				}

@@ -8,9 +8,9 @@ public class ActionCard {
     
     // Default constructor
     public ActionCard() {
-        this.actionType = null;
-        this.modifier = null;
-        this.owner = null;
+        actionType = null;
+        modifier = null;
+        owner = null;
     }
     // Constructor with no owner
     public ActionCard(int actionCardID) {
@@ -23,21 +23,24 @@ public class ActionCard {
     }
     
     public override string ToString() {
-        string str = this.name + " ("+this.actionType.ToString()+"): "+this.description;
-        if(this.modifier != null) {
-            str += " Modifier: "+this.modifier.ToString();
+        string str = name + " ("+actionType.ToString()+"): "+description;
+        if(modifier != null) {
+            str += " Modifier: "+modifier.ToString();
         }
         return str;
     }
 
     // Returns an exact copy of this card
     public ActionCard makeCopy(){
-        ActionCard newCopy = new ActionCard();
-        newCopy.actionType = this.actionType;
-        newCopy.name = this.name;
-        newCopy.description = this.description;
-        newCopy.modifier = this.modifier;
-        newCopy.owner = this.owner;
+
+        ActionCard? newCopy = DataRegistry.CardData.getCardByName(name);
+        if (newCopy == null)
+        {
+            Console.WriteLine("ERROR: could not make copy of card; DataRegistry did not find card by name '"+name+"'!");
+            return new BasicAttack();
+        }
+        newCopy.modifier = modifier;
+        newCopy.owner = owner;
         return newCopy;
     }
     
@@ -48,13 +51,13 @@ public class ActionCard {
             if(numberMatchingActions(entityToUseAction) == 1) {
                 Action? actionToUse = autoSelectAction(entityToUseAction);
                 if(actionToUse != null) {
-                    if(actionToUse.use(target, this.modifier)) CardManager.discardCard(this);
+                    if(actionToUse.use(target, modifier)) CardManager.discardCard(this);
                 }
             }
             else {
                 // Need to select specific action, there are multiple (or 0) options.
                 if(actionCanBeUsed(hoveredAction)) {
-                    if(hoveredAction.use(target, this.modifier)) CardManager.discardCard(this);
+                    if(hoveredAction.use(target, modifier)) CardManager.discardCard(this);
                 }
                 else {
                     return; // Hovered action is not usable, do nothing.
@@ -71,7 +74,7 @@ public class ActionCard {
                 Action? actionToUse = autoSelectAction(entityToUseAction);
                 if(actionToUse != null) {
                      // Good, use the action.
-                    if(actionToUse.use(target, this.modifier)) CardManager.discardCard(this);
+                    if(actionToUse.use(target, modifier)) CardManager.discardCard(this);
                 }
             }
             else {
@@ -83,11 +86,11 @@ public class ActionCard {
     
     // Whether this card can be played on that action.
     public virtual bool actionCanBeUsed(Action hoveredAction) {
-        return (hoveredAction.actionType == this.actionType || hoveredAction.actionType == ActionType.ANY);
+        return hoveredAction.actionType == actionType || hoveredAction.actionType == ActionType.ANY;
     }
     
     // Whether this card can be played on that entity.
-    public bool canBeUsedBy(Entity entityToUseAction) {
+    public virtual bool canBeUsedBy(Entity entityToUseAction) {
         if(entityToUseAction.exhausted) {
             Console.WriteLine("Unit is exhausted and cannot act.");
             return false;
@@ -101,7 +104,7 @@ public class ActionCard {
     
     // Attempts to smooth out selection. If there is more than 1 valid action, returns null.
     // Otherwise, returns the usable action that matches this card type.
-    public Action? autoSelectAction(Entity entityToUseAction) {
+    public virtual Action? autoSelectAction(Entity entityToUseAction) {
         List<Action> matchingActions = new List<Action>();
         foreach(Action action in entityToUseAction.ActionList) {
             if(actionCanBeUsed(action)) {
@@ -113,7 +116,8 @@ public class ActionCard {
     }
 
     // Counts how many usable actions on the specified entity match this action card
-    public int numberMatchingActions(Entity entityToUseAction) {
+    public virtual int numberMatchingActions(Entity entityToUseAction) {
+        Console.WriteLine("numberMatchingActions not overrided somehow?");
         int matches = 0;
         foreach(Action action in entityToUseAction.ActionList) {
             if(actionCanBeUsed(action)) {
