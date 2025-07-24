@@ -51,14 +51,14 @@
 	},
 	{
 		"Name": "Rats",
-		"Description": "I'm the giant rat that makes all of the rules!",
+		"Description": "They creep at night, they stalk at night...",
 		"Difficulty": 6,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Hench-Rat",
+			"Hench-Rat",
+			"Giant Rat",
+			"Hench-Rat",
+			"Hench-Rat"
 		]
 	},
 	{

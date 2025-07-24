@@ -433,7 +433,7 @@ public static class CurrentRun
         // }
         for (int i = 0; i < 10; i++)
         {
-            // Add 10x shop Encounter
+            // Add 10x shop Encounter -- maybe later when player has more money?
             EncounterPool.Add(new Shop());
         }
         for (int i = 0; i < 10; i++)
@@ -925,7 +925,7 @@ public static class CurrentRun
             List<Action> matchingActions = new List<Action>();
             // Find all matching actions from the hero's action list:
             foreach(Action action in heroToEquip.ActionList) {
-                if(itemToEquip.matchesActionType(action)) {
+                if(action.hasEquipmentSlot && itemToEquip.matchesActionType(action)) {
                     matchingActions.Add(action);
                 }
             }

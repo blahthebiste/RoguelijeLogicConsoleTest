@@ -214,6 +214,8 @@ public static class DataRegistry {
                     return new Bite();
                 case "cleave":
                     return new Cleave();
+                case "gnaw":
+                    return new Gnaw();
                 case "infect":
                     return new Infect();
                 case "ravage":
@@ -238,6 +240,8 @@ public static class DataRegistry {
                     return new Dodge();
                 case "parry":
                     return new Parry();
+                case "skitter":
+                    return new Skitter();
                 case "vanish":
                     return new Vanish();
 
@@ -258,6 +262,8 @@ public static class DataRegistry {
                     return new Infected();
                 case "onguard":
                     return new OnGuard();
+                case "rattified":
+                    return new Rattified();
                 case "tough":
                     return new Tough();
 
@@ -284,6 +290,8 @@ public static class DataRegistry {
                     return new Charge();
                 case "climb":
                     return new Climb();
+                case "connive":
+                    return new Connive();
                 case "counter":
                     return new Counter();
                 case "daze":
@@ -306,6 +314,8 @@ public static class DataRegistry {
                     return new BatSwarm();
                 case "deadlybrew":
                     return new DeadlyBrew();
+                case "grow":
+                    return new Grow();
                 case "harden":
                     return new Harden();
                 case "hex":
@@ -322,6 +332,8 @@ public static class DataRegistry {
                     return new LivingFlame();
                 case "pickpocket":
                     return new Pickpocket();
+                case "ratking":
+                    return new RatKing();
                 case "restore":
                     return new Restore();
                 case "usehealthpotion":

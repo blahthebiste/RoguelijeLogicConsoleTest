@@ -93,12 +93,34 @@
 	},
 	{
 		"Name": "\"Infected\" Peasant",
-		"Description": "\"(Act infected, they won't attack other infected!)\"",
+		"Description": "\"(Act natural!)\"",
 		"HP": 8,
 		"ActionList": [
 			"Infected",
 			"Grasp",
 			"Infect"
+		]
+	},
+	{
+		"Name": "Giant Rat",
+		"Description": "\"I make all of da rules! Nya!\"",
+		"HP": 32,
+		"ActionList": [
+			"Rattified",
+			"Bite",
+			"Block",
+			"Grow"
+		]
+	},
+	{
+		"Name": "Hench-Rat",
+		"Description": "\"Let's see what kind of trouble we can get ourselves into!\"",
+		"HP": 7,
+		"ActionList": [
+			"Connive",
+			"Skitter",
+			"Gnaw",
+			"RatKing"
 		]
 	}
 ]

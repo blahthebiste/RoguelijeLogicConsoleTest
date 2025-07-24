@@ -5,7 +5,7 @@ public class Backstab : Action {
         this.description = "Kill an enemy with 8 HP or less.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
-        this.magicNumber = 8;
+        this.magicNumber = 80;
     }
 
     public override bool CanTarget(Entity target) {

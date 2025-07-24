@@ -1,23 +1,23 @@
-public class Poison : StatusEffect {
+public class Bleed : StatusEffect {
 
 
-    public Poison(int amount, Entity owner) {
+    public Bleed(int amount, Entity owner) {
         this.amount = amount;
-        this.name = "Poison";
-        this.description = "Lose this much HP at the start of each turn until you rest.";
+        this.name = "Bleed";
+        this.description = "Lose this much HP at the end of each turn until you rest.";
         this.owner = owner;
         this.isDebuff = true;
     }
 
-    // Remove HP at the start of every turn
-    public override void startOfTurn() {
+    // Remove HP at the end of every turn
+    public override void endOfTurn() {
         if(this.owner != null){
-            Console.WriteLine("Poison saps "+this.amount+" HP from "+this.owner.name+"!");
+            Console.WriteLine("Bleed saps "+this.amount+" HP from "+this.owner.name+"!");
             this.owner.changeHP(-this.amount);
         }
     }
 
-    // Remove poison when resting
+    // Remove Bleed when resting
     public override Action onUseAction(Action actionBeingUsed) {
         if(owner != null && actionBeingUsed.actionType == ActionType.REST) {
             owner.RemoveStatusEffectByName(this.name);

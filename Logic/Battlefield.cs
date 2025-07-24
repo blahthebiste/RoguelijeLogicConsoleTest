@@ -403,7 +403,7 @@ public static class Battlefield
     // Adds a new entity to the battlefield.
     // playerControlled determines which side.
     // Currently, can only summon playercharacters to playerside and enemies to enemy side.
-    public static bool SummonEntity(string entityName, bool playerControlled)
+    public static bool SummonEntity(string entityName, bool playerControlled, int index = 0)
     {
         if (playerControlled)
         { // Summoning to the player's side.
@@ -417,7 +417,7 @@ public static class Battlefield
             }
             else
             { // Found hero to summon.
-                PlayerSide.Add(newHero);
+                PlayerSide.Insert(index, newHero);
                 newHero.previousAction = null;
                 Console.WriteLine("Successfully summoned '" + newHero.name + "' to player side.");
                 return true;
@@ -434,7 +434,7 @@ public static class Battlefield
             }
             else
             { // Found enemy to summon.
-                EnemySide.Add(newEnemy);
+                EnemySide.Insert(index, newEnemy);
                 newEnemy.previousAction = null;
                 Console.WriteLine("Successfully summoned '" + newEnemy.name + "' to enemy side.");
                 return true;

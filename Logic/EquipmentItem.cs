@@ -13,7 +13,7 @@ public class EquipmentItem : Item {
 
         // Useful for printing what would be shown to the player
 	public override string ToString() {
-		string actionString = "(Slot - "+this.slot+") "+this.name + ": " + this.description;
+		string actionString = "(Slot - "+slot+") "+this.name + ": " + this.description;
 		return actionString;
 	}
     
@@ -26,7 +26,7 @@ public class EquipmentItem : Item {
             action = action.equippedItem.oldAction;
         }
         
-        if(this.slot != ActionType.ANY && this.slot != action.actionType) {
+        if(slot != ActionType.ANY && slot != action.actionType) {
             Console.WriteLine("ERROR: item does not fit that action type!");
             return false;
         }
@@ -36,7 +36,7 @@ public class EquipmentItem : Item {
             action.Unequip();
         }
         // Finally, equip the item.
-        this.parentAction = action;
+        parentAction = action;
         action.equippedItem = this;
         if(action.owner != null) {
             Console.WriteLine("Equipping "+this.name+" to "+action.owner.name);
@@ -46,7 +46,7 @@ public class EquipmentItem : Item {
             }
         }
         CurrentRun.Inventory.Remove(this);
-        this.onEquip();
+        onEquip();
         return true;
     }
 
@@ -64,7 +64,7 @@ public class EquipmentItem : Item {
                     Console.WriteLine("ERROR: action index is too large!");
                     return false;
                 }
-                if(this.slot != ActionType.ANY && this.slot != hero.ActionList[actionIndex-1].actionType) {
+                if(slot != ActionType.ANY && slot != hero.ActionList[actionIndex-1].actionType) {
                     Console.WriteLine("ERROR: item does not fit that action type!");
                     return false;
                 }
@@ -74,15 +74,15 @@ public class EquipmentItem : Item {
                     hero.ActionList[actionIndex-1].Unequip();
                 }
                 // Finally, equip the item.
-                this.parentAction = hero.ActionList[actionIndex-1];
+                parentAction = hero.ActionList[actionIndex-1];
                 hero.ActionList[actionIndex-1].equippedItem = this;
-                Console.WriteLine("Equipping "+this.name+" to "+this.parentAction.owner!.name);
+                Console.WriteLine("Equipping "+this.name+" to "+parentAction.owner!.name);
                 // Exhaust the hero who equipped/unequipped this in combat
                 if(CurrentRun.InCombat) {
-                    this.parentAction!.owner!.exhausted = true;
+                    parentAction!.owner!.exhausted = true;
                 }
                 CurrentRun.Inventory.Remove(this);
-                this.onEquip();
+                onEquip();
                 return true;
             }
         }
@@ -96,7 +96,7 @@ public class EquipmentItem : Item {
     // Boolean return code signifies whether the unequip attempt succeeded.
     public bool Unequip(Action action) {
         // Unequip the item.
-        this.onUnequip();
+        onUnequip();
         if(action.owner != null) {
             Console.WriteLine("Unequipping "+this.name+" from "+action.owner.name);
             // Exhaust the hero who equipped/unequipped this in combat
@@ -128,13 +128,13 @@ public class EquipmentItem : Item {
                     return false;
                 }
                 // Finally, unequip the item.
-                this.onUnequip();
-                Console.WriteLine("Unequipping "+this.name+" from "+this.parentAction!.owner!.name);
+                onUnequip();
+                Console.WriteLine("Unequipping "+this.name+" from "+parentAction!.owner!.name);
                 // Exhaust the hero who equipped/unequipped this in combat
                 if(CurrentRun.InCombat) {
-                    this.parentAction!.owner!.exhausted = true;
+                    parentAction!.owner!.exhausted = true;
                 }
-                this.parentAction = null;
+                parentAction = null;
                 hero.ActionList[actionIndex-1].equippedItem = null;
                 CurrentRun.Inventory.Add(this);
                 return true;
@@ -145,17 +145,20 @@ public class EquipmentItem : Item {
     }
 
     public Entity? getOwner() {
-        if(this.parentAction == null) return null;
-        if(this.parentAction.owner == null) return null;
-        return this.parentAction.owner;
+        if(parentAction == null) return null;
+        if(parentAction.owner == null) return null;
+        return parentAction.owner;
     }
 
     public bool matchesActionType(Action action) {
+        if (!action.hasEquipmentSlot) {
+            return false;
+        }
         ActionType type = action.actionType;
-        if(this.slot == ActionType.ANY) {
+        if(slot == ActionType.ANY) {
             return true;
         }
-        if(type == this.slot && action.hasEquipmentSlot) {
+        if(type == slot && action.hasEquipmentSlot) {
             return true;
         }
         // No need to check for DUAL; Actions can never be DUAL, only ActionCards
@@ -166,7 +169,7 @@ public class EquipmentItem : Item {
     public int numberMatchingActions(Entity entityToEquip) {
         int matches = 0;
         foreach(Action action in entityToEquip.ActionList) {
-            if(this.matchesActionType(action) && action.hasEquipmentSlot) {
+            if(matchesActionType(action) && action.hasEquipmentSlot) {
                 matches++;
             }
         }
@@ -175,30 +178,30 @@ public class EquipmentItem : Item {
 
     // Replaces an action in-place in the equipped action's owner's action list
     public void replaceAction(Action newAction) {
-        if(this.parentAction == null) {
+        if(parentAction == null) {
             Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null parentAction!");
             return;
         }
-        if(this.getOwner() == null) {
+        if(getOwner() == null) {
             Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null owner!");
             return;
         }
-        this.oldAction = this.parentAction!;
-        this.actionIndex = this.getOwner()!.ActionList.IndexOf(this.oldAction); // Keep the index in the action list
+        oldAction = parentAction!;
+        actionIndex = getOwner()!.ActionList.IndexOf(oldAction); // Keep the index in the action list
         if(actionIndex == -1) {
             Console.WriteLine("ERROR: "+this.name+" could not find an index for the old action!");
             return;
         }
-        this.getOwner()!.ActionList[this.actionIndex] = newAction;
+        getOwner()!.ActionList[actionIndex] = newAction;
     }
 
     // Restores the original action
     public void restoreOriginalAction(bool emptyOriginalActionsItemSlot=true) {
-        if(this.oldAction == null) {
+        if(oldAction == null) {
             Console.WriteLine("ERROR: "+this.name+" cannot restore old action; old action is null!");
             return;
         }
-        if(this.getOwner() == null) {
+        if(getOwner() == null) {
             Console.WriteLine("ERROR: "+this.name+" cannot restore old action -- null owner!");
             return;
         }
@@ -209,16 +212,16 @@ public class EquipmentItem : Item {
         if(emptyOriginalActionsItemSlot) {
             // Useful, since this is usually only called when unequipping the item anyway
             // Necessary, because the item will remember what was equipped to it
-            this.oldAction.equippedItem = null;
+            oldAction.equippedItem = null;
         } 
-        this.getOwner()!.ActionList[this.actionIndex] = this.oldAction;
+        getOwner()!.ActionList[actionIndex] = oldAction;
         // Reset values
-        this.actionIndex = -1;
-        this.oldAction = null;
+        actionIndex = -1;
+        oldAction = null;
     }
 
     public bool isEquipped(){
-        return this.parentAction != null;
+        return parentAction != null;
     }
 
     public virtual void onEquip() {

@@ -1,9 +1,9 @@
-public class Dodge : Action
+public class Skitter : Action
 {
 
-    public Dodge()
+    public Skitter()
     {
-        this.name = "Dodge";
+        this.name = "Skitter";
         this.description = "Dodge the next attack.";
         this.actionType = ActionType.DEFEND;
         this.magicNumber = 1;
