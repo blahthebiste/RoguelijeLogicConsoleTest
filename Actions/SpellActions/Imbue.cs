@@ -1,19 +1,18 @@
-public class RatKing : Action {
+public class Imbue : Action {
 
-    public RatKing() {
-        this.name = "Rat-King";
-        this.description = "Kill self. Give Giant Rat +7 HP and +1 Strength.";
+    public Imbue() {
+        this.name = "Imbue";
+        this.description = "Grant an ally +1 Strength.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 7;
-        this.magicNumber2 = 1;
+        this.magicNumber = 1;
         this.hasLimitedUses = true;
-        this.uses = 1;
+        this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ALLY;
     }
 
 
-    // Requires an allied Giant Rat.
+    // Requires an ally, cannot target self
     public override bool canUse(Entity? target, Modifier? modifier)
     {
         if (this.owner == null)
@@ -23,12 +22,12 @@ public class RatKing : Action {
         }
         if (target == null)
         {
-            Console.WriteLine(this.owner.name + " cannot use Rat-King without a target!");
+            Console.WriteLine("ERROR: null target for action '" + this.name + "'.");
             return false;
         }
-        if (target.name != "Giant Rat")
+        if (target == this.owner)
         {
-            Console.WriteLine(this.owner.name + " can only use Rat-King on the Giant Rat!");
+            Console.WriteLine(this.name + " cannot target self!");
             return false;
         }
         return base.canUse(target, modifier);
@@ -43,16 +42,11 @@ public class RatKing : Action {
         }
         if (target == null)
         {
-            Console.WriteLine(this.owner.name + " cannot use Rat-King without a target!");
+            Console.WriteLine("ERROR: null target for action '" + this.name + "'.");
             return false;
         }
-        // Kill self:
-        this.owner.die();
-        // Apply bonus HP
-        target.maxHP += magicNumber;
-        target.currentHP += magicNumber;
         // Apply strength
-        target.AddStatusEffect(new Strength(magicNumber2, target));
+        target.AddStatusEffect(new Strength(magicNumber, target));
         return true;
     }
 }

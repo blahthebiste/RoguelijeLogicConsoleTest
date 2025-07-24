@@ -4,8 +4,8 @@ public class RevivePotion : EquipmentItem {
 
     public RevivePotion()
     {
-        this.useRevivePotionInstance = new UseRevivePotion();
-        this.useRevivePotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
+        useRevivePotionInstance = new UseRevivePotion();
+        useRevivePotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Revive Potion";
         this.description = "Gain the '" + useRevivePotionInstance + "' action.";
         this.slot = ActionType.ANY;
@@ -19,8 +19,8 @@ public class RevivePotion : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        useRevivePotionInstance.owner = this.getOwner();
         this.getOwner()!.ActionList.Add(useRevivePotionInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 
@@ -31,6 +31,7 @@ public class RevivePotion : EquipmentItem {
         }
         // Remove action to owners action list
         this.getOwner()!.ActionList.Remove(useRevivePotionInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 }

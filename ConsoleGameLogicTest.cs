@@ -246,7 +246,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    CurrentRun.ZoneProgress = 5; // For debugging
+    CurrentRun.ZoneProgress = 6; // For debugging
     CurrentRun.GenerateNextCombat();
 }
 

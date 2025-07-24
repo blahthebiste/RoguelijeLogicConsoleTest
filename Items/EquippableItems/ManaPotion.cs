@@ -4,8 +4,8 @@ public class ManaPotion : EquipmentItem {
 
     public ManaPotion()
     {
-        this.useManaPotionInstance = new UseManaPotion();
-        this.useManaPotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
+        useManaPotionInstance = new UseManaPotion();
+        useManaPotionInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Mana Potion";
         this.description = "Gain the '" + useManaPotionInstance + "' action.";
         this.slot = ActionType.ANY;
@@ -19,8 +19,8 @@ public class ManaPotion : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        useManaPotionInstance.owner = this.getOwner();
         this.getOwner()!.ActionList.Add(useManaPotionInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 
@@ -31,6 +31,7 @@ public class ManaPotion : EquipmentItem {
         }
         // Remove action to owners action list
         this.getOwner()!.ActionList.Remove(useManaPotionInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 }

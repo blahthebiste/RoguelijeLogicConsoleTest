@@ -36,10 +36,13 @@ public class Entity : Events
     }
 
 
-    // Fills in the 'owner' field for all actions in the ActionList to be this entity
+    // Fills in the 'owner' field for all actions in the ActionList to be this entity.
+    // Updates ActionListMinusPassives.
     public void assignActionOwnership()
     {
-        foreach (Action act in this.ActionList) {
+        ActionListMinusPassives = new List<Action>();
+        foreach (Action act in ActionList)
+        {
             act.owner = this;
             if (act.actionType != ActionType.PASSIVE)
             { // Assign ActionListMinusPassives:
@@ -240,6 +243,7 @@ public class Entity : Events
                 action.equippedItem.startOfTurn();
             }
         }
+        assignActionOwnership(); // Update action list
     }
 
     public override void endOfTurn()

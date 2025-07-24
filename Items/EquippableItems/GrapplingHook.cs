@@ -4,8 +4,8 @@ public class GrapplingHook : EquipmentItem {
 
     public GrapplingHook()
     {
-        this.hookInstance = new Hook();
-        this.hookInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
+        hookInstance = new Hook();
+        hookInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Grappling Hook";
         this.description = "Gain the '" + hookInstance + "' action.";
         this.slot = ActionType.SKILL;
@@ -13,14 +13,16 @@ public class GrapplingHook : EquipmentItem {
         this.tier = 2;
     }
 
-    public override void onEquip() {
+    public override void onEquip()
+    {
         base.onEquip();
         // Add Hook action to owners action list
-        if(this.getOwner() == null) {
+        if (this.getOwner() == null)
+        {
             return;
         }
-        hookInstance.owner = this.getOwner();
         this.getOwner()!.ActionList.Add(hookInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 
@@ -31,6 +33,7 @@ public class GrapplingHook : EquipmentItem {
         }
         // Remove Hook action to owners action list
         this.getOwner()!.ActionList.Remove(hookInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 }

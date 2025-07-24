@@ -13,7 +13,7 @@ public class Focus : Action
     {
         if (this.owner == null)
         {
-            Console.WriteLine("ERROR: null owner for action '" + this + "'.");
+            Console.WriteLine("ERROR: null owner for action '" + this.name + "'.");
             return false;
         }
         // Restore spell uses.

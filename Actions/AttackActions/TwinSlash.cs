@@ -12,7 +12,7 @@ public class TwinSlash : Action {
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
         if (target == null)
         {
-            Console.WriteLine("ERROR: null target for action '" + this + "'.");
+            Console.WriteLine("ERROR: null target for action '" + this.name + "'.");
             return false;
         }
         // Deal damage to the target twice.

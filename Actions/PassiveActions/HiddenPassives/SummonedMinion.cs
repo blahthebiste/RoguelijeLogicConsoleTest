@@ -26,7 +26,7 @@ public class SummonedMinion : Action {
             if (ally.name.ToLower().Trim() == ((Enemy)this.owner).master!.ToLower().Trim())
             {
                 // Master is still here, chill
-                Console.WriteLine(this.owner.name + "'s master is alive and well.");
+                //Console.WriteLine(this.owner.name + "'s master is alive and well.");
                 return;
             }
         }
@@ -35,7 +35,7 @@ public class SummonedMinion : Action {
             if (ally.name.ToLower().Trim() == ((Enemy)this.owner).master!.ToLower().Trim())
             {
                 // Master is still here, chill
-                Console.WriteLine(this.owner.name + "'s master is alive and well.");
+                //Console.WriteLine(this.owner.name + "'s master is alive and well.");
                 return;
             }
         }

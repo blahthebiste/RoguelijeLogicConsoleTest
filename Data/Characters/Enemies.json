@@ -122,5 +122,30 @@
 			"Gnaw",
 			"RatKing"
 		]
+	},
+	{
+		"Name": "Dark One",
+		"Description": "How could anyone hope to defeat a foe this powerful?",
+		"HP": 200,
+		"ActionList": [
+			"ConjureDagger",
+			"ConjureBlade",
+			"Strike",
+			"ShadowStrike",
+			"Inflame"
+		]
+	},
+	{
+		"Name": "Mystical Dagger",
+		"Description": "The dagger seems to be the source of this power... But perhaps this magic takes its toll.",
+		"HP": 10,
+		"ActionList": [
+			"ReturnDagger",
+			"ShadowSlash",
+			"Imbue",
+			"Corruption",
+			"SummonedMinion"
+		],
+		"Master": "Dark One"
 	}
 ]

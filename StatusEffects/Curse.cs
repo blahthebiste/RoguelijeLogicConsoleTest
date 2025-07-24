@@ -1,4 +1,5 @@
-public class Curse : StatusEffect {
+public class Curse : StatusEffect
+{
 
     public int countdown;
     public Curse(int amount, Entity owner)
@@ -12,10 +13,12 @@ public class Curse : StatusEffect {
     }
 
     // Count down at the start of every turn
-    public override void endOfTurn() {
-        if(this.owner != null){
+    public override void endOfTurn()
+    {
+        if (this.owner != null)
+        {
             countdown--;
-            Console.WriteLine("Curse counts down -- "+countdown+" turns left!");
+            Console.WriteLine("Curse counts down -- " + countdown + " turns left!");
             if (countdown == 0)
             {
                 Console.WriteLine(this.owner.name + "'s Curse damages them!");
@@ -29,4 +32,9 @@ public class Curse : StatusEffect {
         }
     }
 
+    public override void startOfTurn()
+    {
+        if (this.owner != null)
+        if (countdown == 1) Console.WriteLine(this.owner.name + "'s Curse is about to damage them for " + this.amount + "!");
+    }
 }

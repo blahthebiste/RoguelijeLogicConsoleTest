@@ -4,8 +4,8 @@ public class Medkit : EquipmentItem {
 
     public Medkit()
     {
-        this.tendInstance = new Tend();
-        this.tendInstance.equippedItem = this; // Still show medkit as equipped
+        tendInstance = new Tend();
+        tendInstance.equippedItem = this; // Still show medkit as equipped
         this.name = "Medkit";
         this.description = "Replace your Rest action with '" + tendInstance + "'.";
         this.slot = ActionType.REST;
@@ -20,7 +20,7 @@ public class Medkit : EquipmentItem {
         }
         tendInstance.owner = this.getOwner();
         // Replace parent action in action list with Stab
-        this.replaceAction(this.tendInstance);
+        this.replaceAction(tendInstance);
     }
 
 

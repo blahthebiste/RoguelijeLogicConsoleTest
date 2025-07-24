@@ -4,8 +4,8 @@ public class Quarterstaff : EquipmentItem {
 
     public Quarterstaff()
     {
-        this.parryInstance = new Parry();
-        this.parryInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
+        parryInstance = new Parry();
+        parryInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Quarterstaff";
         this.description = "Gain the '" + parryInstance + "' action.";
         this.slot = ActionType.ATTACK;
@@ -19,8 +19,8 @@ public class Quarterstaff : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        parryInstance.owner = this.getOwner();
         this.getOwner()!.ActionList.Add(parryInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 
@@ -31,6 +31,7 @@ public class Quarterstaff : EquipmentItem {
         }
         // Remove Strike action to owners action list
         this.getOwner()!.ActionList.Remove(parryInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 }

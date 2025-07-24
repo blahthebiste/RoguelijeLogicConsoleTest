@@ -117,7 +117,6 @@ public class ActionCard {
 
     // Counts how many usable actions on the specified entity match this action card
     public virtual int numberMatchingActions(Entity entityToUseAction) {
-        Console.WriteLine("numberMatchingActions not overrided somehow?");
         int matches = 0;
         foreach(Action action in entityToUseAction.ActionList) {
             if(actionCanBeUsed(action)) {

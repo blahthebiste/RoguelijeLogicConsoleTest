@@ -220,6 +220,10 @@ public static class DataRegistry {
                     return new Infect();
                 case "ravage":
                     return new Ravage();
+                case "shadowslash":
+                    return new ShadowSlash();
+                case "shadowstrike":
+                    return new ShadowStrike();
                 case "stab":
                     return new Stab();
                 case "strike":
@@ -264,6 +268,8 @@ public static class DataRegistry {
                     return new OnGuard();
                 case "rattified":
                     return new Rattified();
+                case "returndagger":
+                    return new ReturnDagger();
                 case "tough":
                     return new Tough();
 
@@ -312,6 +318,12 @@ public static class DataRegistry {
                 //==========SPELLS==========
                 case "batswarm":
                     return new BatSwarm();
+                case "conjureblade":
+                    return new ConjureBlade();
+                case "conjuredagger":
+                    return new ConjureDagger();
+                case "corruption":
+                    return new Corruption();
                 case "deadlybrew":
                     return new DeadlyBrew();
                 case "grow":
@@ -322,6 +334,8 @@ public static class DataRegistry {
                     return new Hex();
                 case "icewall":
                     return new IceWall();
+                case "imbue":
+                    return new Imbue();
                 case "immortalitypotion":
                     return new ImmortalityPotion();
                 case "inflame":

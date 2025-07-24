@@ -146,7 +146,7 @@ public class Enemy : Entity {
                     // Try each target in order.
                     if (act.canUse(Battlefield.EnemySide[targetIndex], null))
                     {
-                        Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex] + "!");
+                        Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex].name + "!");
                         return Battlefield.EnemySide[targetIndex];
                     }
                 }

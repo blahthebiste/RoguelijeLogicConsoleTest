@@ -83,6 +83,7 @@ public class EquipmentItem : Item {
                 }
                 CurrentRun.Inventory.Remove(this);
                 onEquip();
+                hero.assignActionOwnership();
                 return true;
             }
         }
@@ -137,6 +138,7 @@ public class EquipmentItem : Item {
                 parentAction = null;
                 hero.ActionList[actionIndex-1].equippedItem = null;
                 CurrentRun.Inventory.Add(this);
+                hero.assignActionOwnership();
                 return true;
             }
         }
@@ -177,22 +179,27 @@ public class EquipmentItem : Item {
     }
 
     // Replaces an action in-place in the equipped action's owner's action list
-    public void replaceAction(Action newAction) {
-        if(parentAction == null) {
-            Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null parentAction!");
+    public void replaceAction(Action newAction)
+    {
+        if (parentAction == null)
+        {
+            Console.WriteLine("ERROR: " + this.name + " cannot replace action -- null parentAction!");
             return;
         }
-        if(getOwner() == null) {
-            Console.WriteLine("ERROR: "+this.name+" cannot replace action -- null owner!");
+        if (getOwner() == null)
+        {
+            Console.WriteLine("ERROR: " + this.name + " cannot replace action -- null owner!");
             return;
         }
         oldAction = parentAction!;
         actionIndex = getOwner()!.ActionList.IndexOf(oldAction); // Keep the index in the action list
-        if(actionIndex == -1) {
-            Console.WriteLine("ERROR: "+this.name+" could not find an index for the old action!");
+        if (actionIndex == -1)
+        {
+            Console.WriteLine("ERROR: " + this.name + " could not find an index for the old action!");
             return;
         }
         getOwner()!.ActionList[actionIndex] = newAction;
+        getOwner()!.assignActionOwnership();
     }
 
     // Restores the original action
@@ -215,6 +222,7 @@ public class EquipmentItem : Item {
             oldAction.equippedItem = null;
         } 
         getOwner()!.ActionList[actionIndex] = oldAction;
+        getOwner()!.assignActionOwnership();
         // Reset values
         actionIndex = -1;
         oldAction = null;

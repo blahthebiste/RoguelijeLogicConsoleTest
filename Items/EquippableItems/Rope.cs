@@ -4,8 +4,8 @@ public class Rope : EquipmentItem {
 
     public Rope()
     {
-        this.climbInstance = new Climb();
-        this.climbInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
+        climbInstance = new Climb();
+        climbInstance.hasEquipmentSlot = false; // Show that the new action does not come with equipment slots.
         this.name = "Rope";
         this.description = "Gain the '" + climbInstance + "' action.";
         this.slot = ActionType.SKILL;
@@ -19,8 +19,8 @@ public class Rope : EquipmentItem {
         if(this.getOwner() == null) {
             return;
         }
-        climbInstance.owner = this.getOwner();
         this.getOwner()!.ActionList.Add(climbInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 
@@ -31,6 +31,7 @@ public class Rope : EquipmentItem {
         }
         // Remove Climb action to owners action list
         this.getOwner()!.ActionList.Remove(climbInstance);
+        this.getOwner()!.assignActionOwnership();
     }
 
 }
