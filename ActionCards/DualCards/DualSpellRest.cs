@@ -1,7 +1,7 @@
 public class DualSpellRest : DualActionCard {
 
     public DualSpellRest() {
-        this.name = "Spell or Rest";
+        this.name = "Spell/Rest";
         this.description = "Perform a spell or rest action.";
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.SPELL;

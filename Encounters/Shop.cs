@@ -128,7 +128,7 @@ public class Shop : Encounter {
                                     break;    
                                 }
                                 
-                                CurrentRun.DraftCard(0);
+                                CurrentRun.DraftCard(chosenCard);
                                 CurrentRun.Money -= cardPrice;
                                 Console.WriteLine("Got "+chosenCard.name);
                                 offeredCard = null;

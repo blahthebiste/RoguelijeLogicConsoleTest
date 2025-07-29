@@ -2,10 +2,10 @@ public class ShadowSlash : Action {
 
     public ShadowSlash() {
         this.name = "Shadow Slash";
-        this.description = "Deal 3 damage. Apply 6 Curse.";
+        this.description = "Deal 3 damage. Apply 5 Curse.";
         this.actionType = ActionType.ATTACK;
         this.damage = 3;
-        this.magicNumber = 6;
+        this.magicNumber = 5;
         this.targetting = TargetCategory.SINGLE_ENEMY;
     }
 

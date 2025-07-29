@@ -2,9 +2,9 @@ public class Corruption : Action {
 
     public Corruption() {
         this.name = "Corruption";
-        this.description = "Apply 10 Vulnerability to my master.";
+        this.description = "Apply 3 Vulnerability to my master.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 10;
+        this.magicNumber = 3;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;

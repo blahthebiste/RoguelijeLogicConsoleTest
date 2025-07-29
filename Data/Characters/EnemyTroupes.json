@@ -66,8 +66,7 @@
 		"Description": "The king's loyal servant, said to wield dark magic more powerful than that of any sorcerer.",
 		"Difficulty": 8,
 		"EnemyList": [
-			"Dark One",
-			"Mystical Dagger"
+			"Dark One"
 		]
 	},
 	{

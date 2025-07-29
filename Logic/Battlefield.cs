@@ -200,14 +200,33 @@ public static class Battlefield
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
+        foreach (Entity hero in DeadHeroes.ToList())
+        {
+            hero.endOfCombat();
+            foreach (Action action in hero.ActionList.ToList())
+            {
+                if (action.hasLimitedUses)
+                {
+                    action.uses = action.maxUses;
+                }
+            }
+            // Wipe status effects
+            hero.EffectList = new List<StatusEffect>();
+            hero.exhausted = false;
+            hero.currentHP = hero.maxHP;
+            hero.previousAction = null;
+        }
         if (playerWon)
         {
             Console.WriteLine("VICTORY!");
             Console.WriteLine("");
             Console.WriteLine("Rewards: ");
-            CurrentRun.InCombat = false;
             // Distribute rewards.
             CurrentRun.DistributeCombatRewards();
+        }
+        else
+        {
+            Console.WriteLine("DEFEAT!");
         }
         CurrentRun.ZoneProgress += 1;
         if (CurrentRun.ZoneProgress == 4)

@@ -142,8 +142,8 @@
 		"ActionList": [
 			"ReturnDagger",
 			"ShadowSlash",
-			"Imbue",
 			"Corruption",
+			"Imbue",
 			"SummonedMinion"
 		],
 		"Master": "Dark One"

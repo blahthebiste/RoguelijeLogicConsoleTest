@@ -78,6 +78,21 @@ public static class CurrentRun
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
+        // CardCollection.Add(new BasicAttack());
+        // CardCollection.Add(new BasicAttack());
+        // CardCollection.Add(new BasicAttack());
+        // CardCollection.Add(new BasicDefend());
+        // CardCollection.Add(new BasicDefend());
+        // CardCollection.Add(new BasicDefend());
+        // CardCollection.Add(new BasicSkill());
+        // CardCollection.Add(new BasicSkill());
+        // CardCollection.Add(new BasicSkill());
+        // CardCollection.Add(new BasicSpell());
+        // CardCollection.Add(new BasicSpell());
+        // CardCollection.Add(new BasicSpell());
+        // CardCollection.Add(new BasicRest());
+        // CardCollection.Add(new BasicRest());
+        // CardCollection.Add(new BasicRest());
 
         Inventory = new List<Item>(); // Starts empty(?).
         CurrentZone = DataRegistry.GenerateZone(ZoneID.HUB); // Party is selected in the Hub world.
@@ -330,10 +345,11 @@ public static class CurrentRun
         NextCombatReward.moneyReward = randomMoneyReward + extraMoneyReward;
         Money += NextCombatReward.moneyReward;
         Console.WriteLine("Earned $" + NextCombatReward.moneyReward);
-        foreach (Item item in NextCombatReward.itemRewards)
+        foreach (Item item in NextCombatReward.itemRewards.ToList())
         {
             Inventory.Add(item);
             Console.WriteLine("Acquired a " + item.name);
+            NextCombatReward.itemRewards.Remove(item);
         }
     }
 
@@ -400,19 +416,18 @@ public static class CurrentRun
         Console.WriteLine("Populated complex card pool.");
     }
 
-    // Add the card at the specified index to the player's master deck, and replace it in the pool with a complex action card. 
-    public static void DraftCard(int index)
+    // Add the given card to the player's card collection, and replace it in the pool with a complex action card. 
+    public static void DraftCard(ActionCard card)
     {
-        if (index < 0 || index > DraftableCardPool.Count)
+        if (!DraftableCardPool.Contains(card))
         {
-            Console.WriteLine("ERROR: index out of bounds for DraftableCardPool!");
+            Console.WriteLine("ERROR: card not found in DraftableCardPool!");
         }
         else
         {
-            ActionCard newCard = DraftableCardPool[index]!;
-            CardCollection.Add(newCard);
-            Console.WriteLine("Added one '" + newCard.name + "' card to your collection.");
-            DraftableCardPool.Remove(newCard); // Remove drafted card from pool
+            CardCollection.Add(card);
+            Console.WriteLine("Added one '" + card.name + "' card to your collection.");
+            DraftableCardPool.Remove(card); // Remove drafted card from pool
             DraftableCardPool.Add(ComplexCardPool[0]); // Move complex card into draft pool
             ComplexCardPool.RemoveAt(0);
             // If ComplexCardPool is exhausted, add a Wound
@@ -431,11 +446,8 @@ public static class CurrentRun
         //     // Add 25x card draft Encounter
         //     EncounterPool.Add(new CardDraft());
         // }
-        for (int i = 0; i < 10; i++)
-        {
-            // Add 10x shop Encounter -- maybe later when player has more money?
-            EncounterPool.Add(new Shop());
-        }
+        // Do not add any shops until the player clears the first encounter.
+
         for (int i = 0; i < 10; i++)
         {
             // Add 10x plunder Encounter
@@ -751,10 +763,10 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        Inventory.Add(new Campfire());
+        Inventory.Add(new Chainmail());
         Inventory.Add(new ManaPotion());
-        Inventory.Add(new PlateArmor());
-        Inventory.Add(new RevivePotion());
+        Inventory.Add(new IronHelm());
+        Inventory.Add(new Robes());
     }
 
     // Gets a random item from the specified tier (1-3).

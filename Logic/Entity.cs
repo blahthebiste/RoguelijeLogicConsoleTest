@@ -153,8 +153,8 @@ public class Entity : Events
     public virtual void die()
     {
         // Trigger events for death
-        this.onDeath();
-        Console.WriteLine(this.name + " has been slain!");
+        onDeath();
+        Console.WriteLine(name + " has been slain!");
         Battlefield.RemoveEntity(this);
         if (this is PlayerCharacter)
         {
@@ -169,7 +169,7 @@ public class Entity : Events
     // Determines whether an entity has the given item equipped (slot irrelevant)
     public bool hasItem(EquipmentItem item)
     {
-        foreach (Action act in this.ActionList)
+        foreach (Action act in ActionList)
         {
             if (act.equippedItem != null && act.equippedItem.name == item.name)
             {
