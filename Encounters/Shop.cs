@@ -40,7 +40,7 @@ public class Shop : Encounter {
         // Select offered Modifier:
         // TODO
         // Console.WriteLine("Added "+offeredModifier.name+" to shop");
-        modifierPrice = CurrentRun.rng.Next(25, 50);
+        modifierPrice = CurrentRun.rng.Next(25, 45);
 
         // Display the items on offer
         while(true) {

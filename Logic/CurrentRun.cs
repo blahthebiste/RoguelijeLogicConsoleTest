@@ -6,6 +6,7 @@ public static class CurrentRun
     //===
     public static Random rng = new Random();
     public static int Lives; // How many lives the player has left before losing this run.
+    public static int MaxLives; // Remembers how many lives the player started with.
     public static int Money;
     public static int LevelCap;
     public static int PartySize;
@@ -54,6 +55,7 @@ public static class CurrentRun
     static CurrentRun()
     {
         Lives = 6; // Subject to change
+        MaxLives = Lives;
         Money = 0; // Subject to change
         LevelCap = 1; // Player cannot level anyone up until they acquire a Chaos Tome.
         PartySize = 3; // Also increases later via Chaos Tomes.
@@ -441,11 +443,7 @@ public static class CurrentRun
     // TODO: fill out
     public static void PopulateEncounterPool()
     {
-        // Remove card draft from encounter pool, it's just way worse than other options
-        // for(int i = 0; i < 25; i++) {
-        //     // Add 25x card draft Encounter
-        //     EncounterPool.Add(new CardDraft());
-        // }
+        // Remove card draft from encounter pool, it's just way worse than other options.
         // Do not add any shops until the player clears the first encounter.
 
         for (int i = 0; i < 10; i++)
@@ -453,10 +451,20 @@ public static class CurrentRun
             // Add 10x plunder Encounter
             EncounterPool.Add(new Plunder());
         }
+        for (int i = 0; i < 8; i++)
+        {
+            // Add 8x scavenge Encounter
+            EncounterPool.Add(new Scavenge());
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            // Add 3x Sanctuary Encounter
+            EncounterPool.Add(new Sanctuary());
+        }
         for (int i = 0; i < 2; i++)
         {
             // Add 2x duplicate Encounter
-            EncounterPool.Add(new Duplicate());
+            EncounterPool.Add(new Mirror());
         }
         for (int i = 0; i < 2; i++)
         {
@@ -502,9 +510,9 @@ public static class CurrentRun
         while (true)
         {
             Console.WriteLine("Choose one of the following Encounters to visit, by entering its number:\n");
-            Console.WriteLine("\t[1] " + EncounterPool[0]!.name);
+            Console.WriteLine("\t[1] " + EncounterPool[0]!.ToString());
             Console.WriteLine("\t[2] ??? Mystery Encounter ???");
-            Console.WriteLine("\t[3] " + EncounterPool[2]!.name);
+            Console.WriteLine("\t[3] " + EncounterPool[2]!.ToString());
             Console.WriteLine("");
             Console.Write("\n> ");
             string? cmd2 = Console.ReadLine();
@@ -834,6 +842,16 @@ public static class CurrentRun
         {
             // Game over, man!
             Console.WriteLine("GAME OVER.");
+        }
+    }
+
+    public static void RegainLives(int numLives)
+    {
+        Lives += numLives;
+        if (Lives > MaxLives)
+        {
+            Lives = MaxLives;
+            Console.WriteLine("Lives already full.");
         }
     }
 

@@ -1,7 +1,7 @@
-public class Duplicate : Encounter {
+public class Mirror : Encounter {
 
-    public Duplicate() {
-        this.name = "Duplicate";
+    public Mirror() {
+        this.name = "Mirror";
         this.description = "Copy a card in your collection.";
     }
 
@@ -33,7 +33,7 @@ public class Duplicate : Encounter {
             if (cmd.ToLower().Trim() == "exit" || cmd.ToLower().Trim() == "quit")
             {
                 Console.WriteLine("");
-                Console.WriteLine("Exiting Forge.");
+                Console.WriteLine("Exiting Mirror.");
                 return;
             }
             if (cmd.Split().Length != 1) continue;
