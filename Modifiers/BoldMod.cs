@@ -11,8 +11,9 @@ public class BoldMod : Modifier {
         if (act.owner == null)
         {
             Console.WriteLine("ERROR: null owner for action passed to modifier " + this.name + "!");
+            return;
         }
         Console.WriteLine("Gaining Taunt due to Bold modifier!");
-        act.owner!.AddStatusEffect(new Taunting(1, act.owner));
+        act.owner.AddStatusEffect(new Taunting(1, act.owner));
     }
 }

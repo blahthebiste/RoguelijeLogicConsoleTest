@@ -785,11 +785,8 @@ public static class CurrentRun
         Inventory.Add(new ManaPotion());
         Inventory.Add(new IronHelm());
         Inventory.Add(new Robes());
-        Inventory.Add(new AgileMod());
-        Inventory.Add(new BoldMod());
-        Inventory.Add(new ReinforcedMod());
-        Inventory.Add(new SoothingMod());
-        Inventory.Add(new SharpMod());
+
+        Inventory.Add(new PiousMod());
     }
 
     // Gets a random item from the specified tier (1-3).
@@ -847,9 +844,16 @@ public static class CurrentRun
             // Add 3x each common Modifier
             ModifierPool.Add(new AgileMod());
             ModifierPool.Add(new BoldMod());
+            ModifierPool.Add(new DippedMod());
+            ModifierPool.Add(new FlankingMod());
+            ModifierPool.Add(new IcyMod());
+            ModifierPool.Add(new PiousMod());
+            ModifierPool.Add(new PureMod());
             ModifierPool.Add(new ReinforcedMod());
+            ModifierPool.Add(new SerratedMod());
             ModifierPool.Add(new SharpMod());
             ModifierPool.Add(new SoothingMod());
+            ModifierPool.Add(new SturdyMod());
         }
 
         Console.WriteLine("Populated Modifier pool.");
@@ -1055,6 +1059,7 @@ public static class CurrentRun
     {
         card.modifier = mod;
         Inventory.Remove(mod);
+        Console.WriteLine("Attached "+mod.name+" to "+card.name);
         card.updateName();
     }
     //===
