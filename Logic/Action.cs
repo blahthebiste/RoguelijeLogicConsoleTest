@@ -141,37 +141,56 @@ public class Action : Events {
 			targetList.Add(mainTarget); // If we were passed a target, just use it
 		}
 		owner!.onUseAction(this); // Trigger event; this can modify the target list
-		if(targetList != null) {
-			foreach(Entity target in targetList) {
-				if(this.canUse(target, modifier)) {
-					if(target == null) {
-						Console.WriteLine(owner!.name+" attempting to use "+name+"!");
+		if (targetList != null)
+		{
+			foreach (Entity target in targetList)
+			{
+				if (this.canUse(target, modifier))
+				{
+					if (target == null)
+					{
+						Console.WriteLine(owner!.name + " attempting to use " + name + "!");
 					}
-					else {
-						Console.WriteLine(owner!.name+" attempting to use "+name+" on "+target!.name+"!");
+					else
+					{
+						Console.WriteLine(owner!.name + " attempting to use " + name + " on " + target!.name + "!");
 					}
-					anySuccess = this.useOnTarget(target, modifier) || anySuccess;
+					bool successOnThisTarget = this.useOnTarget(target, modifier);
+					// Run targeted modifier code:
+					if (successOnThisTarget && modifier != null && target != null)
+					{
+						modifier.useOnTarget(this, target);
+					} 
+					anySuccess = successOnThisTarget || anySuccess;
 				}
-				else {
+				else
+				{
 					// Invalid target
 				}
 			}
 		}
 		// Run the action code that does not target anyone
-		if(!requiresTarget() && canUse(null, modifier)) {
+		if (!requiresTarget() && canUse(null, modifier))
+		{
 			anySuccess = useOnce(modifier) || anySuccess;
 		}
-		if(anySuccess) { // Action succeeded (at least in some capacity)
+		if (anySuccess)
+		{ // Action succeeded (at least in some capacity)
 			owner!.previousAction = this; // Update previous action.
-			if(hasLimitedUses) { // Decrement uses if the action has limited uses
+			if (hasLimitedUses)
+			{ // Decrement uses if the action has limited uses
 				uses--;
-				Console.WriteLine(uses+" use(s) remaining.");
+				Console.WriteLine(uses + " use(s) remaining.");
 			}
-			if(!freeAction) {
+			if (!freeAction)
+			{
 				owner!.exhausted = true; // Exhaust owner
 			}
+			// Run modifier code:
+			if (modifier != null) modifier.useOnce(this);
 		}
-		else { // Action never went through; don't exhaust, don't use up uses
+		else
+		{ // Action never went through; don't exhaust, don't use up uses
 			Console.WriteLine("Action could not be used!");
 		}
 		Battlefield.resolveDeath();

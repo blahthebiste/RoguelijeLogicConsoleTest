@@ -17,7 +17,7 @@ public class Recover : Action {
             return false;
         }
         // Restore HP.
-        this.owner.ReceiveHealing(healing);
+        this.owner.ReceiveHealing(healing + (modifier == null? 0 : modifier.healMod));
         // Draw cards.
         Console.WriteLine("Drawing 3 cards");
         CardManager.drawCard(3);

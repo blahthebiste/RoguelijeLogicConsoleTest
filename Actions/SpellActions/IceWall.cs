@@ -31,6 +31,7 @@ public class IceWall : Action
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
+        if(modifier != null) power += modifier.blockMod;
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
         Console.WriteLine("Generated " + power + " Block.");
         // Generate Block.

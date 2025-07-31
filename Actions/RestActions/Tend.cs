@@ -10,7 +10,7 @@ public class Tend : Action {
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
         // Restore HP.
-        target!.ReceiveHealing(healing);
+        target!.ReceiveHealing(healing + (modifier == null? 0 : modifier.healMod));
         return true;
     }
 }

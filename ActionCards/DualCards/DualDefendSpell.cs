@@ -1,8 +1,8 @@
 public class DualDefendSpell : DualActionCard {
 
     public DualDefendSpell() {
-        this.name = "Defend/Spell";
-        this.description = "Perform a defend or spell action.";
+        this.name = this.originalName = "Defend/Spell";
+        this.description = this.originalDescription = "Perform a defend or spell action.";
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.DEFEND;
         this.actionType2 = ActionType.SPELL;

@@ -120,6 +120,15 @@ void commandLoop() {
                     unequipItem(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
                 }
                 break;
+            case "attach":
+                if(cmd.ToLower().Trim().Split().Length < 3) {
+                    Console.WriteLine("Incorrect syntax -- requires <modifier> and <actionCard> arguments");
+                    continue;
+                }
+                else {
+                    attachModifier(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
+                }
+                break;
             case "edit":
                 editMasterDeck();
                 break;
@@ -658,7 +667,14 @@ void printDiscardPile() {
 void printInventory() {
     Console.WriteLine("Inventory ("+CurrentRun.Inventory.Count+" items):");
     foreach(Item item in CurrentRun.Inventory) {
-        Console.WriteLine("\t*\t"+item.ToString());
+        if (item is Modifier)
+        {
+            Console.WriteLine("\t* [Card Modifier] "+item.ToString());
+        }
+        else
+        {
+            Console.WriteLine("\t*\t" + item.ToString());
+        }
     }
 }
 
@@ -840,6 +856,65 @@ void unequipItem(string itemName, string heroName) {
     Console.WriteLine("ERROR: Could not find item '"+itemName+"' in "+heroName+"'s equipped items.");
 }
 
+void attachModifier(string modifierName, string actionCardName)
+{
+    Modifier? modifierToAttach = null;
+    ActionCard? cardToModify = null;
+    if (CurrentRun.InCombat)
+    {
+        Console.WriteLine("Cannot attach modifiers during combat!");
+        return;
+    }
+    // First find the modifier in the inventory:
+    foreach (Modifier mod in CurrentRun.Inventory.OfType<Modifier>())
+    {
+        if (mod.name.ToLower().Trim() == modifierName.ToLower().Trim())
+        {
+            modifierToAttach = mod;
+            break;
+        }
+    }
+    if (modifierToAttach == null)
+    {
+        Console.WriteLine("ERROR: Could not find modifier with name " + modifierName + " within your inventory.");
+        return;
+    }
+    // Then find the action card:
+    foreach (ActionCard card in CurrentRun.MasterDeck.ToList())
+    {
+        // Skip cards that already have a modifier:
+        if (card.modifier != null) continue;
+
+        if (card.name.ToLower().Trim() == actionCardName.ToLower().Trim().Replace('_', ' '))
+        {
+            cardToModify = card;
+            break;
+        }
+    }
+    // If it is not in the master deck, search the collection:
+    if (cardToModify == null)
+    {
+        foreach (ActionCard card in CurrentRun.CardCollection.ToList())
+        {
+            // Skip cards that already have a modifier:
+            if (card.modifier != null) continue;
+
+            if (card.name.ToLower().Trim() == actionCardName.ToLower().Trim().Replace('_', ' '))
+            {
+                cardToModify = card;
+                break;
+            }
+        }
+    }
+    // If still could not find the card, error:
+    if (cardToModify == null)
+    {
+        Console.WriteLine("ERROR: Could not find card with name " + actionCardName + " within your deck or collection.");
+        return;
+    }
+    // Finally, we have both selected; execute
+    CurrentRun.AttachModifier(modifierToAttach, cardToModify);
+}
 
 // Enters the collection, where the player can edit their deck
 void editMasterDeck() {

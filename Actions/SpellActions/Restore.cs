@@ -23,6 +23,7 @@ public class Restore : Action {
             owner.EffectList.Remove(charge);
         }
         // Apply healing
+        if(modifier != null) power += modifier.healMod;
         target!.ReceiveHealing(power);
         return true;
     }

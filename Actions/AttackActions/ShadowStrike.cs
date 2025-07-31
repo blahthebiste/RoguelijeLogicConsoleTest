@@ -19,7 +19,7 @@ public class ShadowStrike : Action {
             return false;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(damage, this.owner!, target, this.hitsAbove, this.hitsBelow);
+        Attack atk = new Attack(damage + (modifier == null? 0 : modifier.damageMod), this.owner!, target, this.hitsAbove, this.hitsBelow);
         Battlefield.performAttack(atk);
         // Apply curse
         Console.WriteLine(this.owner.name + " applies " +magicNumber+ " Curse to " + target.name + "!");

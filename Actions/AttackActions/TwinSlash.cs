@@ -18,7 +18,7 @@ public class TwinSlash : Action {
         // Deal damage to the target twice.
         for (int i = 0; i < magicNumber; i++)
         {
-            Attack atk = new Attack(damage, this.owner!, target, this.hitsAbove, this.hitsBelow);
+            Attack atk = new Attack(damage + (modifier == null? 0 : modifier.damageMod), this.owner!, target, this.hitsAbove, this.hitsBelow);
             Battlefield.performAttack(atk);
         }
         return true;

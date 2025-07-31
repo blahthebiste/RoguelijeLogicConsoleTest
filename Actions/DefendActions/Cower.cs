@@ -14,7 +14,7 @@ public class Cower : Action {
             return false;
         }
         // Generate Block.
-        Battlefield.addBlock(block, this.owner);
+        Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
         return true;
     }
 }

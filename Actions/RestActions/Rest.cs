@@ -14,7 +14,7 @@ public class Rest : Action {
             return false;
         }
         // Restore HP.
-        this.owner.ReceiveHealing(healing);
+        this.owner.ReceiveHealing(healing + (modifier == null? 0 : modifier.healMod));
         return true;
     }
 }

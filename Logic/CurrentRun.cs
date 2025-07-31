@@ -31,6 +31,8 @@ public static class CurrentRun
 
     public static List<Encounter> EncounterPool; // Resets after each act
 
+    public static List<Modifier> ModifierPool;
+
     public static int NUMDRAFTABLEBASICCARDS = 10;
     public static int NUMDRAFTABLEDUALCARDS = 3;
     public static int NUMDRAFTABLEMOVEMENTCARDS = 2;
@@ -109,10 +111,12 @@ public static class CurrentRun
         DraftableCardPool = new List<ActionCard>();
         ComplexCardPool = new List<ActionCard>();
         EncounterPool = new List<Encounter>();
+        ModifierPool = new List<Modifier>();
         PopulateItemPools();
         PopulateDraftPool();
         PopulateComplexDraftPool();
         PopulateEncounterPool();
+        PopulateModifierPool();
     }
     //===
     //===
@@ -380,7 +384,8 @@ public static class CurrentRun
     {
         for (int i = 0; i < NUMDRAFTABLEBASICCARDS; i++)
         {
-            foreach (ActionCard card in Compendium.Cards.BasicCards) {
+            foreach (ActionCard card in Compendium.Cards.BasicCards)
+            {
                 ActionCard newCopy = card.makeCopy();
                 DraftableCardPool.Add(newCopy);
             }
@@ -412,9 +417,9 @@ public static class CurrentRun
         {
             //ComplexCardPool.Add(new Ultimate());
         }
-        
+
         // Randomize the order:
-            Shuffle(ComplexCardPool);
+        Shuffle(ComplexCardPool);
         Console.WriteLine("Populated complex card pool.");
     }
 
@@ -446,6 +451,11 @@ public static class CurrentRun
         // Remove card draft from encounter pool, it's just way worse than other options.
         // Do not add any shops until the player clears the first encounter.
 
+        for (int i = 0; i < 100; i++)
+        {
+            // Add 10x upgrade Encounter
+            EncounterPool.Add(new Upgrade());
+        }
         for (int i = 0; i < 10; i++)
         {
             // Add 10x plunder Encounter
@@ -519,7 +529,7 @@ public static class CurrentRun
             if (cmd2 == null) continue;
             if (int.TryParse(cmd2.ToLower().Trim(), out int encounterSelection))
             {
-                // If they entered a valid number for card selection, add it to their collection:
+                // If they entered a valid number for encounter selection, run it:
                 if (encounterSelection <= 3 && encounterSelection > 0)
                 {
                     EnterEncounter(encounterSelection - 1);
@@ -775,6 +785,11 @@ public static class CurrentRun
         Inventory.Add(new ManaPotion());
         Inventory.Add(new IronHelm());
         Inventory.Add(new Robes());
+        Inventory.Add(new AgileMod());
+        Inventory.Add(new BoldMod());
+        Inventory.Add(new ReinforcedMod());
+        Inventory.Add(new SoothingMod());
+        Inventory.Add(new SharpMod());
     }
 
     // Gets a random item from the specified tier (1-3).
@@ -822,6 +837,25 @@ public static class CurrentRun
         Console.WriteLine("WARNING: Item was null or not equippable");
         return new RubberDuck();
     }
+
+    // TODO: fill out
+    public static void PopulateModifierPool()
+    {
+
+        for (int i = 0; i < 3; i++)
+        {
+            // Add 3x each common Modifier
+            ModifierPool.Add(new AgileMod());
+            ModifierPool.Add(new BoldMod());
+            ModifierPool.Add(new ReinforcedMod());
+            ModifierPool.Add(new SharpMod());
+            ModifierPool.Add(new SoothingMod());
+        }
+
+        Console.WriteLine("Populated Modifier pool.");
+    }
+
+
     //===
     //===
     //===
@@ -870,121 +904,158 @@ public static class CurrentRun
     // Attempts to equip the specified item to the hero.
     // If multiple action slots are valid options, prompts the user to choose.
     // Errors if the item or hero is not found, or if the hero is exhausted
-    public static void equipItem(string itemName, string heroName) {
+    public static void equipItem(string itemName, string heroName)
+    {
         PlayerCharacter? heroToEquip = null;
         EquipmentItem? itemToEquip = null;
         // Works a little differently depending on whether we are in combat or not.
-        if(InCombat) {
+        if (InCombat)
+        {
             // Combat version: only alive heroes who are not on the bench can item swap.
             // This takes the hero's action.
 
             // First, find the hero:
-            foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+            foreach (PlayerCharacter hero in Battlefield.PlayerSide)
+            {
                 // PlayerSide only includes living heroes
-                if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
+                {
                     heroToEquip = hero;
                 }
             }
             // Now find the item:
-            foreach(Item item in CurrentRun.Inventory){
-                if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim() || item.name.ToLower().Trim() == itemName.ToLower().Trim()) {
-                    if(item is EquipmentItem) {
+            foreach (Item item in CurrentRun.Inventory)
+            {
+                if (item.name.ToLower().Trim().Replace(' ', '_') == itemName.ToLower().Trim() || item.name.ToLower().Trim() == itemName.ToLower().Trim())
+                {
+                    if (item is EquipmentItem)
+                    {
                         itemToEquip = (EquipmentItem)item;
                     }
-                    else {
-                        Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
+                    else
+                    {
+                        Console.WriteLine("ERROR: " + itemName + " is not an equippable item!");
                         return;
                     }
                 }
             }
             // Finally, check if the hero can act:
-            if(heroToEquip != null && heroToEquip.exhausted) {
-                Console.WriteLine("ERROR: "+heroName+" cannot swap items because they are exhausted.");
+            if (heroToEquip != null && heroToEquip.exhausted)
+            {
+                Console.WriteLine("ERROR: " + heroName + " cannot swap items because they are exhausted.");
                 return;
             }
         }
-        else if(CurrentRun.InARun){
+        else if (CurrentRun.InARun)
+        {
             // Non-combat version: free swapping for all heroes, bench or not
             // First, find the hero:
-            foreach(PlayerCharacter hero in CurrentRun.Party){
+            foreach (PlayerCharacter hero in CurrentRun.Party)
+            {
                 // PlayerSide only includes living heroes
-                if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
+                {
                     heroToEquip = hero;
                 }
             }
             // Also search the benched heroes:
-            foreach(PlayerCharacter hero in CurrentRun.Bench){
+            foreach (PlayerCharacter hero in CurrentRun.Bench)
+            {
                 // PlayerSide only includes living heroes
-                if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
+                if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
+                {
                     heroToEquip = hero;
                 }
             }
             // Now find the item:
-            foreach(Item item in CurrentRun.Inventory){
-                if(item.name.ToLower().Trim().Replace(' ','_') == itemName.ToLower().Trim()) {
-                    if(item is EquipmentItem) {
+            foreach (Item item in CurrentRun.Inventory)
+            {
+                if (item.name.ToLower().Trim().Replace(' ', '_') == itemName.ToLower().Trim())
+                {
+                    if (item is EquipmentItem)
+                    {
                         itemToEquip = (EquipmentItem)item;
                     }
-                    else {
-                        Console.WriteLine("ERROR: "+itemName+" is not an equippable item!");
+                    else
+                    {
+                        Console.WriteLine("ERROR: " + itemName + " is not an equippable item!");
                         return;
                     }
                 }
             }
-            
+
         }
-        if(itemToEquip == null) {
-            Console.WriteLine("ERROR: Could not find item with name "+itemName);
+        if (itemToEquip == null)
+        {
+            Console.WriteLine("ERROR: Could not find item with name " + itemName);
             return;
         }
-        if(heroToEquip == null) {
-            Console.WriteLine("ERROR: Could not find hero with name "+heroName);
+        if (heroToEquip == null)
+        {
+            Console.WriteLine("ERROR: Could not find hero with name " + heroName);
             return;
         }
         int numMatchingActions = itemToEquip.numberMatchingActions(heroToEquip);
         // If the hero has no matching actions, print an error:
-        if(numMatchingActions == 0) {
-            Console.WriteLine("Item '"+itemName+"' cannot be equipped by "+heroName+"; no actions match item's slot restrictions");
+        if (numMatchingActions == 0)
+        {
+            Console.WriteLine("Item '" + itemName + "' cannot be equipped by " + heroName + "; no actions match item's slot restrictions");
             return;
         }
         // If the hero has multiple matching actions, prompt the player to choose one:
-        if(numMatchingActions > 1) {
-            Console.WriteLine(heroName+" has multiple actions that this item can be equipped to.");
+        if (numMatchingActions > 1)
+        {
+            Console.WriteLine(heroName + " has multiple actions that this item can be equipped to.");
             Console.WriteLine("Select one from the following by entering its number, or type something else to go back:");
             Console.WriteLine("");
             List<Action> matchingActions = new List<Action>();
             // Find all matching actions from the hero's action list:
-            foreach(Action action in heroToEquip.ActionList) {
-                if(action.hasEquipmentSlot && itemToEquip.matchesActionType(action)) {
+            foreach (Action action in heroToEquip.ActionList)
+            {
+                if (action.hasEquipmentSlot && itemToEquip.matchesActionType(action))
+                {
                     matchingActions.Add(action);
                 }
             }
             // Print them out and await selection:
-            for(int i = 0; i < matchingActions.Count; i++) {
-                Console.Write("["+(i+1)+" - "+matchingActions[i].name+"]\t");
+            for (int i = 0; i < matchingActions.Count; i++)
+            {
+                Console.Write("[" + (i + 1) + " - " + matchingActions[i].name + "]\t");
             }
             Console.Write("\n> ");
             string? cmd2 = Console.ReadLine();
-            if(cmd2 == null) return;
-            if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
+            if (cmd2 == null) return;
+            if (int.TryParse(cmd2.ToLower().Trim(), out int actionSelection))
+            {
                 // If they entered a valid number for action selection, equip the item to the action:
-                if(actionSelection <= matchingActions.Count && actionSelection > 0) {
-                    itemToEquip.Equip(matchingActions[actionSelection-1]);
+                if (actionSelection <= matchingActions.Count && actionSelection > 0)
+                {
+                    itemToEquip.Equip(matchingActions[actionSelection - 1]);
                 }
             }
             // Return afterwards regardless.
             return;
         }
         // If the hero has exactly 1 matching action, equip the item to the action:
-        if(numMatchingActions == 1) {
+        if (numMatchingActions == 1)
+        {
             // Find the first matching action from the hero's action list:
-            foreach(Action action in heroToEquip.ActionList) {
-                if(itemToEquip.matchesActionType(action)) {
+            foreach (Action action in heroToEquip.ActionList)
+            {
+                if (itemToEquip.matchesActionType(action))
+                {
                     action.Equip(itemToEquip);
                     break;
                 }
             }
         }
+    }
+
+    public static void AttachModifier(Modifier mod, ActionCard card)
+    {
+        card.modifier = mod;
+        Inventory.Remove(mod);
+        card.updateName();
     }
     //===
     //===

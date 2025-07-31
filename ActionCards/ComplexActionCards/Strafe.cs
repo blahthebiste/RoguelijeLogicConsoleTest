@@ -3,8 +3,8 @@ public class Strafe : MovementCard
 
     public Strafe()
     {
-        this.name = "Strafe";
-        this.description = "Move up or down 1 space (free action).";
+        this.name = this.originalName = "Strafe";
+        this.description = this.originalDescription = "Move up or down 1 space (free action).";
         this.actionType = ActionType.MOVEMENT;
         this.owner = null;
         this.modifier = null;
