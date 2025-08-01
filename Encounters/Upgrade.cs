@@ -15,6 +15,6 @@ public class Upgrade : Encounter {
         CurrentRun.Shuffle(CurrentRun.ModifierPool);
         Modifier newModifier = CurrentRun.ModifierPool[0];
         CurrentRun.Inventory.Add(newModifier);
-        Console.WriteLine("Got card modifier, '" + newModifier.name+"'.");
+        Console.WriteLine("Got card modifier, '" + newModifier+"'.");
     }
 }

@@ -18,10 +18,10 @@ public class Attack {
     
     // Copy constructor
     public Attack(Attack atk, Entity newTarget) {
-        this.damage = atk.damage;
-        this.target = atk.target;
-        this.hitsAbove = atk.hitsAbove;
-        this.hitsBelow = atk.hitsBelow;
-        this.source = newTarget;
+        damage = atk.damage;
+        target = atk.target;
+        hitsAbove = atk.hitsAbove;
+        hitsBelow = atk.hitsBelow;
+        source = newTarget;
     }
 }

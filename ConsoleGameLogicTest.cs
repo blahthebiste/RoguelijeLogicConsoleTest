@@ -255,7 +255,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    //CurrentRun.ZoneProgress = 6; // For debugging
+    //CurrentRun.ZoneProgress = 3; // For debugging
     CurrentRun.GenerateNextCombat();
 }
 
@@ -518,8 +518,12 @@ void printCombatSituation() {
     int numEnemies = Battlefield.EnemySide.Count;
     int numHeroes = Battlefield.PlayerSide.Count;
     int sizeDiff = Math.Abs(numEnemies - numHeroes);
-    if(Battlefield.playerBlock > 0 || Battlefield.enemyBlock > 0) {
-        Console.WriteLine("\tCurrent Block: "+Battlefield.playerBlock+"\t|\tEnemy Block: "+Battlefield.enemyBlock);
+    if (Battlefield.playerBlock > 0 || Battlefield.enemyBlock > 0)
+    {
+        string playerBlockString = "Current Block: " + Battlefield.playerBlock;
+        string enemyBlockString = "Enemy Block: " + Battlefield.enemyBlock;
+        string blockString = String.Format("{0,40}\t|{1,40}", playerBlockString, enemyBlockString);
+        Console.WriteLine(blockString);
     } 
     Console.WriteLine("");
     

@@ -617,7 +617,7 @@ public class Entity : Events
         }
         int targetIndex;
         // Apply additional targets if applicable
-        if (atk.target.hostile)
+        if (!atk.target.hostile)
         {
             targetIndex = Battlefield.PlayerSide.IndexOf(atk.target);
             if (atk.hitsAbove && targetIndex > 0)
