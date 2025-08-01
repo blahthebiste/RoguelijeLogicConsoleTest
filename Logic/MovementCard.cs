@@ -17,7 +17,7 @@ public class MovementCard : ActionCard
             Console.WriteLine("ERROR: only living entities can perform this action!");
             return false;
         }
-        if (entityToUseAction is PlayerCharacter && Battlefield.PlayerSide.Contains((PlayerCharacter)entityToUseAction))
+        if (entityToUseAction is PlayerCharacter && Battlefield.PlayerSide.Contains(entityToUseAction))
         {
             return true;
         }

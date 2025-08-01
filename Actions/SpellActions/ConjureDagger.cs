@@ -19,7 +19,7 @@ public class ConjureDagger : Action {
             Console.WriteLine("ERROR: null owner for action '" + this.name + "'.");
             return false;
         }
-        foreach (Enemy enemy in Battlefield.EnemySide)
+        foreach (Entity enemy in Battlefield.EnemySide)
         {
             if (enemy.name == "Mystical Dagger")
             {
@@ -36,7 +36,7 @@ public class ConjureDagger : Action {
         {
             for (int i = 0; i < magicNumber; i++)
             { // TODO: This will error if used by a player character, currently
-                Battlefield.SummonEntity("Mystical Dagger", this.owner.playerControlled);
+                Battlefield.SummonEntity("Mystical Dagger", this.owner.hostile, 0, this.owner.name);
             }
             return true;
         }

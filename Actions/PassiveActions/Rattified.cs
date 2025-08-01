@@ -14,8 +14,8 @@ public class Rattified : Action {
             return;
         }
         // Check for allied hench-rats:
-        List<Enemy> matchingRats = new List<Enemy>();
-        foreach (Enemy enemy in Battlefield.EnemySide)
+        List<Entity> matchingRats = new List<Entity>();
+        foreach (Entity enemy in Battlefield.EnemySide)
         {
             if (enemy.name == "Hench-Rat")
             {
@@ -28,7 +28,7 @@ public class Rattified : Action {
             CurrentRun.Shuffle(matchingRats);
             int index = Battlefield.EnemySide.IndexOf(matchingRats[0]); // Nice to have the giant rat in the same position as the one that transformed.
             Battlefield.EnemySide.Remove(matchingRats[0]);
-            Battlefield.SummonEntity("Giant Rat", this.owner.playerControlled, index);
+            Battlefield.SummonEntity("Giant Rat", this.owner.hostile, index);
         }
         base.onDeath();
     }

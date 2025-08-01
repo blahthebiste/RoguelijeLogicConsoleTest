@@ -9,8 +9,8 @@ public static class DataRegistry {
         Console.WriteLine("Loading data...");
         CharacterData.LoadPlayerData();
         Console.WriteLine("Loaded player character data.");
-        CharacterData.LoadEnemyData();
-        Console.WriteLine("Loaded enemy character data.");
+        CharacterData.LoadEntityData();
+        Console.WriteLine("Loaded entity character data.");
         EnemyTroupes.LoadTroupeData();
         Console.WriteLine("Loaded enemy troupe data.");
         // TODO: load item data?
@@ -47,70 +47,111 @@ public static class DataRegistry {
 
     }
 
-    public static class CharacterData {
+    public static class CharacterData
+    {
         public static string playerDataPath = "Data/Characters/PlayerCharacters.json";
-        public static string enemyDataPath = "Data/Characters/Enemies.json";
+        public static string EntityDataPath = "Data/Characters/Entities.json";
 
         public static List<PlayerData>? PlayerDataList = new List<PlayerData>();
-        public static List<EnemyData>? EnemyDataList = new List<EnemyData>();
+        public static List<EntityData>? EntityDataList = new List<EntityData>();
 
-        public static void LoadPlayerData() {
+        public static void LoadPlayerData()
+        {
             string json = File.ReadAllText(playerDataPath);
             PlayerDataList = JsonSerializer.Deserialize<List<PlayerData>>(json);
-            if(PlayerDataList == null) {
+            if (PlayerDataList == null)
+            {
                 Console.WriteLine("Failed to load player data.");
                 return;
             }
-            Console.WriteLine("Loaded "+PlayerDataList.Count+" player characters from json.");
+            Console.WriteLine("Loaded " + PlayerDataList.Count + " player characters from json.");
         }
-        
-        public static void LoadEnemyData()
+
+        public static void LoadEntityData()
         {
-            string json = File.ReadAllText(enemyDataPath);
-            EnemyDataList = JsonSerializer.Deserialize<List<EnemyData>>(json);
-            if (EnemyDataList == null)
+            string json = File.ReadAllText(EntityDataPath);
+            EntityDataList = JsonSerializer.Deserialize<List<EntityData>>(json);
+            if (EntityDataList == null)
             {
-                Console.WriteLine("Failed to load enemy data.");
+                Console.WriteLine("Failed to load entity data.");
                 return;
             }
-            Console.WriteLine("Loaded " + EnemyDataList.Count + " enemies from json.");
-            foreach(EnemyData data in EnemyDataList){
-                Console.WriteLine("Found "+data.Name);
+            Console.WriteLine("Loaded " + EntityDataList.Count + " entities from json.");
+            foreach (EntityData data in EntityDataList)
+            {
+                Console.WriteLine("Found " + data.Name);
             }
         }
 
-        public static PlayerData? getPlayerDataByName(string characterName) {
-            if(PlayerDataList == null) {
+        public static PlayerData? getPlayerDataByName(string characterName)
+        {
+            if (PlayerDataList == null)
+            {
                 Console.WriteLine("Cannot get player data -- Failed to load.");
                 return null;
             }
-            foreach(PlayerData data in PlayerDataList) {
-                if(data.Name.ToLower().Trim() == characterName.ToLower().Trim()) {
-                    Console.WriteLine("Found match for player character with ID = "+characterName);
-                    return data;
-                }
-            }
-            Console.WriteLine("ERROR: No match found for player character with ID = "+characterName);
-            return null;
-        }
-        
-        public static EnemyData? getEnemyDataByName(string characterName)
-        {
-            if (EnemyDataList == null)
-            {
-                Console.WriteLine("Cannot get enemy data -- Failed to load.");
-                return null;
-            }
-            foreach (EnemyData data in EnemyDataList)
+            foreach (PlayerData data in PlayerDataList)
             {
                 if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
                 {
-                    Console.WriteLine("Found match for enemy with ID = " + characterName);
+                    Console.WriteLine("Found match for player character with ID = " + characterName);
                     return data;
                 }
             }
-            Console.WriteLine("ERROR: No match found for enemy with ID = " + characterName);
+            Console.WriteLine("ERROR: No match found for player character with ID = " + characterName);
             return null;
+        }
+
+        // Just tells you whether the hero could be found in the playerdata list
+        public static bool heroExists(string characterName)
+        {
+            if (PlayerDataList == null)
+            {
+                Console.WriteLine("Cannot get player data -- Failed to load.");
+                return false;
+            }
+            foreach (PlayerData data in PlayerDataList)
+            {
+                if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static EntityData? getEntityDataByName(string characterName)
+        {
+            if (EntityDataList == null)
+            {
+                Console.WriteLine("Cannot get entity data -- Failed to load.");
+                return null;
+            }
+            foreach (EntityData data in EntityDataList)
+            {
+                if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
+                {
+                    Console.WriteLine("Found match for entity with ID = " + characterName);
+                    return data;
+                }
+            }
+            Console.WriteLine("ERROR: No match found for entity with ID = " + characterName);
+            return null;
+        }
+        
+        // Just tells you whether the entity could be found in the entitydata list
+        public static bool entityExists(string characterName)
+        {
+            if(EntityDataList == null) {
+                Console.WriteLine("Cannot get player data -- Failed to load.");
+                return false;
+            }
+            foreach(EntityData data in EntityDataList) {
+                if(data.Name.ToLower().Trim() == characterName.ToLower().Trim()) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }

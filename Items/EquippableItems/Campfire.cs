@@ -21,20 +21,20 @@ public class Campfire : EquipmentItem {
             return actionBeingUsed;
         }
         // Loop through allies, trigger their first rest action
-        foreach (PlayerCharacter hero in Battlefield.PlayerSide.ToList())
+        foreach (Entity ally in Battlefield.PlayerSide.ToList())
         {
-            // Make sure not to double up on the hero using the campfire!
-            if (this.parentAction.owner == hero)
+            // Make sure not to double up on the ally using the campfire!
+            if (this.parentAction.owner == ally)
             {
                 continue;
             }
-            foreach (Action act in hero.ActionListMinusPassives.ToList())
+            foreach (Action act in ally.ActionListMinusPassives.ToList())
             {
                 // Match the first action that is type rest and targets self:
                 if (act.actionType == ActionType.REST && act.targetting == TargetCategory.SELF)
                 {
-                    act.freeAction = true; // Let the heroes rest without exhausting themself
-                    Console.WriteLine(hero.name + " rests at the Campfire!");
+                    act.freeAction = true; // Let the allyes rest without exhausting themself
+                    Console.WriteLine(ally.name + " rests at the Campfire!");
                     act.promptUse();
                     act.freeAction = false;
                     break;

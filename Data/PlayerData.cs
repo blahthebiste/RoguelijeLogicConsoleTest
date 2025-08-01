@@ -1,15 +1,8 @@
 
-        public class PlayerData {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public int HP { get; set; }
+        public class PlayerData : EntityData {
             public string PersonalCard { get; set; }
-            public List<string> ActionList { get; set; }
 
-            public PlayerData() {
-                Name = "MISSING NAME";
-                Description = "MISSING DESCRIPTION";
+            public PlayerData() : base() {
                 PersonalCard = "Basic Attack";
-                ActionList = new List<string>();
             }
         }

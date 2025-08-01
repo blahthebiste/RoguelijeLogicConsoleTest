@@ -919,16 +919,15 @@ public static class CurrentRun
             // This takes the hero's action.
 
             // First, find the hero:
-            foreach (PlayerCharacter hero in Battlefield.PlayerSide)
+            foreach (PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>())
             {
-                // PlayerSide only includes living heroes
                 if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
                 {
                     heroToEquip = hero;
                 }
             }
             // Now find the item:
-            foreach (Item item in CurrentRun.Inventory)
+            foreach (Item item in Inventory)
             {
                 if (item.name.ToLower().Trim().Replace(' ', '_') == itemName.ToLower().Trim() || item.name.ToLower().Trim() == itemName.ToLower().Trim())
                 {
@@ -950,29 +949,27 @@ public static class CurrentRun
                 return;
             }
         }
-        else if (CurrentRun.InARun)
+        else if (InARun)
         {
             // Non-combat version: free swapping for all heroes, bench or not
             // First, find the hero:
-            foreach (PlayerCharacter hero in CurrentRun.Party)
+            foreach (PlayerCharacter hero in Party)
             {
-                // PlayerSide only includes living heroes
                 if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
                 {
                     heroToEquip = hero;
                 }
             }
             // Also search the benched heroes:
-            foreach (PlayerCharacter hero in CurrentRun.Bench)
+            foreach (PlayerCharacter hero in Bench)
             {
-                // PlayerSide only includes living heroes
                 if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
                 {
                     heroToEquip = hero;
                 }
             }
             // Now find the item:
-            foreach (Item item in CurrentRun.Inventory)
+            foreach (Item item in Inventory)
             {
                 if (item.name.ToLower().Trim().Replace(' ', '_') == itemName.ToLower().Trim())
                 {

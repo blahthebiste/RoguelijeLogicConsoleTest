@@ -12,11 +12,11 @@ public class Taunting : StatusEffect {
     {
         // Add owner to Taunters list:
         Battlefield.Taunters.Add(owner!);
-        // If this is on a player controlled entity, update enemy targets:
-        if (owner!.playerControlled)
+        // If this is on a player side entity, update enemy targets:
+        if (!owner!.hostile)
         {
             // Go through all enemies, and for those that target allies, change the target
-            foreach (Enemy enemy in Battlefield.EnemySide)
+            foreach (Entity enemy in Battlefield.EnemySide)
             {
                 // Skip enemies whose next action ignores taunt:
                 if (enemy.nextTarget != null && Battlefield.PlayerSide.Contains(enemy.nextTarget) && !enemy.getNextAction().ignoresTaunt)

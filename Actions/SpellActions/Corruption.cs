@@ -20,7 +20,7 @@ public class Corruption : Action {
             Console.WriteLine("ERROR: null owner for action '" + this.name + "'.");
             return false;
         }
-        if (this.owner is not Enemy)
+        if (!this.owner.hostile)
         {
             Console.WriteLine("ERROR: owner must be enemy for action '" + this.name + "'.");
             return false;
@@ -30,12 +30,12 @@ public class Corruption : Action {
             Console.WriteLine("ERROR: null target for action '" + this.name + "'.");
             return false;
         }
-        if (((Enemy)this.owner).master == null)
+        if (this.owner.master == null)
         {
             Console.WriteLine(this.name + " requires a master!");
             return false;
         }
-        if (target.name != ((Enemy)this.owner).master)
+        if (target.name != this.owner.master)
         {
             Console.WriteLine(this.name + " must target master!");
             return false;

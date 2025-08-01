@@ -14,7 +14,7 @@ public class Pavise : EquipmentItem {
     // On action use:
     public override Action onUseEquippedAction(Action actionBeingUsed) {
         Console.WriteLine("Pavise deals damage");
-        Enemy randomTarget = Battlefield.EnemySide[CurrentRun.rng.Next(0, Battlefield.EnemySide.Count)];
+        Entity randomTarget = Battlefield.EnemySide[CurrentRun.rng.Next(0, Battlefield.EnemySide.Count)];
         // Deal damage to the target.
         Attack atk = new Attack(damage, this.parentAction!.owner!, randomTarget!);
         randomTarget!.onReceiveAttack(atk);

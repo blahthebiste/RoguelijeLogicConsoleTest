@@ -15,7 +15,7 @@ public class Everfull : Action {
             Console.WriteLine("ERROR: " + this.name + " has null owner!");
             return;
         }
-        foreach(Enemy ally in Battlefield.EnemySide.ToList()) {
+        foreach(Entity ally in Battlefield.EnemySide.ToList()) {
             foreach (Action act in ally.ActionListMinusPassives) {
                 if (act.actionType == ActionType.SPELL && act.uses < act.maxUses)
                 {

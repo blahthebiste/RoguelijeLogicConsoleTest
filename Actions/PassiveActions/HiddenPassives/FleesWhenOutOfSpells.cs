@@ -26,7 +26,7 @@ public class FleesWhenOutOfSpells : Action {
         }
         // All out of spells, run away!
         Console.WriteLine(this.owner.name + " is all out of spells!");
-        ((Enemy)this.owner).fleeing = true;
+        this.owner.fleeing = true;
         return;
     }
 }

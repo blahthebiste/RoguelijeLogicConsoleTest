@@ -25,7 +25,7 @@ public class Conniving : Action {
         else
         {
             // Enemy selects a valid random target:
-            Entity? target = ((Enemy)this.owner).chooseNextTarget(subtlepoisonInstance);
+            Entity? target = this.owner.chooseNextTarget(subtlepoisonInstance);
             if (target == null)
             {
                 Console.WriteLine("ERROR: " + this.name + " has null target!");

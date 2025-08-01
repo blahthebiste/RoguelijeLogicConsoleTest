@@ -24,9 +24,9 @@ public class Connive : Action {
                 continue;
             }
             // For actions that do require a target, validate that we can find a valid target:
-            if (this.owner is Enemy)
+            if (!this.owner.playerControlled)
             {
-                chosenTarget = ((Enemy)this.owner).chooseNextTarget(act);
+                chosenTarget = this.owner.chooseNextTarget(act);
                 if (chosenTarget != null)
                 {
                     possibleActions.Add(act, chosenTarget);
@@ -49,7 +49,7 @@ public class Connive : Action {
         CurrentRun.Shuffle(keyList);
         Action chosenAction = keyList[0];
         Console.WriteLine(this.owner.name+" chose "+chosenAction.name+" with Connive.");
-        if (this.owner is Enemy)
+        if (!this.owner.playerControlled)
         {
             chosenAction.use(possibleActions[keyList[0]], modifier);
         }

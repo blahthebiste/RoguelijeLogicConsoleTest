@@ -74,10 +74,10 @@ public class Action : Events {
 	// Asks the player to select a target if necessary. Returns false if the action was not used.
 	// Also returns false if the action was untargetted, and failed.
 	public virtual bool promptUse() {
-		if(this.targetting == TargetCategory.SINGLE_ANY || this.targetting == TargetCategory.SINGLE_ALLY || this.targetting == TargetCategory.SINGLE_ENEMY) {
+		if(targetting == TargetCategory.SINGLE_ANY || targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY) {
 			// Prompt the player for a target.
 			while(true) {
-				Console.WriteLine("Enter a target for "+this.name+" (or 'skip' to not use the action):");
+				Console.WriteLine("Enter a target for "+name+" (or 'skip' to not use the action):");
 				Console.Write("\n> ");
                 string? feedback = Console.ReadLine();
 				Entity? target = null;
@@ -88,14 +88,14 @@ public class Action : Events {
 					Console.WriteLine("Skipping action.");
 					return false;
 				}
-				foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+				foreach(Entity hero in Battlefield.PlayerSide){
 					// Check if target is here, if we were given one.:
 					if(hero.name.ToLower().Trim() == actionTarget) {
 						target = hero;
 						break;
 					}
 				}
-				foreach(Enemy enemy in Battlefield.EnemySide){
+				foreach(Entity enemy in Battlefield.EnemySide){
 					// Check if target is here, if we were given one.:
 					if(enemy.name.ToLower().Trim() == actionTarget) {
 						target = enemy;
@@ -109,7 +109,7 @@ public class Action : Events {
 				}
 				// Check if the target is valid:
 				if(this.CanTarget(target)) {
-					if(this.use(target, null)) {
+					if(use(target, null)) {
 						return true;
 					}
 					else {
@@ -324,7 +324,7 @@ public class Action : Events {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-		switch(this.targetting)
+		switch(targetting)
 		{
 			case TargetCategory.NONE:
 				return false;
@@ -339,13 +339,13 @@ public class Action : Events {
 					return false;
 				}
 				// If they are on different teams, they can target with this action.
-				bool opposingTeams = (owner.playerControlled != target.playerControlled);
+				bool opposingTeams = owner.hostile != target.hostile;
 				// Check for Taunt as well:
-				if(!this.ignoresTaunt && !Battlefield.Taunters.Contains(target)) {
+				if(!ignoresTaunt && !Battlefield.Taunters.Contains(target)) {
 					// If the target does not have taunt, need to check if their allies do:
 					if(Battlefield.Taunters.Count > 0) {
 						foreach(Entity taunter in Battlefield.Taunters) {
-							if(target.playerControlled == taunter.playerControlled) {
+							if(target.hostile == taunter.hostile) {
 								// Taunter is on the same team as the target, and will protect them.
 								Console.WriteLine(target.name+" could not be targeted, because they were protected by "+taunter.name);
 								return false;
@@ -356,11 +356,11 @@ public class Action : Events {
 				// Check for invisibility:
 				if(target.HasStatusEffect("Invisibility")) {
 					// If they are not last on their team, they cannot be targeted
-					if(target.playerControlled && Battlefield.PlayerSide.Count > 1) {
+					if(!target.hostile && Battlefield.PlayerSide.Count > 1) {
 						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
 						return false;
 					}
-					else if(!target.playerControlled && Battlefield.EnemySide.Count > 1) {
+					else if(target.hostile && Battlefield.EnemySide.Count > 1) {
 						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
 						return false;
 					}
@@ -375,15 +375,15 @@ public class Action : Events {
 					return false;
 				}
 				// If they are on the same team, they can target with this action
-				return owner.playerControlled == target.playerControlled;
+				return owner.hostile == target.hostile;
 			case TargetCategory.DEAD_ALLY:
 				// If they are on the same team, but the target is dead, they can target with this action
-				return (Battlefield.DeadHeroes.Contains(target) && owner.playerControlled) 
-				|| (Battlefield.DeadEnemies.Contains(target) && !owner.playerControlled);
+				return (Battlefield.DeadHeroes.Contains(target) && !owner.hostile) 
+				|| (Battlefield.DeadEnemies.Contains(target) && owner.hostile);
 			case TargetCategory.DEAD_ENEMY:
 				// If they are on opposite teams, but the target is dead, they can target with this action
-				return (Battlefield.DeadHeroes.Contains(target) && !owner.playerControlled) 
-				|| (Battlefield.DeadEnemies.Contains(target) && owner.playerControlled);
+				return (Battlefield.DeadHeroes.Contains(target) && owner.hostile) 
+				|| (Battlefield.DeadEnemies.Contains(target) && !owner.hostile);
 			case TargetCategory.DEAD_ANY:
 				// If the target is dead, they can target with this action
 				return Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target);

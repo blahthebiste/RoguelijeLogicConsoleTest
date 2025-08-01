@@ -4,14 +4,28 @@ public class Entity : Events
     public string name = "Missing entity name!";
     public string description = "Missing entity description!";
     public int maxHP = 1;
-    public bool hostile = true;
-    public bool playerControlled = false;
+    public bool hostile = true; // Whether the entity appears on the Enemy side of the battlefield, or player side
+    public bool playerControlled = false; // Whether the entity requires the player to play action cards to get them to act
     public int currentHP = 1;
     public bool exhausted = false;
     public List<Action> ActionList = new List<Action>(); // Equipment is tied to actions.
     public List<Action> ActionListMinusPassives = new List<Action>(); // Used for enemies determining what action to use next
     public List<StatusEffect> EffectList = new List<StatusEffect>(); // All status effects currently on the entity.
     public Action? previousAction = null;
+
+    // For non-player controlled entities only:
+    // Tracks what the entity is about to do each turn.
+    // For most enemies, just increments by 1 until it hits a usable action each turn.
+    public int nextActionIndex = 0;
+
+    // For non-player controlled entities only:
+    public Entity? nextTarget; // The next entity that will be targeted. Can be null for actions that do not require a target
+
+    public bool fleeing = false;
+
+    public Action idle = new Idle();
+
+    public string? master; // Used by minions
 
     // Default constuctor
     public Entity()
@@ -26,8 +40,52 @@ public class Entity : Events
         this.maxHP = maxHP;
         this.hostile = hostile;
         this.playerControlled = playerControlled;
-        this.currentHP = maxHP;
-        this.exhausted = false;
+        currentHP = maxHP;
+        exhausted = false;
+    }
+
+        // Constructor from data
+    public Entity(string characterID)
+    {
+        EntityData? data = DataRegistry.CharacterData.getEntityDataByName(characterID);
+        if (data == null)
+        {
+            Console.WriteLine("Could not generate entity; ID not found.");
+            return;
+        }
+        foreach (string actionName in data.ActionList)
+        {
+            Action? newAction = DataRegistry.ActionData.getActionByName(actionName);
+            if (newAction == null)
+            {
+                Console.WriteLine("Could not generate entity; action not found.");
+                return;
+            }
+            ActionList.Add(newAction);
+        }
+        idle.owner = this;
+        name = data.Name;
+        description = data.Description;
+        maxHP = data.HP;
+        exhausted = false;
+        currentHP = maxHP;
+        master = data.Master;
+        assignActionOwnership();
+    }
+
+    // Prints out full details about the entity
+    public override string ToString()
+    {
+        string str = name;
+        str += "\nHP: " + currentHP + "/" + maxHP;
+        str = str + "\nActions:";
+        for (int i = 0; i < ActionList.Count; i++)
+        {
+            Action action = ActionList[i];
+            str += "\n\t";
+            str += action.ToString();
+        }
+        return str;
     }
 
     public bool isAlive()
@@ -54,24 +112,39 @@ public class Entity : Events
     // Should always be used instead of direct HP operations
     public void changeHP(int delta)
     {
-        delta = this.onHPChange(delta);
-        this.currentHP += delta;
-        if (this.currentHP > this.maxHP) this.currentHP = this.maxHP; // Cap healing
+        delta = onHPChange(delta);
+        currentHP += delta;
+        if (currentHP > maxHP) currentHP = maxHP; // Cap healing
     }
 
     // Should always be used instead of direct max HP operations
     // No events associated with changes to max HP for now.
     public void changeMaxHP(int delta)
     {
-        this.maxHP += delta;
-        if (this.currentHP > this.maxHP) this.currentHP = this.maxHP; // Cap healing
+        maxHP += delta;
+        if (currentHP > maxHP) currentHP = maxHP; // Cap healing
     }
 
     public virtual void ReceiveHealing(int healing)
     {
-        Console.WriteLine(this.name + " was healed for " + healing + " HP.");
+        Console.WriteLine(name + " was healed for " + healing + " HP.");
         changeHP(healing);
     }
+
+
+    // Determines whether an entity has the given item equipped (slot irrelevant)
+    public bool hasItem(EquipmentItem item)
+    {
+        foreach (Action act in ActionList)
+        {
+            if (act.equippedItem != null && act.equippedItem.name == item.name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public virtual void AddStatusEffect(StatusEffect newEffect)
     {
@@ -81,7 +154,7 @@ public class Entity : Events
             newEffect.amount -= 1;
         }
         string newEffectName = newEffect.name;
-        Console.WriteLine(this.name + " gained new effect: " + newEffectName + " with value " + newEffect.amount + ".");
+        Console.WriteLine(name + " gained new effect: " + newEffectName + " with value " + newEffect.amount + ".");
         foreach (StatusEffect existingEffect in EffectList)
         {
             string existingEffectName = existingEffect.name;
@@ -95,7 +168,7 @@ public class Entity : Events
             }
         }
         // Entity does not have this effect, add it
-        this.EffectList.Add(newEffect);
+        EffectList.Add(newEffect);
         newEffect.onApplied();
     }
 
@@ -155,31 +228,226 @@ public class Entity : Events
         // Trigger events for death
         onDeath();
         Console.WriteLine(name + " has been slain!");
+        if (Battlefield.PlayerSide.Contains(this))
+        {
+            Battlefield.DeadHeroes.Add(this);
+        }
+        else if (Battlefield.EnemySide.Contains(this))
+        {
+            Battlefield.DeadEnemies.Add(this);
+        }
         Battlefield.RemoveEntity(this);
-        if (this is PlayerCharacter)
-        {
-            Battlefield.DeadHeroes.Add((PlayerCharacter)this);
-        }
-        else if (this is Enemy)
-        {
-            Battlefield.DeadEnemies.Add((Enemy)this);
-        }
     }
 
-    // Determines whether an entity has the given item equipped (slot irrelevant)
-    public bool hasItem(EquipmentItem item)
+    // Don't kill this entity, but do remove it from combat.
+    public void flee()
     {
-        foreach (Action act in ActionList)
+        // Does not trigger events for death
+        Console.WriteLine(this.name + " has exited combat!");
+        Battlefield.RemoveEntity(this);
+    }
+
+    //=========================== AI ===========================
+    //===
+    //===
+    //===
+
+    // Selects the next action and target automatically.
+    // Should never be called for a playerControlled character.
+    public void prepareTurn()
+    {
+        if (playerControlled)
         {
-            if (act.equippedItem != null && act.equippedItem.name == item.name)
+            Console.WriteLine("ERROR: entity is under player control, and should not be preparing their turn!");
+            return;
+        }
+        // Loop through actions until we find a usable one
+        for (int failedActions = 0; failedActions < ActionListMinusPassives.Count; failedActions++)
+        {
+            // Some actions do not require a target, but still need to be checked for usability:
+            if (!getNextAction().requiresTarget() && getNextAction().canUse(null, null))
             {
-                return true;
+                setNextTarget(null);
+                return;
+            }
+            // For actions that do require a target, validate that we can find a valid target:
+            Entity? chosenTarget = chooseNextTarget(getNextAction());
+            if (chosenTarget != null)
+            {
+                setNextTarget(chosenTarget);
+                return;
+            }
+            // That action could not find a valid target. Move onto the next.
+            nextActionIndex++;
+            if (nextActionIndex >= ActionListMinusPassives.Count)
+            {
+                nextActionIndex = 0;
             }
         }
-        return false;
+        // Every non-passive action was unable to find a valid target. SKip turn
     }
 
-    //====================EVENTS====================
+    // Entity takes its turn. This involves using their action, and then selecting the next one.
+    // Many enemies/summons will override this
+    // Should never be called for a playerControlled character.
+    public void takeTurn()
+    {
+        if (playerControlled)
+        {
+            Console.WriteLine("ERROR: entity is under player control, and should not automatically take their turn!");
+            return;
+        }
+        getNextAction().use(nextTarget, null); // Null modifier, entities outside of player control don't use cards
+        nextActionIndex++;
+        if (nextActionIndex >= ActionListMinusPassives.Count)
+        {
+            nextActionIndex = 0;
+        }
+    }
+
+    // Figures out who the given action should target.
+    // Selects a random target index from the appropriate side of combat.
+    // If no valid target could be found, returns null.
+    // If the entity has no actions, or their next action does not require a target, returns null.
+    // Should never be called for a playerControlled character.
+    public Entity? chooseNextTarget(Action act)
+    {
+        if (playerControlled)
+        {
+            Console.WriteLine("ERROR: entity is under player control, and should not be automatically selecting targets!");
+            return null;
+        }
+        // Get random order for targetting priority:
+        List<int> targetPriorityList = new List<int>();
+        switch (act.targetting)
+        {
+            case TargetCategory.SINGLE_ENEMY:
+                if (hostile)
+                {
+                    for (int i = 0; i < Battlefield.PlayerSide.Count; i++)
+                    {
+                        targetPriorityList.Add(i);
+                    }
+                    CurrentRun.Shuffle(targetPriorityList);
+                    foreach (int targetIndex in targetPriorityList)
+                    {
+                        // Try each target in order.
+                        if (act.canUse(Battlefield.PlayerSide[targetIndex], null))
+                        {
+                            Console.WriteLine("Action " + act + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
+                            return Battlefield.PlayerSide[targetIndex];
+                        }
+                    }
+                }
+                else
+                { // If the entity is on the player's side:
+                    for (int i = 0; i < Battlefield.EnemySide.Count; i++)
+                    {
+                        targetPriorityList.Add(i);
+                    }
+                    CurrentRun.Shuffle(targetPriorityList);
+                    foreach (int targetIndex in targetPriorityList)
+                    {
+                        // Try each target in order.
+                        if (act.canUse(Battlefield.EnemySide[targetIndex], null))
+                        {
+                            Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex].name + "!");
+                            return Battlefield.EnemySide[targetIndex];
+                        }
+                    }
+                }
+
+                Console.WriteLine("Action has no valid targets.");
+                return null;
+            case TargetCategory.SINGLE_ALLY:
+                if (hostile)
+                {
+                    for (int i = 0; i < Battlefield.EnemySide.Count; i++)
+                    {
+                        targetPriorityList.Add(i);
+                    }
+                    CurrentRun.Shuffle(targetPriorityList);
+                    foreach (int targetIndex in targetPriorityList)
+                    {
+                        // Try each target in order.
+                        if (act.canUse(Battlefield.EnemySide[targetIndex], null))
+                        {
+                            Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex].name + "!");
+                            return Battlefield.EnemySide[targetIndex];
+                        }
+                    }
+                }
+                else
+                { // If the entity is on the player's side:
+                    for (int i = 0; i < Battlefield.PlayerSide.Count; i++)
+                    {
+                        targetPriorityList.Add(i);
+                    }
+                    CurrentRun.Shuffle(targetPriorityList);
+                    foreach (int targetIndex in targetPriorityList)
+                    {
+                        // Try each target in order.
+                        if (act.canUse(Battlefield.PlayerSide[targetIndex], null))
+                        {
+                            Console.WriteLine("Action " + act + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
+                            return Battlefield.PlayerSide[targetIndex];
+                        }
+                    }
+                }
+
+                Console.WriteLine("Action has no valid targets.");
+                return null;
+            default:
+                Console.WriteLine("Next action does not use targeting.");
+                return null;
+        }
+    }
+
+    // Set the nextTarget object.
+    // Can be null for actions that do not require a target.
+    public void setNextTarget(Entity? target)
+    {
+        nextTarget = target;
+    }
+
+
+    // Returns the currently selected next target.
+    public Entity? getNextTarget()
+    {
+        return nextTarget;
+    }
+
+    // Returns the name of the currently selected next target,
+    // or 'None' for actions that do not have a target.
+    public string getNextTargetName()
+    {
+        if (nextTarget == null)
+        {
+            return "None";
+        }
+        return nextTarget.name;
+    }
+
+    public Action getNextAction()
+    {
+        if (ActionListMinusPassives.Count < 1)
+        {
+            //Console.WriteLine("ERROR: action list of "+getNextTargetName()+" was empty! Returning Idle for next action");
+            return idle;
+        }
+        return ActionListMinusPassives[nextActionIndex];
+    }
+
+    //===
+    //===
+    //===
+    //=========================== END AI ===========================
+
+    //============================ EVENTS ============================
+    //===
+    //===
+    //===
+
     // Entities are responsible for passing on events to their actions, items, and statuses.
     public override void startOfCombat()
     {
@@ -187,7 +455,7 @@ public class Entity : Events
         {
             effect.startOfCombat();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.startOfCombat();
             if (action.equippedItem != null)
@@ -203,7 +471,7 @@ public class Entity : Events
         {
             effect.endOfCombat();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.endOfCombat();
             if (action.equippedItem != null)
@@ -220,13 +488,18 @@ public class Entity : Events
         {
             effect.startOfRound();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.startOfRound();
             if (action.equippedItem != null)
             {
                 action.equippedItem.startOfRound();
             }
+        }
+        exhausted = false;
+        if (!playerControlled)
+        {
+            prepareTurn();
         }
     }
     public override void startOfTurn()
@@ -235,7 +508,8 @@ public class Entity : Events
         {
             effect.startOfTurn();
         }
-        foreach (Action action in this.ActionList.ToList())
+        assignActionOwnership(); // Update action list
+        foreach (Action action in ActionList.ToList())
         {
             action.startOfTurn();
             if (action.equippedItem != null)
@@ -243,7 +517,32 @@ public class Entity : Events
                 action.equippedItem.startOfTurn();
             }
         }
-        assignActionOwnership(); // Update action list
+        if (hostile)
+        {
+            // Check hero side for Piety, leave peacefully if HP < max piety
+            foreach (Entity hero in Battlefield.PlayerSide)
+            {
+                if (hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= currentHP)
+                {
+                    Console.WriteLine(hero.name + " is too pious! " + name + " leaves combat peacefully.");
+                    fleeing = true;
+                    return;
+                }
+            }
+        }
+        else
+        {
+            // Check enemy side for Piety, leave peacefully if HP < max piety
+            foreach (Entity enemy in Battlefield.EnemySide)
+            {
+                if (enemy != null && enemy.HasStatusEffect("Piety") && enemy.GetStatusEffect("Piety")!.amount >= currentHP)
+                {
+                    Console.WriteLine(enemy.name + " is too pious! " + name + " leaves combat peacefully.");
+                    fleeing = true;
+                    return;
+                }
+            }
+        }
     }
 
     public override void endOfTurn()
@@ -252,7 +551,7 @@ public class Entity : Events
         {
             effect.endOfTurn();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.endOfTurn();
             if (action.equippedItem != null)
@@ -267,7 +566,7 @@ public class Entity : Events
         {
             effect.endOfRound();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.endOfRound();
             if (action.equippedItem != null)
@@ -281,12 +580,12 @@ public class Entity : Events
     public override Action onUseAction(Action actionBeingUsed)
     {
         // "Used action" event for all status effects on the entity
-        foreach (StatusEffect eff in this.EffectList.ToList())
+        foreach (StatusEffect eff in EffectList.ToList())
         {
             actionBeingUsed = eff.onUseAction(actionBeingUsed);
         }
         // "Used action" event for all items on the entity
-        foreach (Action act in this.ActionList.ToList())
+        foreach (Action act in ActionList.ToList())
         {
             act.onUseAction(actionBeingUsed);
             if (act.equippedItem != null)
@@ -308,7 +607,7 @@ public class Entity : Events
         {
             atk = effect.onAttack(atk);
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             atk = action.onAttack(atk);
             if (action.equippedItem != null)
@@ -318,9 +617,9 @@ public class Entity : Events
         }
         int targetIndex;
         // Apply additional targets if applicable
-        if (atk.target.playerControlled)
+        if (atk.target.hostile)
         {
-            targetIndex = Battlefield.PlayerSide.IndexOf((PlayerCharacter)atk.target);
+            targetIndex = Battlefield.PlayerSide.IndexOf(atk.target);
             if (atk.hitsAbove && targetIndex > 0)
             {
                 Entity aboveTarget = Battlefield.PlayerSide[targetIndex - 1];
@@ -338,7 +637,7 @@ public class Entity : Events
         }
         else
         {
-            targetIndex = Battlefield.EnemySide.IndexOf((Enemy)atk.target);
+            targetIndex = Battlefield.EnemySide.IndexOf(atk.target);
             if (atk.hitsAbove && targetIndex > 0)
             {
                 Entity aboveTarget = Battlefield.EnemySide[targetIndex - 1];
@@ -363,7 +662,7 @@ public class Entity : Events
         {
             atk = effect.onReceiveAttack(atk); // Handle events
         }
-        foreach (Action action in this.ActionList.ToList().ToList())
+        foreach (Action action in ActionList.ToList().ToList())
         {
             atk = action.onReceiveAttack(atk);
             if (action.equippedItem != null)
@@ -372,12 +671,12 @@ public class Entity : Events
             }
         }
         int blockedDamage = 0;
-        if (this.playerControlled && Battlefield.playerBlock > 0)
+        if (!hostile && Battlefield.playerBlock > 0)
         {
             blockedDamage = Math.Min(atk.damage, Battlefield.playerBlock);
             Battlefield.playerBlock -= blockedDamage;
         }
-        else if (!this.playerControlled && Battlefield.enemyBlock > 0)
+        else if (hostile && Battlefield.enemyBlock > 0)
         {
             blockedDamage = Math.Min(atk.damage, Battlefield.enemyBlock);
             Battlefield.enemyBlock -= blockedDamage;
@@ -387,7 +686,7 @@ public class Entity : Events
             Console.WriteLine(blockedDamage + " damage was blocked.");
             atk.damage -= blockedDamage;
         }
-        Console.WriteLine(this.name + " was hit for " + atk.damage + " damage.");
+        Console.WriteLine(name + " was hit for " + atk.damage + " damage.");
         changeHP(-atk.damage);
         return atk;
     }
@@ -398,7 +697,7 @@ public class Entity : Events
         {
             block = effect.onGainBlock(block); // Handle events
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             block = action.onGainBlock(block);
             if (action.equippedItem != null)
@@ -415,7 +714,7 @@ public class Entity : Events
         {
             HPdelta = effect.onHPChange(HPdelta); // Handle events
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             HPdelta = action.onHPChange(HPdelta);
             if (action.equippedItem != null)
@@ -432,7 +731,7 @@ public class Entity : Events
         {
             effect.onDeath();
         }
-        foreach (Action action in this.ActionList.ToList())
+        foreach (Action action in ActionList.ToList())
         {
             action.onDeath();
             if (action.equippedItem != null)
@@ -443,5 +742,8 @@ public class Entity : Events
 
     }
 
-
+    //===
+    //===
+    //===
+    //=========================== END EVENTS ===========================
 }

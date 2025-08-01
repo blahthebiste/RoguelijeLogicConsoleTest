@@ -56,8 +56,7 @@
 		"ActionList": [
 			"Swipe",
 			"SummonedMinion"
-		],
-		"Master": "Witch"
+		]
 	},
 	{
 		"Name": "Witch",
@@ -137,7 +136,7 @@
 	},
 	{
 		"Name": "Mystical Dagger",
-		"Description": "The dagger seems to be the source of this power... But perhaps this magic takes its toll.",
+		"Description": "The dagger seems to be the source of the Dark One's power... But perhaps, also a source of weakness?",
 		"HP": 10,
 		"ActionList": [
 			"ReturnDagger",
@@ -145,7 +144,6 @@
 			"Corruption",
 			"Imbue",
 			"SummonedMinion"
-		],
-		"Master": "Dark One"
+		]
 	}
 ]

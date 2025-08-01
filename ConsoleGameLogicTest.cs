@@ -470,7 +470,7 @@ void printCharacterInfo(PlayerCharacter character) {
 }
 
 void printEnemyInfoFromName(string enemyName) {
-    foreach(Enemy enemy in Battlefield.EnemySide) {
+    foreach(Entity enemy in Battlefield.EnemySide) {
         if(enemyName.ToLower().Replace('_',' ') == enemy.name.ToLower()) {
             printEnemyInfo(enemy);
             return;
@@ -479,7 +479,7 @@ void printEnemyInfoFromName(string enemyName) {
     Console.WriteLine("Could not find enemy of that name.");
 }
 
-void printEnemyInfo(Enemy enemy) {
+void printEnemyInfo(Entity enemy) {
     Console.WriteLine(enemy.name);
     Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
     Console.WriteLine("Actions:");
@@ -523,33 +523,35 @@ void printCombatSituation() {
     } 
     Console.WriteLine("");
     
-    List<Enemy?> enemyFilled = new List<Enemy?>();
-    foreach(Enemy ent in Battlefield.EnemySide) {
-        enemyFilled.Add(ent);
+    List<Entity?> enemySideFilled = new List<Entity?>();
+    foreach(Entity ent in Battlefield.EnemySide) {
+        enemySideFilled.Add(ent);
     }
-    List<PlayerCharacter?> playerFilled = new List<PlayerCharacter?>();
-    foreach(PlayerCharacter ent in Battlefield.PlayerSide) {
-        playerFilled.Add(ent);
+    List<Entity?> playerSideFilled = new List<Entity?>();
+    foreach(Entity ent in Battlefield.PlayerSide) {
+        playerSideFilled.Add(ent);
     }
+
     // Add filler lines to both lists, in between each existing line:
-    for(int i = (numEnemies -1); i > 0; i--) {
-        enemyFilled.Insert(i, null);
+    for (int i = numEnemies - 1; i > 0; i--)
+    {
+        enemySideFilled.Insert(i, null);
     }
-    for(int i = (numHeroes -1); i > 0; i--) {
-        playerFilled.Insert(i, null);
+    for(int i = numHeroes - 1; i > 0; i--) {
+        playerSideFilled.Insert(i, null);
     }
     if(numEnemies > numHeroes) {
         // More enemies, so format based on their number
         max_entities = numEnemies;
         // Need to add filler rows to the player list
         bool swap = true;
-        while(playerFilled.Count < (max_entities*2) -1) {
+        while(playerSideFilled.Count < (max_entities*2) -1) {
             if(swap) {
-                playerFilled.Insert(0, null);
+                playerSideFilled.Insert(0, null);
                 swap = false;
             }
             else {
-                playerFilled.Insert(playerFilled.Count-1, null);
+                playerSideFilled.Add(null);
                 swap = true;
             }
         }
@@ -558,13 +560,13 @@ void printCombatSituation() {
         max_entities = numHeroes;
         // Need to add filler rows to the enemy list
         bool swap = true;
-        while(enemyFilled.Count < (max_entities*2) -1) {
+        while(enemySideFilled.Count < (max_entities*2) -1) {
             if(swap) {
-                enemyFilled.Insert(0, null);
+                enemySideFilled.Insert(0, null);
                 swap = false;
             }
             else {
-                enemyFilled.Add(null);
+                enemySideFilled.Add(null);
                 swap = true;
             }
         }
@@ -574,25 +576,15 @@ void printCombatSituation() {
     for(int i = 0; i < (max_entities*2) -1; i++) {
         string heroString = "";
         string enemyString = "";
-        if(playerFilled[i] != null) {
-            heroString = playerFilled[i]!.name+"["+playerFilled[i]!.currentHP+"/"+playerFilled[i]!.maxHP+" HP]";
-            if(playerFilled[i]!.exhausted) heroString = "(E) "+heroString;
+        if (playerSideFilled[i] != null)
+        {
+            heroString = formatEntityInCombat(playerSideFilled[i]!);            
         }
-        if(enemyFilled[i] != null) {
-            string nextEnemyAction = "";
-            string nextEnemyTarget = "";
-            if(enemyFilled[i]!.ActionList.Count > 0) {
-                nextEnemyAction = enemyFilled[i]!.getNextAction().description;
-                if(enemyFilled[i]!.getNextTargetName() != null) {
-                    nextEnemyTarget = enemyFilled[i]!.getNextTargetName();
-                }
-            }
-            enemyString = enemyFilled[i]!.name+"["+enemyFilled[i]!.currentHP+"/"+enemyFilled[i]!.maxHP+" HP] - "
-                        +nextEnemyAction+" Target: "+nextEnemyTarget;
-            if(enemyFilled[i]!.exhausted) enemyString = "(E) "+enemyString;
+        if(enemySideFilled[i] != null) {
+            enemyString = formatEntityInCombat(enemySideFilled[i]!);
         }
         
-        string rowString = String.Format("{0,24}\t|\t{1,32}", heroString, enemyString);
+        string rowString = String.Format("{0,40}\t|\t{1,40}", heroString, enemyString);
         Console.WriteLine(rowString);
     }
     Console.WriteLine("");
@@ -609,6 +601,24 @@ void printCombatSituation() {
         }
     }
     Console.WriteLine("");
+}
+
+string formatEntityInCombat(Entity ent)
+{
+    string formattedString = ent.name + "[" + ent.currentHP + "/" + ent.maxHP + " HP]"; // Name and HP
+    if (ent.exhausted) formattedString = "(E) " + formattedString; // Exhausted
+    else if (!ent.playerControlled) // Target and next move, if not player controlledL
+    {
+        if (ent.ActionList.Count > 0)
+        {
+            formattedString += " - " + ent.getNextAction().description;
+            if (ent.getNextTargetName() != null && ent.getNextTargetName() != "None")
+            {
+                formattedString += " Target: " + ent.getNextTargetName();
+            }
+        }
+    }
+    return formattedString;
 }
 
 void endPlayerTurn() {
@@ -692,7 +702,7 @@ void playCard(string cmd) {
     // If the command included a third argument, that is the players intended target for this action.
     if(cmd.ToLower().Trim().Split().Length > 2) {
         actionTarget = cmd.Split()[2].ToLower().Trim().Replace('_',' ');
-        foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+        foreach(PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>()){
             // Check if target is here, if we were given one.
             if(hero.name.ToLower().Trim() == actionTarget) {
                 target = hero;
@@ -701,7 +711,7 @@ void playCard(string cmd) {
         }
         if (target == null) // If the target is still null, check enemies
         {
-            foreach (Enemy enemy in Battlefield.EnemySide)
+            foreach (Entity enemy in Battlefield.EnemySide)
             {
                 // Check if target is here, if we were given one.
                 if (enemy.name.ToLower().Trim() == actionTarget)
@@ -714,7 +724,7 @@ void playCard(string cmd) {
         if (target == null) // If the target is still null, check dead heroes
         {
             // Check dead entities, just in case:
-            foreach (PlayerCharacter hero in Battlefield.DeadHeroes)
+            foreach (Entity hero in Battlefield.DeadHeroes)
             {
                 // Check if target is here, if we were given one.
                 if (hero.name.ToLower().Trim() == actionTarget)
@@ -726,7 +736,7 @@ void playCard(string cmd) {
         }
         if (target == null) // If the target is still null, check dead enemies
         {
-            foreach (Enemy enemy in Battlefield.DeadEnemies)
+            foreach (Entity enemy in Battlefield.DeadEnemies)
             {
                 // Check if target is here, if we were given one.
                 if (enemy.name.ToLower().Trim() == actionTarget)
@@ -745,7 +755,7 @@ void playCard(string cmd) {
     }
     int cardNumber; // The index in the hand where the card is; 1-indexed
     int.TryParse(cmd.ToLower().Trim().Split()[0], out cardNumber); // No need to check, this is only run if arg 1 is an int
-    foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+    foreach(PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>()){
         if(hero.name.ToLower().Trim() == whoIsUsingTheAction) {
             ActionCard selectedCard = CardManager.Hand[cardNumber - 1];
     
@@ -805,7 +815,7 @@ void unequipItem(string itemName, string heroName) {
         // This takes the hero's action.
 
         // First, find the hero:
-        foreach(PlayerCharacter hero in Battlefield.PlayerSide){
+        foreach(PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>()){
             // PlayerSide only includes living heroes
             if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
                 heroToUnequip = hero;
@@ -821,14 +831,12 @@ void unequipItem(string itemName, string heroName) {
         // Non-combat version: free swapping for all heroes, bench or not
         // First, find the hero:
         foreach(PlayerCharacter hero in CurrentRun.Party){
-            // PlayerSide only includes living heroes
             if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
                 heroToUnequip = hero;
             }
         }
         // Also search the benched heroes:
         foreach(PlayerCharacter hero in CurrentRun.Bench){
-            // PlayerSide only includes living heroes
             if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
                 heroToUnequip = hero;
             }

@@ -15,7 +15,7 @@ public class ReturnDagger : Action {
             Console.WriteLine("ERROR: " + this.name + " has null owner!");
             return;
         }
-        foreach (Enemy enemy in Battlefield.EnemySide.ToList())
+        foreach (Entity enemy in Battlefield.EnemySide.ToList())
         {
             if (enemy.name == "Dark One")
             {

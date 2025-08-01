@@ -2,15 +2,15 @@ public static class Battlefield
 {
 
     public static CombatEncounter? CurrentEncounter;
-    public static List<Enemy> EnemySide = new List<Enemy>();
-    public static List<PlayerCharacter> PlayerSide = new List<PlayerCharacter>();
+    public static List<Entity> EnemySide = new List<Entity>();
+    public static List<Entity> PlayerSide = new List<Entity>();
 
     // Used to keep track of who is currently taunting. Used for targeting restrictions.
     public static List<Entity> Taunters = new List<Entity>();
 
     // Used to keep track of who has died in combat (and maybe resurrect them)
-    public static List<PlayerCharacter> DeadHeroes = new List<PlayerCharacter>();
-    public static List<Enemy> DeadEnemies = new List<Enemy>();
+    public static List<Entity> DeadHeroes = new List<Entity>();
+    public static List<Entity> DeadEnemies = new List<Entity>();
 
     // Used for Dazed logic
     public static List<Entity> BeenDazed = new List<Entity>();
@@ -25,10 +25,10 @@ public static class Battlefield
         playerBlock = 0;
         enemyBlock = 0;
         CurrentEncounter = combat;
-        EnemySide = new List<Enemy>();
-        PlayerSide = new List<PlayerCharacter>();
-        DeadEnemies = new List<Enemy>();
-        DeadHeroes = new List<PlayerCharacter>();
+        EnemySide = new List<Entity>();
+        PlayerSide = new List<Entity>();
+        DeadEnemies = new List<Entity>();
+        DeadHeroes = new List<Entity>();
         // Load in player party:
         foreach (PlayerCharacter hero in CurrentRun.Party.ToList())
         {
@@ -37,22 +37,22 @@ public static class Battlefield
             hero.previousAction = null;
         }
         // Load in enemies:
-        foreach (Enemy enemy in combat.EnemyTroupe.ToList())
+        foreach (Entity enemy in combat.EnemyTroupe.ToList())
         {
             EnemySide.Add(enemy);
         }
         // Start of combat events (entities will pass this along to actions and items)
-        foreach (PlayerCharacter hero in CurrentRun.Party.ToList())
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            hero.startOfCombat();
+            ally.startOfCombat();
         }
         // Start of combat events for enemies
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.startOfCombat();
         }
         turnNumber = 1;
-        Console.WriteLine("Beginning of turn " + Battlefield.turnNumber);
+        Console.WriteLine("Beginning of turn " + turnNumber);
         startRound();
     }
 
@@ -75,12 +75,12 @@ public static class Battlefield
 
         // Reset block:
         int permaBlockAmount = 0;
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            StatusEffect? permaBlock = hero.GetStatusEffect("PermaBlock");
+            StatusEffect? permaBlock = ally.GetStatusEffect("PermaBlock");
             if (permaBlock != null)
             {
-                Console.WriteLine(hero.name + " had Perma-Block; amount is " + permaBlock.amount);
+                Console.WriteLine(ally.name + " had Perma-Block; amount is " + permaBlock.amount);
                 permaBlockAmount += permaBlock.amount;
             }
         }
@@ -92,30 +92,21 @@ public static class Battlefield
         CardManager.drawHand();
 
         // Run startOfRound events:
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            hero.startOfRound();
+            ally.startOfRound();
         }
         // Run startOfTurn events for players:
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            hero.startOfTurn();
+            ally.startOfTurn();
         }
         // Choose targets AFTER players' startOfTurn events have resolved
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.startOfRound();
         }
-
-        // Remove exhaustion from the previous turn
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
-        {
-            hero.exhausted = false;
-        }
-        foreach (Enemy enemy in EnemySide.ToList())
-        {
-            enemy.exhausted = false;
-        }
+        // Removing exhaustion from the previous turn -- covered in base Entity startOfRound event
         resolveDeath();
         resolveFleeing();
     }
@@ -137,14 +128,19 @@ public static class Battlefield
             return;
         }
         Console.WriteLine("Ending turn.");
-        // Run endOfTurn events for heroes:
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        // Friendly NPCs all take their turn:
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            hero.endOfTurn();
+            if(!ally.playerControlled) ally.takeTurn();
+        }
+        // Run endOfTurn events for heroes:
+        foreach (Entity ally in PlayerSide.ToList())
+        {
+            ally.endOfTurn();
         }
         // Reset block:
         int permaBlockAmount = 0;
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             StatusEffect? permaBlock = enemy.GetStatusEffect("PermaBlock");
             if (permaBlock != null) permaBlockAmount += permaBlock.amount;
@@ -152,26 +148,26 @@ public static class Battlefield
         enemyBlock = (enemyBlock <= permaBlockAmount) ? enemyBlock : permaBlockAmount;
 
         // Run startOfTurn events for enemies:
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.startOfTurn();
         }
         // Enemies all take their turn:
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.takeTurn();
         }
         // End of turn events for enemies
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.endOfTurn();
         }
         // End of round events for both players and enemies
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        foreach (Entity ally in PlayerSide.ToList())
         {
-            hero.endOfRound();
+            ally.endOfRound();
         }
-        foreach (Enemy enemy in EnemySide.ToList())
+        foreach (Entity enemy in EnemySide.ToList())
         {
             enemy.endOfRound();
         }
@@ -196,7 +192,6 @@ public static class Battlefield
             }
             // Wipe status effects
             hero.EffectList = new List<StatusEffect>();
-            hero.exhausted = false;
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
@@ -212,7 +207,6 @@ public static class Battlefield
             }
             // Wipe status effects
             hero.EffectList = new List<StatusEffect>();
-            hero.exhausted = false;
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
@@ -245,7 +239,7 @@ public static class Battlefield
     // If all heroes are exhausted, we can prompt the player to end their turn.
     public static bool playerCharactersAllExhausted()
     {
-        foreach (PlayerCharacter hero in PlayerSide.ToList())
+        foreach (PlayerCharacter hero in PlayerSide.OfType<PlayerCharacter>())
         {
             if (!hero.exhausted) return false;
         }
@@ -282,7 +276,7 @@ public static class Battlefield
     // Returns false if the hero was not found in the Dead Heroes list.
     public static bool ReviveHero(string heroName, bool toFullHP = true, bool exhausted = true)
     {
-        foreach (PlayerCharacter hero in DeadHeroes.ToList())
+        foreach (Entity hero in DeadHeroes.ToList())
         {
             if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
             {
@@ -309,7 +303,7 @@ public static class Battlefield
     // Returns false if the hero was not found in the Dead Heroes list.
     public static bool ReviveEnemy(string enemyName, bool toFullHP = true, bool exhausted = true)
     {
-        foreach (Enemy enemy in DeadEnemies.ToList())
+        foreach (Entity enemy in DeadEnemies.ToList())
         {
             if (enemy.name.ToLower().Trim() == enemyName.ToLower().Trim())
             {
@@ -337,7 +331,7 @@ public static class Battlefield
     {
         if (PlayerSide.Contains(entity))
         {
-            PlayerSide.Remove((PlayerCharacter)entity);
+            PlayerSide.Remove(entity);
             CurrentRun.LoseLives(1);
             if (noMoreHeroes())
             {
@@ -346,7 +340,7 @@ public static class Battlefield
         }
         else if (EnemySide.Contains(entity))
         {
-            EnemySide.Remove((Enemy)entity);
+            EnemySide.Remove(entity);
             if (noMoreEnemies())
             {
                 endCombat(true);
@@ -368,7 +362,7 @@ public static class Battlefield
     public static void addBlock(int blockAmount, Entity source)
     {
         blockAmount = source.onGainBlock(blockAmount);
-        if (source.playerControlled)
+        if (!source.hostile)
         {
             playerBlock += blockAmount;
         }
@@ -413,51 +407,61 @@ public static class Battlefield
 
     public static void ResetCombat()
     {
-        EnemySide = new List<Enemy>();
-        PlayerSide = new List<PlayerCharacter>();
+        EnemySide = new List<Entity>();
+        PlayerSide = new List<Entity>();
         Taunters = new List<Entity>();
         turnNumber = 0;
     }
 
     // Adds a new entity to the battlefield.
-    // playerControlled determines which side.
-    // Currently, can only summon playercharacters to playerside and enemies to enemy side.
-    public static bool SummonEntity(string entityName, bool playerControlled, int index = 0)
+    // hostile determines which side.
+    public static bool SummonEntity(string entityName, bool hostile, int index = 0, string? master = null)
     {
-        if (playerControlled)
-        { // Summoning to the player's side.
-
-            PlayerCharacter? newHero = new PlayerCharacter(entityName);
-            if (newHero == null)
-            {
-                Console.WriteLine("Given name '" + entityName + "' did not match any hero.");
-                // No matching heroes.
-                return false;
-            }
-            else
-            { // Found hero to summon.
-                PlayerSide.Insert(index, newHero);
-                newHero.previousAction = null;
-                Console.WriteLine("Successfully summoned '" + newHero.name + "' to player side.");
-                return true;
-            }
+        // First check if entity is a hero or entity:
+        bool isHero = false;
+        Entity? newEntity = new Entity();
+        if (DataRegistry.CharacterData.heroExists(entityName))
+        {
+            isHero = true;
+            newEntity = new PlayerCharacter(entityName);
+        }
+        else if (DataRegistry.CharacterData.entityExists(entityName))
+        {
+            // Now try a normal entity:
+            newEntity = new Entity(entityName);
         }
         else
+        {
+            Console.WriteLine("Given name '" + entityName + "' did not match any entity or hero.");
+            return false;
+        }
+        // Found entity to summon.
+        if (master != null) newEntity.master = master;
+        newEntity.exhausted = true;
+        if (hostile)
         { // Summoning to the enemy side.
-            Enemy? newEnemy = new Enemy(entityName);
-            if (newEnemy == null)
+            newEntity.hostile = true;
+            newEntity.playerControlled = false;
+            EnemySide.Insert(index, newEntity!);
+            newEntity.previousAction = null;
+            Console.WriteLine("Successfully summoned '" + newEntity.name + "' to enemy side.");
+            return true;
+        }
+        else
+        { // Summoning to the player's side.
+            newEntity.hostile = false;
+            if (isHero)
             {
-                Console.WriteLine("Given name '" + entityName + "' did not match any enemy.");
-                // No matching enemies.
-                return false;
+                newEntity.playerControlled = true;
             }
             else
-            { // Found enemy to summon.
-                EnemySide.Insert(index, newEnemy);
-                newEnemy.previousAction = null;
-                Console.WriteLine("Successfully summoned '" + newEnemy.name + "' to enemy side.");
-                return true;
+            { // must be entity
+                newEntity.playerControlled = false;
             }
+            PlayerSide.Insert(index, newEntity!);
+            newEntity.previousAction = null;
+            Console.WriteLine("Successfully summoned '" + newEntity.name + "' to player side.");
+            return true;
         }
 
     }

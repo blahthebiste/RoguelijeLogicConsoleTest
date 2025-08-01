@@ -11,9 +11,9 @@ public class CombatEncounter {
             return;
         }
         foreach(string enemyName in data.EnemyList) {
-            Enemy? newEnemy = new Enemy(enemyName);
+            Entity? newEnemy = new Entity(enemyName);
             if(newEnemy == null) {
-                Console.WriteLine("Could not generate enemy troupe; enemy '"+enemyName+"' not found.");
+                Console.WriteLine("Could not generate enemy troupe; Entity '"+enemyName+"' not found.");
                 return;
             }
             EnemyTroupe.Add(newEnemy);
@@ -24,7 +24,7 @@ public class CombatEncounter {
     }
     
     public override string ToString() {
-        string str = "(Difficulty " +this.difficulty + ") " + this.name + " - "+this.description;
+        string str = "(Difficulty " +difficulty + ") " + name + " - "+description;
         return str;
     }
 }

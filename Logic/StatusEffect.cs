@@ -9,9 +9,9 @@ public abstract class StatusEffect : Events {
 
     public Entity owner; // The owner will always be set by the actual status effect constructor.
 
+    // Protection against null pointer exception, maybe a bad idea:
     protected StatusEffect()
     {
-        Console.WriteLine("ERROR: creating generic status effect!");
         owner = new Entity();
     }
 

@@ -17,7 +17,7 @@ public class BatSwarm : Action {
         {
             for (int i = 0; i < magicNumber; i++)
             { // TODO: This will error if used by a player character, currently
-                Battlefield.SummonEntity("Bat", this.owner.playerControlled);
+                Battlefield.SummonEntity("Bat", this.owner.hostile, 0, this.owner.name);
             }
             return true;
         }
