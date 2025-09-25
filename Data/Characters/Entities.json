@@ -146,5 +146,121 @@
 			"Imbue",
 			"SummonedMinion"
 		]
+	},
+	{
+		"Name": "Gate Guard",
+		"Description": "\"You shall not pass!\"",
+		"HP": 16,
+		"ActionList": [
+			"PermaTaunt",
+			"Block",
+			"Hold",
+			"Stab"
+		]
+	},
+	{
+		"Name": "Wall Archer",
+		"Description": "Only eats wall chickens.",
+		"HP": 12,
+		"ActionList": [
+			"Shoot",
+			"RainOfArrows",
+			"TakeAim"
+		]
+	},
+	{
+		"Name": "Icy Wind",
+		"Description": "The wind howls.",
+		"ActionList": [
+			"Environment",
+			"Chill",
+			"Idle"
+		]
+	},
+	{
+		"Name": "Arcane Blizzard",
+		"Description": "The ice whirls as if possessed.",
+		"ActionList": [
+			"Environment",
+			"Chill",
+			"Idle",
+			"EyeOfTheStorm"
+		]
+	},
+	{
+		"Name": "Cryomancer",
+		"Description": "Go on, cryo-bout it!.",
+		"HP":14,
+		"ActionList": [
+			"IceSpike",
+			"Chill",
+			"DeepFreeze"
+		]
+	},
+	{
+		"Name": "Warder",
+		"Description": "This specialized sorcerer thinks that the best offense is an overwhleming defense.",
+		"HP":12,
+		"ActionList": [
+			"Warding",
+			"ForceField",
+			"MirrorForce",
+			"Repel",
+			"Focus"
+		]
+	},
+	{
+		"Name": "King",
+		"Description": "Seven rings and sixty feathers plucked from sparrows' wings.",
+		"HP":40,
+		"ActionList": [
+			"Royal",
+			"Wait",
+			"CrisisContingency"
+		]
+	},
+	{
+		"Name": "Hand of the King",
+		"Description": "Willing to lay down his life.",
+		"HP":25,
+		"ActionList": [
+			"TargetLock",
+			"Obstruct",
+			"Duel",
+			"IceWall"
+		]
+	},
+	{
+		"Name": "Royal Sorcerer",
+		"Description": "The kingdom's greatest summoner.",
+		"HP":16,
+		"ActionList": [
+			"TargetLock",
+			"MirrorArmor",
+			"PrepareRitual",
+			"ConjureGuardian"
+		]
+	},
+	{
+		"Name": "Deadeye Assassin",
+		"Description": "Never misses.",
+		"HP":14,
+		"ActionList": [
+			"TargetLock",
+			"Dodge",
+			"Take Aim",
+			"Snipe"
+		]
+	},
+	{
+		"Name": "Frost Knight",
+		"Description": "Obeys its master.",
+		"HP":30,
+		"ActionList": [
+			"IceWall",
+			"Cleave",
+			"Duel",
+			"SummonedMinion"
+		]
 	}
 ]

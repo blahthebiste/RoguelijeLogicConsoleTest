@@ -8,6 +8,9 @@ public static class Battlefield
     // Used to keep track of who is currently taunting. Used for targeting restrictions.
     public static List<Entity> Taunters = new List<Entity>();
 
+    // Used to keep track of how many entities are environments in this combat:
+    public static int numEnvironmentEntities = 0;
+
     // Used to keep track of who has died in combat (and maybe resurrect them)
     public static List<Entity> DeadHeroes = new List<Entity>();
     public static List<Entity> DeadEnemies = new List<Entity>();
@@ -180,6 +183,7 @@ public static class Battlefield
     {
         CurrentRun.InCombat = false;
         CurrentRun.NextCombatEncounter = null;
+        numEnvironmentEntities = 0;
         foreach (Entity hero in PlayerSide.ToList())
         {
             hero.endOfCombat();
@@ -247,10 +251,10 @@ public static class Battlefield
     }
 
 
-    // Check if there are any more enemies.
+    // Check if there are any more enemies. Environments do not count.
     public static bool noMoreEnemies()
     {
-        if (EnemySide.Count > 0)
+        if (EnemySide.Count - numEnvironmentEntities > 0)
         {
             return false;
         }
@@ -374,18 +378,19 @@ public static class Battlefield
 
     // Entities do not immediately die upon losing all HP; instead, they die at predefined checkpoints,
     // after resolving an action or trigger.
+    // Environments are never killed.
     public static void resolveDeath()
     {
         for (int i = EnemySide.Count - 1; i >= 0; i--)
         {
-            if (!EnemySide[i].isAlive())
+            if (!EnemySide[i].isAlive() && !EnemySide[i].isEnvironment)
             {
                 EnemySide[i].die();
             }
         }
         for (int i = PlayerSide.Count - 1; i >= 0; i--)
         {
-            if (!PlayerSide[i].isAlive())
+            if (!PlayerSide[i].isAlive() && !PlayerSide[i].isEnvironment)
             {
                 PlayerSide[i].die();
             }

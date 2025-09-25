@@ -231,10 +231,10 @@ void startRun() {
 // Skips the party selection process to start the run immediately
 void setDefaultParty()
 {
-    PlayerCharacter newThief = new PlayerCharacter("Thief");
-    CurrentRun.Party.Add(newThief);
-    PlayerCharacter newHealer = new PlayerCharacter("Healer");
-    CurrentRun.Party.Add(newHealer);
+    PlayerCharacter newFighter = new PlayerCharacter("Fighter");
+    CurrentRun.Party.Add(newFighter);
+    PlayerCharacter newMage = new PlayerCharacter("Mage");
+    CurrentRun.Party.Add(newMage);
     PlayerCharacter newDefender = new PlayerCharacter("Defender");
     CurrentRun.Party.Add(newDefender);
     zoneSelection();
@@ -255,7 +255,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    //CurrentRun.ZoneProgress = 3; // For debugging
+    CurrentRun.ZoneProgress = 7; // For debugging
     CurrentRun.GenerateNextCombat();
 }
 
@@ -481,7 +481,7 @@ void printEnemyInfoFromName(string enemyName) {
 
 void printEnemyInfo(Entity enemy) {
     Console.WriteLine(enemy.name);
-    Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
+    if(!enemy.isEnvironment) Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
     Console.WriteLine("Actions:");
     foreach(Action action in enemy.ActionList) {
         if (action.hiddenAction)
@@ -507,6 +507,7 @@ void printEnemyInfo(Entity enemy) {
 }
 
 void printCombatSituation() {
+    Entity targetLockingEnemy;
     printSeparator();
     if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
             Console.WriteLine("Current Battle: None");
@@ -528,8 +529,12 @@ void printCombatSituation() {
     Console.WriteLine("");
     
     List<Entity?> enemySideFilled = new List<Entity?>();
-    foreach(Entity ent in Battlefield.EnemySide) {
+    foreach (Entity ent in Battlefield.EnemySide)
+    {
         enemySideFilled.Add(ent);
+        if (ent.HasStatusEffect()) {
+            targetLockingEnemy = ent;
+        }
     }
     List<Entity?> playerSideFilled = new List<Entity?>();
     foreach(Entity ent in Battlefield.PlayerSide) {
@@ -609,7 +614,16 @@ void printCombatSituation() {
 
 string formatEntityInCombat(Entity ent)
 {
-    string formattedString = ent.name + "[" + ent.currentHP + "/" + ent.maxHP + " HP]"; // Name and HP
+    string formattedString;
+    if (ent.isEnvironment)
+    {   // If the entity is just an enviroment, do not display their HP:
+        formattedString = ent.name;
+    }
+    else
+    {
+        formattedString = ent.name+ "[" + ent.currentHP + "/" + ent.maxHP + " HP]"; // Name and HP
+    }
+    
     if (ent.exhausted) formattedString = "(E) " + formattedString; // Exhausted
     else if (!ent.playerControlled) // Target and next move, if not player controlledL
     {
@@ -704,11 +718,14 @@ void playCard(string cmd) {
     Entity? target = null;
     string? actionTarget;
     // If the command included a third argument, that is the players intended target for this action.
-    if(cmd.ToLower().Trim().Split().Length > 2) {
-        actionTarget = cmd.Split()[2].ToLower().Trim().Replace('_',' ');
-        foreach(PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>()){
+    if (cmd.ToLower().Trim().Split().Length > 2)
+    {
+        actionTarget = cmd.Split()[2].ToLower().Trim().Replace('_', ' ');
+        foreach (PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>())
+        {
             // Check if target is here, if we were given one.
-            if(hero.name.ToLower().Trim() == actionTarget) {
+            if (hero.name.ToLower().Trim() == actionTarget)
+            {
                 target = hero;
                 break;
             }
@@ -754,6 +771,12 @@ void playCard(string cmd) {
         if (target == null)
         {
             Console.WriteLine("No target with the name " + actionTarget + " exists in this battle.");
+            return;
+        }
+        // If the target is an environment, error:
+        if (target.isEnvironment)
+        {
+            Console.WriteLine("Cannot target " + actionTarget + ", it is part of the environment.");
             return;
         }
     }

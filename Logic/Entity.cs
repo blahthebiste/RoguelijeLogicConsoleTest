@@ -23,6 +23,8 @@ public class Entity : Events
 
     public bool fleeing = false;
 
+    public bool isEnvironment = false;
+
     public Action idle = new Idle();
 
     public string? master; // Used by minions
@@ -89,8 +91,8 @@ public class Entity : Events
     }
 
     public bool isAlive()
-    {
-        return currentHP > 0;
+    { // Environments are always considered dead
+        return !isEnvironment && currentHP > 0;
     }
 
 

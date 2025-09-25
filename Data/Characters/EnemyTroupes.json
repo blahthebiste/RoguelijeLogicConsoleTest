@@ -74,11 +74,11 @@
 		"Description": "Archers defend the wall, while guards block the way.",
 		"Difficulty": 9,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Icy Wind",
+			"Wall Archer",
+			"Gate Guard",
+			"Gate Guard",
+			"Wall Archer"
 		]
 	},
 	{
@@ -86,10 +86,10 @@
 		"Description": "Cryomancers freeze intruders where they stand, protected by powerful shielding magic.",
 		"Difficulty": 10,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Arcane Blizzard",
+			"Cryomancer",
+			"Cryomancer",
+			"Warder"
 		]
 	},
 	{
@@ -97,10 +97,10 @@
 		"Description": "The king responsible for never-ending Winter, surrounded by legendary warriors.",
 		"Difficulty": 12,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"King",
+			"Hand of the King",
+			"Royal Sorcerer",
+			"Deadeye Assassin"
 		]
 	},
 	{
@@ -108,10 +108,10 @@
 		"Description": "With the King's Court defeated, the king reveals his true form...",
 		"Difficulty": 15,
 		"EnemyList": [
-			"Pengoon",
-			"Pengoon",
-			"Pengoon",
-			"Pengoon"
+			"Frozen Core",
+			"Ice Dragon",
+			"Frozen Core",
+			"Sword in the Stone"
 		]
 	}
 ]

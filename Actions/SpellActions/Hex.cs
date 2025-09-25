@@ -6,7 +6,7 @@ public class Hex : Action {
         this.actionType = ActionType.SPELL;
         this.magicNumber = 10;
         this.hasLimitedUses = true;
-        this.uses = 3;
+        this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
     }

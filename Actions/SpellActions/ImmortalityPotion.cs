@@ -18,7 +18,7 @@ public class ImmortalityPotion : Action {
         }
         if (this.owner.currentHP >= 0.5 * this.owner.maxHP)
         {
-            Console.WriteLine(this.owner.name + " cannot use Immortality Potion, HP is not below half!");
+            Console.WriteLine(this.owner.name + " cannot use "+this.name+", HP is not below half!");
             return false;
         }
         return base.canUse(target, modifier);

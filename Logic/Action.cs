@@ -324,7 +324,13 @@ public class Action : Events {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-		switch(targetting)
+		// If the target is an environment, return false:
+        if (target.isEnvironment)
+        {
+            Console.WriteLine(target + " cannot be targeted, it is part of the environment.");
+            return false;
+        }
+		switch (targetting)
 		{
 			case TargetCategory.NONE:
 				return false;
@@ -332,36 +338,43 @@ public class Action : Events {
 				return target == owner;
 			case TargetCategory.ALL_ENEMIES:
 			case TargetCategory.SINGLE_ENEMY:
-                // Must be alive
-                if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
+				// Must be alive
+				if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
 				{
-					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					Console.WriteLine(target.name + " cannot be targeted, because they are dead!");
 					return false;
 				}
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = owner.hostile != target.hostile;
 				// Check for Taunt as well:
-				if(!ignoresTaunt && !Battlefield.Taunters.Contains(target)) {
+				if (!ignoresTaunt && !Battlefield.Taunters.Contains(target))
+				{
 					// If the target does not have taunt, need to check if their allies do:
-					if(Battlefield.Taunters.Count > 0) {
-						foreach(Entity taunter in Battlefield.Taunters) {
-							if(target.hostile == taunter.hostile) {
+					if (Battlefield.Taunters.Count > 0)
+					{
+						foreach (Entity taunter in Battlefield.Taunters)
+						{
+							if (target.hostile == taunter.hostile)
+							{
 								// Taunter is on the same team as the target, and will protect them.
-								Console.WriteLine(target.name+" could not be targeted, because they were protected by "+taunter.name);
+								Console.WriteLine(target.name + " could not be targeted, because they were protected by " + taunter.name);
 								return false;
 							}
 						}
-					}	
+					}
 				}
 				// Check for invisibility:
-				if(target.HasStatusEffect("Invisibility")) {
+				if (target.HasStatusEffect("Invisibility"))
+				{
 					// If they are not last on their team, they cannot be targeted
-					if(!target.hostile && Battlefield.PlayerSide.Count > 1) {
-						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
+					if (!target.hostile && Battlefield.PlayerSide.Count > 1)
+					{
+						Console.WriteLine(target.name + " could not be targeted, because they were invisible.");
 						return false;
 					}
-					else if(target.hostile && Battlefield.EnemySide.Count > 1) {
-						Console.WriteLine(target.name+" could not be targeted, because they were invisible.");
+					else if (target.hostile && Battlefield.EnemySide.Count > 1)
+					{
+						Console.WriteLine(target.name + " could not be targeted, because they were invisible.");
 						return false;
 					}
 				}
@@ -371,18 +384,18 @@ public class Action : Events {
 				// Must be alive
 				if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
 				{
-					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					Console.WriteLine(target.name + " cannot be targeted, because they are dead!");
 					return false;
 				}
 				// If they are on the same team, they can target with this action
 				return owner.hostile == target.hostile;
 			case TargetCategory.DEAD_ALLY:
 				// If they are on the same team, but the target is dead, they can target with this action
-				return (Battlefield.DeadHeroes.Contains(target) && !owner.hostile) 
+				return (Battlefield.DeadHeroes.Contains(target) && !owner.hostile)
 				|| (Battlefield.DeadEnemies.Contains(target) && owner.hostile);
 			case TargetCategory.DEAD_ENEMY:
 				// If they are on opposite teams, but the target is dead, they can target with this action
-				return (Battlefield.DeadHeroes.Contains(target) && owner.hostile) 
+				return (Battlefield.DeadHeroes.Contains(target) && owner.hostile)
 				|| (Battlefield.DeadEnemies.Contains(target) && !owner.hostile);
 			case TargetCategory.DEAD_ANY:
 				// If the target is dead, they can target with this action
@@ -392,7 +405,7 @@ public class Action : Events {
 				// Must be alive
 				if (Battlefield.DeadHeroes.Contains(target) || Battlefield.DeadEnemies.Contains(target))
 				{
-					Console.WriteLine(target.name+" cannot be targeted, because they are dead!");
+					Console.WriteLine(target.name + " cannot be targeted, because they are dead!");
 					return false;
 				}
 				return true;
