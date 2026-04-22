@@ -188,6 +188,25 @@ public class Action : Events {
 			}
 			// Run modifier code:
 			if (modifier != null) modifier.useOnce(this);
+			// Run the following event code only after action succeeds
+			if(owner!.hostile)
+			{
+				//Console.WriteLine("DEBUG: Triggering onEnemyUsedAction for every hero");
+				// Trigger onEnemyUsedAction for all heroes
+				foreach(Entity hero in Battlefield.PlayerSide)
+				{
+					hero.onEnemyUsedAction(this);
+				}
+			}
+			else
+			{
+				//Console.WriteLine("DEBUG: Triggering onEnemyUsedAction for every enemy");
+				// Trigger onEnemyUsedAction for all enemies
+				foreach(Entity enemy in Battlefield.EnemySide)
+				{
+					enemy.onEnemyUsedAction(this);
+				}
+			}
 		}
 		else
 		{ // Action never went through; don't exhaust, don't use up uses
@@ -307,7 +326,7 @@ public class Action : Events {
 		string actionString = "("+this.actionType+") "+this.name + ": " + this.description;
 		if(this.hasLimitedUses) {
 			actionString += " " + this.uses + " use";
-			if(this.uses > 1) {
+			if(this.uses != 1) {
 				actionString += "s."; 
 			}
 			else {
@@ -347,7 +366,7 @@ public class Action : Events {
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = owner.hostile != target.hostile;
 				// Check for Taunt as well:
-				if (!ignoresTaunt && !Battlefield.Taunters.Contains(target))
+				if (!IgnoresTaunt() && !Battlefield.Taunters.Contains(target))
 				{
 					// If the target does not have taunt, need to check if their allies do:
 					if (Battlefield.Taunters.Count > 0)
@@ -377,6 +396,23 @@ public class Action : Events {
 						Console.WriteLine(target.name + " could not be targeted, because they were invisible.");
 						return false;
 					}
+				}
+				// Check for Locked:
+				if (owner.HasStatusEffect("Locked"))
+				{
+					StatusEffect? eff = owner.GetStatusEffect("Locked");
+					if(eff is Locked lockStatus) {
+						if (target != lockStatus.lockedTarget)
+						{
+							Console.WriteLine(target.name + " could not be targeted, because they were not "+owner.name+"'s locked target.");
+							return false;
+						}
+					}
+				}
+				// Check for Skill Immune:
+				if(actionType == ActionType.SKILL && target.HasPassive("Skill-immune"))
+				{
+					Console.WriteLine(target.name + " could not be targeted, because they are immune to Skills.");
 				}
 				return opposingTeams;
 			case TargetCategory.ALL_ALLIES:
@@ -416,10 +452,20 @@ public class Action : Events {
 		}
 	}
 
-	// All target categories require a target to operate on except for single_ally, single_enemy, or single_any.
+	// All target categories require a target to operate on except for single_ally, single_enemy, or single_any. Wait, what?
     public bool requiresTarget() {
         return targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY || targetting == TargetCategory.SINGLE_ANY;
     }
+
+	// Helper
+	public bool IgnoresTaunt()
+	{
+		if(owner == null) {
+			Console.WriteLine("ERROR: Action has no owner.");
+			return ignoresTaunt;
+		}
+		return ignoresTaunt || owner.HasStatusEffect("Flying");
+	}
 
 	//==========================ITEM OPERATIONS=========================
 	

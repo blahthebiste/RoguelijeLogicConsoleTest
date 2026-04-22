@@ -172,14 +172,15 @@ void printHelp() {
     }
     else {
         Console.WriteLine("depart -- sets off with the currently selected party");
-        Console.WriteLine("zone -- selects the zone to travel to");
+        Console.WriteLine("zone -- selects the zone to travel to");       
+        Console.WriteLine("deck -- prints out your current deck");
+        Console.WriteLine("collection -- prints out your entire card collection");
         Console.WriteLine("edit -- enter the deck editor");
+        Console.WriteLine("attach <modifier> <card> -- attach a modifier to a card");
     }
     // These commands are always available once the run starts
     Console.WriteLine("party -- prints out info about your current party");
     Console.WriteLine("run -- prints out info about the current run");
-    Console.WriteLine("deck -- prints out your current deck");
-    Console.WriteLine("collection -- prints out your entire card collection");
     Console.WriteLine("inventory -- prints out your inventory");
     Console.WriteLine("hero <name> -- prints out details about the player character you named");
     Console.WriteLine("equip <item> <hero> -- equip an item to a hero (takes hero's action)");
@@ -233,8 +234,8 @@ void setDefaultParty()
 {
     PlayerCharacter newFighter = new PlayerCharacter("Fighter");
     CurrentRun.Party.Add(newFighter);
-    PlayerCharacter newMage = new PlayerCharacter("Mage");
-    CurrentRun.Party.Add(newMage);
+    PlayerCharacter newThief = new PlayerCharacter("Thief");
+    CurrentRun.Party.Add(newThief);
     PlayerCharacter newDefender = new PlayerCharacter("Defender");
     CurrentRun.Party.Add(newDefender);
     zoneSelection();
@@ -255,7 +256,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    CurrentRun.ZoneProgress = 7; // For debugging
+    CurrentRun.ZoneProgress = 9; // For debugging
     CurrentRun.GenerateNextCombat();
 }
 
@@ -507,7 +508,7 @@ void printEnemyInfo(Entity enemy) {
 }
 
 void printCombatSituation() {
-    Entity targetLockingEnemy;
+    Entity? targetLockingEnemy = null;
     printSeparator();
     if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
             Console.WriteLine("Current Battle: None");
@@ -531,10 +532,19 @@ void printCombatSituation() {
     List<Entity?> enemySideFilled = new List<Entity?>();
     foreach (Entity ent in Battlefield.EnemySide)
     {
+        // Check for Target Lock in the action list
         enemySideFilled.Add(ent);
-        if (ent.HasStatusEffect()) {
-            targetLockingEnemy = ent;
+        if(targetLockingEnemy == null) {
+            foreach (Action act in ent.ActionList) {
+                if (act is TargetLock targetLockPassive && targetLockPassive.lockedTarget == null)
+                { // Only print the first match, and only if they have not locked onto a target yet
+                    targetLockingEnemy = ent;
+                    Console.WriteLine("The next hero to act will be locked into a duel with "+targetLockingEnemy.name+"!");
+                    break;
+                }
+            }
         }
+        
     }
     List<Entity?> playerSideFilled = new List<Entity?>();
     foreach(Entity ent in Battlefield.PlayerSide) {

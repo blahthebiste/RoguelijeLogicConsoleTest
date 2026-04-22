@@ -248,7 +248,7 @@
 		"ActionList": [
 			"TargetLock",
 			"Dodge",
-			"Take Aim",
+			"TakeAim",
 			"Snipe"
 		]
 	},
@@ -261,6 +261,36 @@
 			"Cleave",
 			"Duel",
 			"SummonedMinion"
+		]
+	},
+	{
+		"Name": "Frozen Core",
+		"Description": "The source of this eternal winter.",
+		"HP":30,
+		"ActionList": [
+			"Chill",
+			"IceSpike"
+		]
+	},
+	{
+		"Name": "Ice Dragon",
+		"Description": "Every step shakes the ground. Every breath freezes the air.",
+		"HP":150,
+		"ActionList": [
+			"TakeFlight",
+			"FrostBreath",
+			"Dive",
+			"Jaws"
+		]
+	},
+	{
+		"Name": "Sword in the Stone",
+		"Description": "Even the monstrous Winter King could not wrench it free.",
+		"HP":5,
+		"ActionList": [
+			"MadeOfStone",
+			"SkillImmune",
+			"EmbeddedSword"
 		]
 	}
 ]

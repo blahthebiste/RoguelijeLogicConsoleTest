@@ -13,7 +13,7 @@ public class MasterSword : EquipmentItem {
         twinslashInstance.hasEquipmentSlot = false; // Show that the new actions do not come with equipment slots.
         counterInstance.hasEquipmentSlot = false; // Show that the new actions do not come with equipment slots.
         this.name = "Master Sword";
-        this.description = "Gain the " + cleaveInstance.name + ", " + twinslashInstance.name + ", and " + counterInstance + " actions.";
+        this.description = "Gain the " + cleaveInstance.name + ", " + twinslashInstance.name + ", and " + counterInstance.name + " actions.";
         this.slot = ActionType.ATTACK;
         this.price = 260;
         this.tier = 3;

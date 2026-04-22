@@ -4,6 +4,8 @@ public class EquipmentItem : Item {
 
     public Action? parentAction = null;
 
+    public bool temporary = false; // Temporary items are removed at the end of combat.
+
     public int? price; // A baseline price the item is usually sold for at shops
     public int tier;
     
@@ -247,4 +249,16 @@ public class EquipmentItem : Item {
         return actionBeingUsed;
     }
 
+    // If item is temporary, remove it at the end of combat:
+    public override void endOfCombat()
+    {
+        if(temporary)
+        {
+            Console.WriteLine(this.name+" was a temporary item; removing at the end of combat");
+            // Unequip itself, if equipped
+            if(parentAction != null && isEquipped()) parentAction.Unequip();
+            // Remove itself from the inventory:
+            this.RemoveFromInventory();
+        }
+    }
 }

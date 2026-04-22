@@ -19,7 +19,7 @@ public class Taunting : StatusEffect {
             foreach (Entity enemy in Battlefield.EnemySide)
             {
                 // Skip enemies whose next action ignores taunt:
-                if (enemy.nextTarget != null && Battlefield.PlayerSide.Contains(enemy.nextTarget) && !enemy.getNextAction().ignoresTaunt)
+                if (enemy.nextTarget != null && Battlefield.PlayerSide.Contains(enemy.nextTarget) && !enemy.getNextAction().IgnoresTaunt())
                 {
                     enemy.setNextTarget(owner!);
                 }

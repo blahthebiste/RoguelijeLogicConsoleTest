@@ -255,16 +255,26 @@ public static class DataRegistry {
                     return new Bite();
                 case "cleave":
                     return new Cleave();
+                case "dive":
+                    return new Dive();
+                case "duel":
+                    return new Duel();
+                case "frostbreath":
+                    return new FrostBreath();
                 case "gnaw":
                     return new Gnaw();
                 case "infect":
                     return new Infect();
+                case "jaws":
+                    return new Jaws();
                 case "ravage":
                     return new Ravage();
                 case "shadowslash":
                     return new ShadowSlash();
                 case "shadowstrike":
                     return new ShadowStrike();
+                case "snipe":
+                    return new Snipe();
                 case "shoot":
                     return new Shoot();
                 case "stab":
@@ -285,6 +295,8 @@ public static class DataRegistry {
                     return new Cower();
                 case "dodge":
                     return new Dodge();
+                case "obstruct":
+                    return new Obstruct();
                 case "parry":
                     return new Parry();
                 case "skitter":
@@ -303,12 +315,16 @@ public static class DataRegistry {
                     return new Assertive();
                 case "conniving":
                     return new Conniving();
+                case "embeddedsword":
+                    return new EmbeddedSword();
                 case "environment":
                     return new Environment();
                 case "everfull":
                     return new Everfull();
                 case "infected":
                     return new Infected();
+                case "madeofstone":
+                    return new MadeOfStone();
                 case "onguard":
                     return new OnGuard();
                 case "permataunt":
@@ -317,6 +333,12 @@ public static class DataRegistry {
                     return new Rattified();
                 case "returndagger":
                     return new ReturnDagger();
+                case "royal":
+                    return new Royal();
+                case "skillimmune":
+                    return new SkillImmune();
+                case "targetlock":
+                    return new TargetLock();
                 case "tough":
                     return new Tough();
                 case "warding":
@@ -329,6 +351,8 @@ public static class DataRegistry {
                     return new Focus();
                 case "idle":
                     return new Idle();
+                case "prepareritual":
+                    return new PrepareRitual();
                 case "recover":
                     return new Recover();
                 case "rest":
@@ -337,6 +361,8 @@ public static class DataRegistry {
                     return new Resurrect();
                 case "tend":
                     return new Tend();
+                case "wait":
+                    return new Wait();
 
                 //==========SKILLS==========
                 case "backstab":
@@ -363,6 +389,8 @@ public static class DataRegistry {
                     return new SubtlePoison();
                 case "takeaim":
                     return new TakeAim();
+                case "takeflight":
+                    return new TakeFlight();
                 case "taunt":
                     return new Taunt();
                 case "whirl":
@@ -377,8 +405,12 @@ public static class DataRegistry {
                     return new ConjureBlade();
                 case "conjuredagger":
                     return new ConjureDagger();
+                case "conjureguardian":
+                    return new ConjureGuardian();
                 case "corruption":
                     return new Corruption();
+                case "crisiscontingency":
+                    return new CrisisContingency();
                 case "deadlybrew":
                     return new DeadlyBrew();
                 case "deepfreeze":
@@ -409,6 +441,8 @@ public static class DataRegistry {
                     return new KillingWord();
                 case "livingflame":
                     return new LivingFlame();
+                case "mirrorarmor":
+                    return new MirrorArmor();
                 case "mirrorforce":
                     return new MirrorForce();
                 case "pickpocket":
@@ -417,6 +451,8 @@ public static class DataRegistry {
                     return new RatKing();
                 case "repel":
                     return new Repel();
+                case "rightfulheir":
+                    return new RightfulHeir();
                 case "restore":
                     return new Restore();
                 case "usehealthpotion":
@@ -515,6 +551,8 @@ public static class DataRegistry {
                     return new HeavyArmor();
                 case "fortressshield":
                     return new FortressShield();
+                case "excalibur":
+                    return new Excalibur();
                 default:
                     Console.WriteLine("ERROR: no item registered under the name "+itemName);
                     return null;

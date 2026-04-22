@@ -224,6 +224,20 @@ public class Entity : Events
         return false;
     }
 
+    // Check the entity's ActionList for the named passive
+    public bool HasPassive(string passiveName)
+    {
+        foreach (Action act in ActionList)
+        {
+            string actName = act.name;
+            if (passiveName == actName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Kill this entity and remove it from combat.
     public virtual void die()
     {
@@ -400,7 +414,7 @@ public class Entity : Events
                 Console.WriteLine("Action has no valid targets.");
                 return null;
             default:
-                Console.WriteLine("Next action does not use targeting.");
+                //Console.WriteLine("Next action does not use targeting.");
                 return null;
         }
     }
@@ -598,6 +612,26 @@ public class Entity : Events
                     // "Used action" event for the item equipped to the action
                     act.equippedItem.onUseEquippedAction(actionBeingUsed);
                 }
+            }
+        }
+        return actionBeingUsed;
+    }
+
+    // Triggered every time an opposing entity acts
+    public override Action onEnemyUsedAction(Action actionBeingUsed)
+    {
+        // "Used action" event for all status effects on the entity
+        foreach (StatusEffect eff in EffectList.ToList())
+        {
+            actionBeingUsed = eff.onEnemyUsedAction(actionBeingUsed);
+        }
+        // "Used action" event for all items on the entity
+        foreach (Action act in ActionList.ToList())
+        {
+            act.onEnemyUsedAction(actionBeingUsed);
+            if (act.equippedItem != null)
+            {
+                actionBeingUsed = act.equippedItem.onEnemyUsedAction(actionBeingUsed);
             }
         }
         return actionBeingUsed;

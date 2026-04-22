@@ -781,12 +781,12 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        // Inventory.Add(new Chainmail());
-        // Inventory.Add(new ManaPotion());
-        // Inventory.Add(new IronHelm());
-        // Inventory.Add(new Robes());
-
-        // Inventory.Add(new PiousMod());
+        Inventory.Add(new MasterSword());
+        Inventory.Add(new ElderWand());
+        Inventory.Add(new ResurrectionStone());
+        Inventory.Add(new InvisibilityCloak());
+        Inventory.Add(new HeavyArmor());
+        Inventory.Add(new FortressShield());
     }
 
     // Gets a random item from the specified tier (1-3).

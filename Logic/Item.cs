@@ -3,6 +3,7 @@ public class Item : Events {
     public string name = "MISSING NAME";
     public string description = "MISSING DESCRIPTION";
 
+
     // Useful for printing what would be shown to the player
 	public override string ToString() {
 		string actionString = this.name + ": " + this.description;

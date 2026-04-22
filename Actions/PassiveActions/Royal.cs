@@ -12,7 +12,7 @@ public class Royal : Action {
         if (this.owner == null)
         {
             Console.WriteLine("ERROR: null owner for action '" + this.name + "'.");
-            return false;
+            return 0;
         }
         // check if court members are alive:
         foreach (Entity enemy in Battlefield.EnemySide.ToList())

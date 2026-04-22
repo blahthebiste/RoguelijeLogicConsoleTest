@@ -41,8 +41,14 @@ public class Events
 
     }
 
-    // Triggered every time an entity acts
+    // Triggered every time this entity acts
     public virtual Action onUseAction(Action actionBeingUsed)
+    {//
+        return actionBeingUsed;
+    }
+
+    // Triggered every time an opposing entity acts
+    public virtual Action onEnemyUsedAction(Action actionBeingUsed)
     {//
         return actionBeingUsed;
     }

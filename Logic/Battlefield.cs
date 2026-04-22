@@ -214,6 +214,11 @@ public static class Battlefield
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
         }
+        // Trigger end of combat for items in inventory as well:
+        foreach(Item item in CurrentRun.Inventory.ToList())
+        {
+            item.endOfCombat(); // Mostly to remove temporary items.
+        }
         if (playerWon)
         {
             Console.WriteLine("VICTORY!");
@@ -254,27 +259,13 @@ public static class Battlefield
     // Check if there are any more enemies. Environments do not count.
     public static bool noMoreEnemies()
     {
-        if (EnemySide.Count - numEnvironmentEntities > 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return EnemySide.Count - numEnvironmentEntities <= 0;
     }
 
     // Check if any player characters are still alive.
     public static bool noMoreHeroes()
     {
-        if (PlayerSide.Count > 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return PlayerSide.Count <= 0;
     }
 
     // Returns false if the hero was not found in the Dead Heroes list.
@@ -304,7 +295,7 @@ public static class Battlefield
         return false;
     }
 
-    // Returns false if the hero was not found in the Dead Heroes list.
+    // Returns false if the enemy was not found in the Dead Enemies list.
     public static bool ReviveEnemy(string enemyName, bool toFullHP = true, bool exhausted = true)
     {
         foreach (Entity enemy in DeadEnemies.ToList())
@@ -331,6 +322,7 @@ public static class Battlefield
         return false;
     }
 
+    // Also handles the logic for the player losing a life
     public static void RemoveEntity(Entity entity)
     {
         if (PlayerSide.Contains(entity))
