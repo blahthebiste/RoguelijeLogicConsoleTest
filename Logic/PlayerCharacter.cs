@@ -2,6 +2,8 @@ public class PlayerCharacter : Entity {
     
     // The card that is included in the master deck whenever this character is in the party.
     public ActionCard personalCard;
+
+    public int level;
     
     // Default Constructor
     public PlayerCharacter() {
@@ -9,6 +11,7 @@ public class PlayerCharacter : Entity {
         hostile = false;
         exhausted = false;
         personalCard = new BasicAttack();
+        level = 1;
     }
 
     // Constructor from data
@@ -41,6 +44,7 @@ public class PlayerCharacter : Entity {
         name = data.Name;
         description = data.Description;
         maxHP = data.HP;
+        level = data.level;
         playerControlled = true;
         hostile = false;
         exhausted = false;

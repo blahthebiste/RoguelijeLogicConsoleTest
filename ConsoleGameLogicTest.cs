@@ -7,7 +7,7 @@ DataRegistry.LoadData();
 Compendium.Initialize();
 printStartScreen();
 // Enter command loop
-commandLoop();
+commandLoop(); // Effectively main
 
 void printSeparator() {
     Console.WriteLine("============================================================");

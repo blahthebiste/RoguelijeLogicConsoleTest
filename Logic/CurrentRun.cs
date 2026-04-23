@@ -339,7 +339,7 @@ public static class CurrentRun
         else if (ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
         {
             extraMoneyReward = rng.Next(40, 61);
-            NextCombatReward.itemRewards.Add(new AscensionBook());
+            NextCombatReward.itemRewards.Add(new AscensionBook1());
         }
         else // Normal combat. // Prompt for card draft
         {
@@ -784,9 +784,9 @@ public static class CurrentRun
         Inventory.Add(new MasterSword());
         Inventory.Add(new ElderWand());
         Inventory.Add(new ResurrectionStone());
-        Inventory.Add(new InvisibilityCloak());
         Inventory.Add(new HeavyArmor());
         Inventory.Add(new FortressShield());
+        Inventory.Add(new AscensionBook1());
     }
 
     // Gets a random item from the specified tier (1-3).

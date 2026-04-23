@@ -3,6 +3,7 @@
 		"Name": "Fighter",
 		"Description": "Sturdy attacker that can handle any situation",
 		"HP": 10,
+		"level":1,
 		"PersonalCard": "Basic Attack",
 		"ActionList": [
 			"Strike",
@@ -16,6 +17,7 @@
 		"Name": "Defender",
 		"Description": "Healthy wall that protects weaker allies",
 		"HP": 12,
+		"level":1,
 		"PersonalCard": "Basic Defend",
 		"ActionList": [
 			"Bash",
@@ -29,6 +31,7 @@
 		"Name": "Healer",
 		"Description": "Restores HP and rests well",
 		"HP": 10,
+		"level":1,
 		"PersonalCard": "Basic Rest",
 		"ActionList": [
 			"Whack",
@@ -42,6 +45,7 @@
 		"Name": "Mage",
 		"Description": "Uses spells to blast enemies",
 		"HP": 8,
+		"level":1,
 		"PersonalCard": "Basic Spell",
 		"ActionList": [
 			"Whack",
@@ -52,9 +56,24 @@
 		]
 	},
 	{
+		"Name": "Archer",
+		"Description": "",
+		"HP": 10,
+		"level":1,
+		"PersonalCard": "Basic Skill",
+		"ActionList": [
+			"Stab",
+			"Dodge",
+			"Breathe",
+			"Backstab",
+			"Pickpocket"
+		]
+	},
+	{
 		"Name": "Thief",
 		"Description": "Stabby, sneaky goblin with bonus items",
 		"HP": 10,
+		"level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
 			"Stab",

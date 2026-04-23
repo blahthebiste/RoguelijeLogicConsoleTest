@@ -14,10 +14,8 @@ public enum ActionType
     PERSONAL,
     AILMENT
     
-    // // Possible advanced actions:
+    // // Other Possible advanced actions:
     // SpecialAttack,
-    // Ultimate,
-    // Movement,
     // SignatureSpell,
-    // Summon
+    // (aren't these both just Ultimates?)
 }

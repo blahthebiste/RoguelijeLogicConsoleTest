@@ -11,4 +11,9 @@ public class Idle : Action {
         // Do nothing.
         return true;
     }
+
+    public override bool canUse(Entity? target, Modifier? modifier)
+    {
+        return true; // You can ALWAYS do nothing!
+    }
 }
