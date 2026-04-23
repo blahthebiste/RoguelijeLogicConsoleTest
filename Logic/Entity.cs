@@ -706,21 +706,24 @@ public class Entity : Events
                 atk = action.equippedItem.onReceiveAttack(atk);
             }
         }
-        int blockedDamage = 0;
-        if (!hostile && Battlefield.playerBlock > 0)
+        if(!atk.ignoresBlock)
         {
-            blockedDamage = Math.Min(atk.damage, Battlefield.playerBlock);
-            Battlefield.playerBlock -= blockedDamage;
-        }
-        else if (hostile && Battlefield.enemyBlock > 0)
-        {
-            blockedDamage = Math.Min(atk.damage, Battlefield.enemyBlock);
-            Battlefield.enemyBlock -= blockedDamage;
-        }
-        if (blockedDamage > 0)
-        {
-            Console.WriteLine(blockedDamage + " damage was blocked.");
-            atk.damage -= blockedDamage;
+            int blockedDamage = 0;
+            if (!hostile && Battlefield.playerBlock > 0)
+            {
+                blockedDamage = Math.Min(atk.damage, Battlefield.playerBlock);
+                Battlefield.playerBlock -= blockedDamage;
+            }
+            else if (hostile && Battlefield.enemyBlock > 0)
+            {
+                blockedDamage = Math.Min(atk.damage, Battlefield.enemyBlock);
+                Battlefield.enemyBlock -= blockedDamage;
+            }
+            if (blockedDamage > 0)
+            {
+                Console.WriteLine(blockedDamage + " damage was blocked.");
+                atk.damage -= blockedDamage;
+            }
         }
         Console.WriteLine(name + " was hit for " + atk.damage + " damage.");
         changeHP(-atk.damage);

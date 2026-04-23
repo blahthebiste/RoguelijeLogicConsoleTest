@@ -1,13 +1,13 @@
-public class TargetLock : Action
+public class Duel : Action
 {
 
     // Track the target that is locked onto
     public Entity? lockedTarget;
 
-    public TargetLock()
+    public Duel()
     {
-        this.name = "Target Lock";
-        this.description = "Locks onto the next hero that acts. That hero, and this enemy, can only target each other. (Only 1 Target Lock triggers per action.)";
+        this.name = "Duel";
+        this.description = "Enters a duel with the next hero that acts, locking them into single combat.";
         this.actionType = ActionType.PASSIVE;
         lockedTarget = null;
     }
@@ -27,7 +27,7 @@ public class TargetLock : Action
         }
         if (this.owner == null)
         {
-            Console.WriteLine("Not locking; TargetLock action has null owner");
+            Console.WriteLine("Not locking; Duel action has null owner");
             return actionBeingUsed;
         }
         if (Battlefield.PlayerSide.Contains(actionBeingUsed.owner) && !actionBeingUsed.owner.HasStatusEffect("Locked"))
@@ -46,7 +46,7 @@ public class TargetLock : Action
     {
         if (this.owner == null)
         {
-            Console.WriteLine("ERROR: TargetLock action has null owner!");
+            Console.WriteLine("ERROR: Duel action has null owner!");
             return;
         }
         if (lockedTarget != null)

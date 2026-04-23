@@ -1,7 +1,7 @@
-public class Duel : Action {
+public class Cut : Action {
 
-    public Duel() {
-        this.name = "Duel";
+    public Cut() {
+        this.name = "Cut";
         this.actionType = ActionType.ATTACK;
         this.damage = 6;
         this.targetting = TargetCategory.SINGLE_ENEMY;

@@ -57,16 +57,16 @@
 	},
 	{
 		"Name": "Archer",
-		"Description": "",
-		"HP": 10,
+		"Description": "Sets up the perfect shot",
+		"HP": 9,
 		"level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
-			"Stab",
-			"Dodge",
-			"Breathe",
-			"Backstab",
-			"Pickpocket"
+			"Loose",
+			"Cower",
+			"Nock",
+			"Shift",
+			"Favor"
 		]
 	},
 	{

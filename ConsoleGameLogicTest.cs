@@ -54,6 +54,7 @@ void commandLoop() {
             case "defender":
             case "healer":
             case "mage":
+            case "archer":
             case "thief":
                 printStarterCharacterInfo(cmd);
                 break;
@@ -232,12 +233,12 @@ void startRun() {
 // Skips the party selection process to start the run immediately
 void setDefaultParty()
 {
-    PlayerCharacter newFighter = new PlayerCharacter("Fighter");
-    CurrentRun.Party.Add(newFighter);
     PlayerCharacter newThief = new PlayerCharacter("Thief");
     CurrentRun.Party.Add(newThief);
     PlayerCharacter newDefender = new PlayerCharacter("Defender");
     CurrentRun.Party.Add(newDefender);
+    PlayerCharacter newArcher = new PlayerCharacter("Archer");
+    CurrentRun.Party.Add(newArcher);
     zoneSelection();
     depart();
 }
@@ -256,7 +257,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    CurrentRun.ZoneProgress = 9; // For debugging
+    CurrentRun.ZoneProgress = 1; // For debugging
     CurrentRun.GenerateNextCombat();
 }
 
@@ -508,7 +509,7 @@ void printEnemyInfo(Entity enemy) {
 }
 
 void printCombatSituation() {
-    Entity? targetLockingEnemy = null;
+    Entity? duelingEnemy = null;
     printSeparator();
     if(!CurrentRun.InCombat || Battlefield.CurrentEncounter == null) {
             Console.WriteLine("Current Battle: None");
@@ -534,12 +535,12 @@ void printCombatSituation() {
     {
         // Check for Target Lock in the action list
         enemySideFilled.Add(ent);
-        if(targetLockingEnemy == null) {
+        if(duelingEnemy == null) {
             foreach (Action act in ent.ActionList) {
-                if (act is TargetLock targetLockPassive && targetLockPassive.lockedTarget == null)
+                if (act is Duel duelPassive && duelPassive.lockedTarget == null)
                 { // Only print the first match, and only if they have not locked onto a target yet
-                    targetLockingEnemy = ent;
-                    Console.WriteLine("The next hero to act will be locked into a duel with "+targetLockingEnemy.name+"!");
+                    duelingEnemy = ent;
+                    Console.WriteLine("The next hero to act will be locked into a duel with "+duelingEnemy.name+"!");
                     break;
                 }
             }

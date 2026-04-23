@@ -224,9 +224,9 @@
 		"Description": "Willing to lay down his life.",
 		"HP":25,
 		"ActionList": [
-			"TargetLock",
-			"Obstruct",
 			"Duel",
+			"Obstruct",
+			"Cut",
 			"IceWall"
 		]
 	},
@@ -235,7 +235,7 @@
 		"Description": "The kingdom's greatest summoner.",
 		"HP":16,
 		"ActionList": [
-			"TargetLock",
+			"Duel",
 			"MirrorArmor",
 			"PrepareRitual",
 			"ConjureGuardian"
@@ -246,7 +246,7 @@
 		"Description": "Never misses.",
 		"HP":14,
 		"ActionList": [
-			"TargetLock",
+			"Duel",
 			"Dodge",
 			"TakeAim",
 			"Snipe"
@@ -259,7 +259,7 @@
 		"ActionList": [
 			"IceWall",
 			"Cleave",
-			"Duel",
+			"Strike",
 			"SummonedMinion"
 		]
 	},

@@ -47,6 +47,48 @@ public static class CardManager {
 			DrawPile.RemoveAt(0);
 		}
 	}
+
+	// Draws a card of the specified type from the draw pile. If the draw pile does not contain that card, triggers a reshuffle.
+	public static void drawCardOfType(ActionType cardType) {
+		if(DrawPile.Count == 0 && DiscardPile.Count == 0) {
+			// Both draw and discard are empty; do nothing
+			return;
+		}
+		// Search the current draw pile first
+		foreach(ActionCard card in DrawPile)
+		{
+			if(card.actionType == ActionType.ATTACK)
+			{
+				Hand.Add(card);
+				DrawPile.Remove(card);
+				Console.WriteLine("DEBUG: Added "+card.name+" to the hand.");
+				return;
+			}
+		}
+		// Didn't find it in the draw pile, lets check the discard:
+		bool foundMatchInDiscardPile = false;
+		foreach(ActionCard card in DiscardPile)
+		{
+			if(card.actionType == ActionType.ATTACK)
+			{
+				foundMatchInDiscardPile = true;
+				Console.WriteLine("DEBUG: Found matching card, "+card.name+", in discard pile. Reshuffling.");
+				break;
+			}
+		}
+		if(foundMatchInDiscardPile)
+		{
+			reshuffle();
+			// Just use recursion, it's fun and I'm lazy.
+			// Could be a problem if a card is ever stuck in the discard pile after every reshuffle, but that is not yet a thing.
+			drawCardOfType(cardType);
+		}
+		else
+		{ // No match found anywhere.
+			Console.WriteLine("Failed to find card of type, "+cardType+", in draw or discard pile.");
+		}
+			
+	}
 	
 	// Puts a card into the discard pile from the hand.
 	// Used whenever a card is played, and at end of turn.

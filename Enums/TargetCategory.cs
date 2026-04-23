@@ -10,5 +10,6 @@ public enum TargetCategory
     EVERYONE,
     DEAD_ALLY,
     DEAD_ENEMY,
-    DEAD_ANY
+    DEAD_ANY,
+    OPPOSING
 }

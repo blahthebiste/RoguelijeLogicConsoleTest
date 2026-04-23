@@ -1,5 +1,7 @@
 
 // All actions extend this class.
+using System.Reflection.Metadata;
+
 public class Action : Events {
     
     public string name;
@@ -281,6 +283,14 @@ public class Action : Events {
 					targets.Add(ent);
 				}
 				return targets;
+			case TargetCategory.OPPOSING:
+				Entity? entOpp = getOpposingTarget(owner);
+				if(entOpp != null)
+				{
+					Console.WriteLine("DEBUG: adding "+entOpp.name+" as opposing target.");
+					targets.Add(entOpp);	
+				}
+				return targets;
 			case TargetCategory.SINGLE_ALLY:
 			case TargetCategory.SINGLE_ENEMY:
 			case TargetCategory.SINGLE_ANY:
@@ -296,8 +306,53 @@ public class Action : Events {
 	}
 
 	// Default overload uses the action's normal targetting
-	public List<Entity> getTargets() {
+	public virtual List<Entity> getTargets() {
 		return getTargets(targetting);
+	}
+
+
+	// Uses math to approximate which enemy is closest to "across" from the action user.
+	public Entity? getOpposingTarget(Entity owner)
+	{
+		Console.WriteLine("DEBUG: selecting opposing target automatically");
+		double ownerIndex;
+		double ownerTeamCount;
+		int targetIndex;
+		double targetTeamCount;
+		if(owner.hostile)
+		{ // Code for enemies
+			ownerIndex = Battlefield.EnemySide.IndexOf(owner);
+			ownerTeamCount = Battlefield.EnemySide.Count;
+			targetTeamCount = Battlefield.PlayerSide.Count;
+			// Math time. Approximate relative positions within each team, and pick the closest:
+			double relativePositionPercent = (ownerIndex) / ownerTeamCount;
+			Console.WriteLine("DEBUG: Owner index: "+ownerIndex+" Owner team count: "+ownerTeamCount+" Relative position: "+relativePositionPercent);
+			targetIndex = (int)Math.Round(targetTeamCount*relativePositionPercent);
+			Console.WriteLine("DEBUG: Target index: "+targetIndex);
+			if(targetIndex < 0 || targetIndex >= Battlefield.PlayerSide.Count)
+			{
+				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);
+				return null;
+			}
+			return Battlefield.PlayerSide[targetIndex];
+		}
+		else
+		{ // Code for heroes
+			ownerIndex = Battlefield.PlayerSide.IndexOf(owner);
+			ownerTeamCount = Battlefield.PlayerSide.Count;
+			targetTeamCount = Battlefield.EnemySide.Count;
+			// Math time. Approximate relative positions within each team, and pick the closest:
+			double relativePositionPercent = (ownerIndex)/ownerTeamCount;
+			Console.WriteLine("DEBUG: Owner index: "+ownerIndex+" Owner team count: "+ownerTeamCount+" Relative position: "+relativePositionPercent);
+			targetIndex = (int)Math.Round(targetTeamCount*relativePositionPercent);
+			Console.WriteLine("DEBUG: Target index: "+targetIndex);
+			if(targetIndex < 0 || targetIndex >= Battlefield.EnemySide.Count)
+			{
+				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);
+				return null;
+			}
+			return Battlefield.EnemySide[targetIndex];
+		}
 	}
 
 	// Uses getTargets as a baseline, and then adds the extra targets if they do not exist in the list.
@@ -355,6 +410,14 @@ public class Action : Events {
 				return false;
 			case TargetCategory.SELF:
 				return target == owner;
+			case TargetCategory.OPPOSING:
+				// Must be the proper target.
+				if(getOpposingTarget(owner) != target)
+				{
+					Console.WriteLine(target.name + " cannot be targeted, because they are not the opposing enemy!");
+					return false;
+				}
+				goto case TargetCategory.SINGLE_ENEMY;
 			case TargetCategory.ALL_ENEMIES:
 			case TargetCategory.SINGLE_ENEMY:
 				// Must be alive
@@ -464,7 +527,7 @@ public class Action : Events {
 			Console.WriteLine("ERROR: Action has no owner.");
 			return ignoresTaunt;
 		}
-		return ignoresTaunt || owner.HasStatusEffect("Flying");
+		return ignoresTaunt || owner.HasStatusEffect("Flying") || owner.HasStatusEffect("Favored");
 	}
 
 	//==========================ITEM OPERATIONS=========================

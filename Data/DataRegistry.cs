@@ -41,6 +41,7 @@ public static class DataRegistry {
             "\n\t* "+CharacterData.getPlayerDataByName("Fighter")!.Name+": "+CharacterData.getPlayerDataByName("Fighter")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Defender")!.Name+": "+CharacterData.getPlayerDataByName("Defender")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Thief")!.Name+": "+CharacterData.getPlayerDataByName("Thief")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Archer")!.Name+": "+CharacterData.getPlayerDataByName("Archer")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Mage")!.Name+": "+CharacterData.getPlayerDataByName("Mage")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Healer")!.Name+": "+CharacterData.getPlayerDataByName("Healer")!.Description
         };
@@ -61,10 +62,10 @@ public static class DataRegistry {
             PlayerDataList = JsonSerializer.Deserialize<List<PlayerData>>(json);
             if (PlayerDataList == null)
             {
-                Console.WriteLine("Failed to load player data.");
+                Console.WriteLine("ERROR: Failed to load player data.");
                 return;
             }
-            Console.WriteLine("Loaded " + PlayerDataList.Count + " player characters from json.");
+            Console.WriteLine("DEBUG: Loaded " + PlayerDataList.Count + " player characters from json.");
         }
 
         public static void LoadEntityData()
@@ -73,13 +74,13 @@ public static class DataRegistry {
             EntityDataList = JsonSerializer.Deserialize<List<EntityData>>(json);
             if (EntityDataList == null)
             {
-                Console.WriteLine("Failed to load entity data.");
+                Console.WriteLine("ERROR: Failed to load entity data.");
                 return;
             }
-            Console.WriteLine("Loaded " + EntityDataList.Count + " entities from json.");
+            Console.WriteLine("DEBUG: Loaded " + EntityDataList.Count + " entities from json.");
             foreach (EntityData data in EntityDataList)
             {
-                Console.WriteLine("Found " + data.Name);
+                Console.WriteLine("DEBUG: Found " + data.Name);
             }
         }
 
@@ -87,14 +88,14 @@ public static class DataRegistry {
         {
             if (PlayerDataList == null)
             {
-                Console.WriteLine("Cannot get player data -- Failed to load.");
+                Console.WriteLine("ERROR: Cannot get player data -- Failed to load.");
                 return null;
             }
             foreach (PlayerData data in PlayerDataList)
             {
                 if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
                 {
-                    Console.WriteLine("Found match for player character with ID = " + characterName);
+                    Console.WriteLine("DEBUG: Found match for player character with ID = " + characterName);
                     return data;
                 }
             }
@@ -107,7 +108,7 @@ public static class DataRegistry {
         {
             if (PlayerDataList == null)
             {
-                Console.WriteLine("Cannot get player data -- Failed to load.");
+                Console.WriteLine("ERROR: Cannot get player data -- Failed to load.");
                 return false;
             }
             foreach (PlayerData data in PlayerDataList)
@@ -124,14 +125,14 @@ public static class DataRegistry {
         {
             if (EntityDataList == null)
             {
-                Console.WriteLine("Cannot get entity data -- Failed to load.");
+                Console.WriteLine("ERROR: Cannot get entity data -- Failed to load.");
                 return null;
             }
             foreach (EntityData data in EntityDataList)
             {
                 if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
                 {
-                    Console.WriteLine("Found match for entity with ID = " + characterName);
+                    Console.WriteLine("DEBUG: Found match for entity with ID = " + characterName);
                     return data;
                 }
             }
@@ -143,7 +144,7 @@ public static class DataRegistry {
         public static bool entityExists(string characterName)
         {
             if(EntityDataList == null) {
-                Console.WriteLine("Cannot get player data -- Failed to load.");
+                Console.WriteLine("ERROR: Cannot get player data -- Failed to load.");
                 return false;
             }
             foreach(EntityData data in EntityDataList) {
@@ -166,20 +167,20 @@ public static class DataRegistry {
             string json = File.ReadAllText(TroupeDataPath);
             TroupeDataList = JsonSerializer.Deserialize<List<TroupeData>>(json);
             if(TroupeDataList == null) {
-                Console.WriteLine("Failed to load Troupe data.");
+                Console.WriteLine("ERROR: Failed to load Troupe data.");
                 return;
             }
-            Console.WriteLine("Loaded "+TroupeDataList.Count+" enemy Troupes from json.");
+            Console.WriteLine("DEBUG: Loaded "+TroupeDataList.Count+" enemy Troupes from json.");
         }
 
         public static TroupeData? getTroupeDataByName(string troupeName) {
             if(TroupeDataList == null) {
-                Console.WriteLine("Cannot get Troupe data -- Failed to load.");
+                Console.WriteLine("ERROR: Cannot get Troupe data -- Failed to load.");
                 return null;
             }
             foreach(TroupeData data in TroupeDataList) {
                 if(data.Name.ToLower().Trim() == troupeName.ToLower().Trim()) {
-                    Console.WriteLine("Found match for Enemy Troupe with ID = "+troupeName);
+                    Console.WriteLine("DEBUG: Found match for Enemy Troupe with ID = "+troupeName);
                     return data;
                 }
             }
@@ -255,10 +256,10 @@ public static class DataRegistry {
                     return new Bite();
                 case "cleave":
                     return new Cleave();
+                case "cut":
+                    return new Cut();
                 case "dive":
                     return new Dive();
-                case "duel":
-                    return new Duel();
                 case "frostbreath":
                     return new FrostBreath();
                 case "gnaw":
@@ -267,6 +268,8 @@ public static class DataRegistry {
                     return new Infect();
                 case "jaws":
                     return new Jaws();
+                case "loose":
+                    return new Loose();
                 case "ravage":
                     return new Ravage();
                 case "shadowslash":
@@ -315,6 +318,8 @@ public static class DataRegistry {
                     return new Assertive();
                 case "conniving":
                     return new Conniving();
+                case "duel":
+                    return new Duel();
                 case "embeddedsword":
                     return new EmbeddedSword();
                 case "environment":
@@ -337,8 +342,6 @@ public static class DataRegistry {
                     return new Royal();
                 case "skillimmune":
                     return new SkillImmune();
-                case "targetlock":
-                    return new TargetLock();
                 case "tough":
                     return new Tough();
                 case "warding":
@@ -351,6 +354,8 @@ public static class DataRegistry {
                     return new Focus();
                 case "idle":
                     return new Idle();
+                case "nock":
+                    return new Nock();
                 case "prepareritual":
                     return new PrepareRitual();
                 case "recover":
@@ -385,6 +390,8 @@ public static class DataRegistry {
                     return new Hook();
                 case "rainofarrows":
                     return new RainOfArrows();
+                case "shift":
+                    return new Shift();
                 case "subtlepoison":
                     return new SubtlePoison();
                 case "takeaim":
@@ -417,6 +424,8 @@ public static class DataRegistry {
                     return new DeepFreeze();
                 case "eyeofthestorm":
                     return new EyeOfTheStorm();
+                case "favor":
+                    return new Favor();
                 case "forcefield":
                     return new Forcefield();
                 case "grow":
