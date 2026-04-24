@@ -315,20 +315,25 @@ public class Action : Events {
 	public Entity? getOpposingTarget(Entity owner)
 	{
 		Console.WriteLine("DEBUG: selecting opposing target automatically");
-		double ownerIndex;
-		double ownerTeamCount;
-		int targetIndex;
-		double targetTeamCount;
+		int ownerIndex; // We will keep this 0-indexed.
+		int ownerTeamCount;
+		decimal ownerTeamCenterPosition; // We will keep this 0-indexed.
+		decimal ownerDistanceFromCenter;
+		int targetIndex; // We don't know this one, it is what we are trying to calculate.
+		decimal targetTeamCenterPosition; // We will keep this 0-indexed.
+		int targetTeamCount;
 		if(owner.hostile)
 		{ // Code for enemies
 			ownerIndex = Battlefield.EnemySide.IndexOf(owner);
 			ownerTeamCount = Battlefield.EnemySide.Count;
+			ownerTeamCenterPosition = (ownerTeamCount * 0.5m)-0.5m; // Should end in .5 if the team count is even
 			targetTeamCount = Battlefield.PlayerSide.Count;
-			// Math time. Approximate relative positions within each team, and pick the closest:
-			double relativePositionPercent = (ownerIndex) / ownerTeamCount;
-			Console.WriteLine("DEBUG: Owner index: "+ownerIndex+" Owner team count: "+ownerTeamCount+" Relative position: "+relativePositionPercent);
-			targetIndex = (int)Math.Round(targetTeamCount*relativePositionPercent);
-			Console.WriteLine("DEBUG: Target index: "+targetIndex);
+			targetTeamCenterPosition = (targetTeamCount * 0.5m)-0.5m; // Should end in .5 if the team count is even
+			ownerDistanceFromCenter = ownerIndex - ownerTeamCenterPosition; // This is allowed to be negative if the owner is above the center.
+			//Console.WriteLine("DEBUG: Owner index: "+ownerIndex+"\n Owner team count: "+ownerTeamCount+"\n Owner team center: "+ownerTeamCenterPosition+"\n Owner distance from center: "+ownerDistanceFromCenter);
+			// Now calculate the equivalent for the targets team:
+			targetIndex = (int)(targetTeamCenterPosition+ownerDistanceFromCenter); // Let the int cast floor it.
+			// Console.WriteLine("DEBUG: Target index: "+targetIndex+"\n Target team count: "+targetTeamCount+"\n Target team center: "+targetTeamCenterPosition);
 			if(targetIndex < 0 || targetIndex >= Battlefield.PlayerSide.Count)
 			{
 				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);
@@ -340,12 +345,14 @@ public class Action : Events {
 		{ // Code for heroes
 			ownerIndex = Battlefield.PlayerSide.IndexOf(owner);
 			ownerTeamCount = Battlefield.PlayerSide.Count;
+			ownerTeamCenterPosition = (ownerTeamCount * 0.5m)-0.5m; // Should end in .5 if the team count is even
 			targetTeamCount = Battlefield.EnemySide.Count;
-			// Math time. Approximate relative positions within each team, and pick the closest:
-			double relativePositionPercent = (ownerIndex)/ownerTeamCount;
-			Console.WriteLine("DEBUG: Owner index: "+ownerIndex+" Owner team count: "+ownerTeamCount+" Relative position: "+relativePositionPercent);
-			targetIndex = (int)Math.Round(targetTeamCount*relativePositionPercent);
-			Console.WriteLine("DEBUG: Target index: "+targetIndex);
+			targetTeamCenterPosition = (targetTeamCount * 0.5m)-0.5m; // Should end in .5 if the team count is even
+			ownerDistanceFromCenter = ownerIndex - ownerTeamCenterPosition; // This is allowed to be negative if the owner is above the center.
+			// Console.WriteLine("DEBUG: Owner index: "+ownerIndex+"\n Owner team count: "+ownerTeamCount+"\n Owner team center: "+ownerTeamCenterPosition+"\n Owner distance from center: "+ownerDistanceFromCenter);
+			// Now calculate the equivalent for the targets team:
+			targetIndex = (int)(targetTeamCenterPosition+ownerDistanceFromCenter); // Let the int cast floor it.
+			// Console.WriteLine("DEBUG: Target index: "+targetIndex+"\n Target team count: "+targetTeamCount+"\n Target team center: "+targetTeamCenterPosition);
 			if(targetIndex < 0 || targetIndex >= Battlefield.EnemySide.Count)
 			{
 				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);

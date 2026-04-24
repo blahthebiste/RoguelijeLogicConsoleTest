@@ -3,7 +3,7 @@ public class PiousMod : Modifier {
     public PiousMod()
     {
         this.name = "Pious";
-        this.description = "When played, gain Piety for a turn.";
+        this.description = "When played, gain 1 Piety.";
     }
 
     public override void useOnce(Action act)

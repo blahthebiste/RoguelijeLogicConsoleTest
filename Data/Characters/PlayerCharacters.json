@@ -3,7 +3,7 @@
 		"Name": "Fighter",
 		"Description": "Sturdy attacker that can handle any situation",
 		"HP": 10,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Attack",
 		"ActionList": [
 			"Strike",
@@ -11,13 +11,16 @@
 			"Rest",
 			"Whirl",
 			"Inflame"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Defender",
 		"Description": "Healthy wall that protects weaker allies",
 		"HP": 12,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Defend",
 		"ActionList": [
 			"Bash",
@@ -25,13 +28,16 @@
 			"Rest",
 			"Taunt",
 			"Harden"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Healer",
 		"Description": "Restores HP and rests well",
 		"HP": 10,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Rest",
 		"ActionList": [
 			"Whack",
@@ -39,13 +45,16 @@
 			"Recover",
 			"Daze",
 			"Restore"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Mage",
 		"Description": "Uses spells to blast enemies",
 		"HP": 8,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Spell",
 		"ActionList": [
 			"Whack",
@@ -53,13 +62,16 @@
 			"Focus",
 			"Charge",
 			"Zap"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Archer",
 		"Description": "Sets up the perfect shot",
 		"HP": 9,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
 			"Loose",
@@ -67,13 +79,16 @@
 			"Nock",
 			"Shift",
 			"Favor"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Thief",
 		"Description": "Stabby, sneaky goblin with bonus items",
 		"HP": 10,
-		"level":1,
+		"Level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
 			"Stab",
@@ -81,13 +96,16 @@
 			"Breathe",
 			"Backstab",
 			"Pickpocket"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	},
 	{
 		"Name": "Swordsman",
 		"Description": "Cuts down enemies with unparalleled ease",
 		"HP": 11,
-		"level":2,
+		"Level":2,
 		"PersonalCard": "Engage",
 		"ActionList": [
 			"Cleave",
@@ -95,6 +113,9 @@
 			"Parry",
 			"Inflame",
 			"Repose"
+		],
+		"UpgradeList": [
+			"Swordsman"
 		]
 	}
 ]

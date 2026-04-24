@@ -40,7 +40,7 @@ public class CardDraft : Encounter {
         while (true)
         {
             Console.WriteLine(this.name);
-            Console.WriteLine("Choose one of the following cards to add to your deck, by entering its number:\n");
+            Console.WriteLine("Choose one of the following cards to add to your collection, by entering its number:\n");
             Console.WriteLine("\t[1] " + draftCards[0]!.ToString());
             Console.WriteLine("\t[2] " + draftCards[1]!.ToString());
             Console.WriteLine("\t[3] " + draftCards[2]!.ToString());

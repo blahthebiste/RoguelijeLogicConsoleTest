@@ -233,12 +233,12 @@ void startRun() {
 // Skips the party selection process to start the run immediately
 void setDefaultParty()
 {
-    PlayerCharacter newThief = new PlayerCharacter("Thief");
-    CurrentRun.Party.Add(newThief);
-    PlayerCharacter newDefender = new PlayerCharacter("Defender");
-    CurrentRun.Party.Add(newDefender);
-    PlayerCharacter newArcher = new PlayerCharacter("Archer");
-    CurrentRun.Party.Add(newArcher);
+    PlayerCharacter p1 = new PlayerCharacter("Thief");
+    CurrentRun.Party.Add(p1);
+    PlayerCharacter p2 = new PlayerCharacter("Mage");
+    CurrentRun.Party.Add(p2);
+    PlayerCharacter p3 = new PlayerCharacter("Archer");
+    CurrentRun.Party.Add(p3);
     zoneSelection();
     depart();
 }
@@ -257,7 +257,7 @@ void depart() {
     }
     Console.WriteLine("\n\tAnd we're off! Generating zone...");
     CurrentRun.SetZone(nextZoneID);
-    CurrentRun.ZoneProgress = 1; // For debugging
+    CurrentRun.ZoneProgress = 1; // Change this to debug fights
     CurrentRun.GenerateNextCombat();
 }
 

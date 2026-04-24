@@ -8,11 +8,11 @@ public static class DataRegistry {
     public static void LoadData() {
         Console.WriteLine("Loading data...");
         CharacterData.LoadPlayerData();
-        Console.WriteLine("Loaded player character data.");
+        Console.WriteLine("Finished loading player character data.");
         CharacterData.LoadEntityData();
-        Console.WriteLine("Loaded entity character data.");
+        Console.WriteLine("Finished loading entity character data.");
         EnemyTroupes.LoadTroupeData();
-        Console.WriteLine("Loaded enemy troupe data.");
+        Console.WriteLine("Finished loading enemy troupe data.");
         // TODO: load item data?
     }
 
@@ -80,7 +80,7 @@ public static class DataRegistry {
             Console.WriteLine("DEBUG: Loaded " + EntityDataList.Count + " entities from json.");
             foreach (EntityData data in EntityDataList)
             {
-                Console.WriteLine("DEBUG: Found " + data.Name);
+                // Console.WriteLine("DEBUG: Found " + data.Name);
             }
         }
 
@@ -95,7 +95,7 @@ public static class DataRegistry {
             {
                 if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
                 {
-                    Console.WriteLine("DEBUG: Found match for player character with ID = " + characterName);
+                    //Console.WriteLine("DEBUG: Found match for player character with ID = " + characterName);
                     return data;
                 }
             }
@@ -132,7 +132,7 @@ public static class DataRegistry {
             {
                 if (data.Name.ToLower().Trim() == characterName.ToLower().Trim())
                 {
-                    Console.WriteLine("DEBUG: Found match for entity with ID = " + characterName);
+                    // Console.WriteLine("DEBUG: Found match for entity with ID = " + characterName);
                     return data;
                 }
             }
@@ -180,7 +180,7 @@ public static class DataRegistry {
             }
             foreach(TroupeData data in TroupeDataList) {
                 if(data.Name.ToLower().Trim() == troupeName.ToLower().Trim()) {
-                    Console.WriteLine("DEBUG: Found match for Enemy Troupe with ID = "+troupeName);
+                    // Console.WriteLine("DEBUG: Found match for Enemy Troupe with ID = "+troupeName);
                     return data;
                 }
             }

@@ -82,23 +82,8 @@ public static class CurrentRun
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
         MasterDeck.Add(new BasicRest());
-        // CardCollection.Add(new BasicAttack());
-        // CardCollection.Add(new BasicAttack());
-        // CardCollection.Add(new BasicAttack());
-        // CardCollection.Add(new BasicDefend());
-        // CardCollection.Add(new BasicDefend());
-        // CardCollection.Add(new BasicDefend());
-        // CardCollection.Add(new BasicSkill());
-        // CardCollection.Add(new BasicSkill());
-        // CardCollection.Add(new BasicSkill());
-        // CardCollection.Add(new BasicSpell());
-        // CardCollection.Add(new BasicSpell());
-        // CardCollection.Add(new BasicSpell());
-        // CardCollection.Add(new BasicRest());
-        // CardCollection.Add(new BasicRest());
-        // CardCollection.Add(new BasicRest());
 
-        Inventory = new List<Item>(); // Starts empty(?).
+        Inventory = new List<Item>(); // Starts empty.
         CurrentZone = DataRegistry.GenerateZone(ZoneID.HUB); // Party is selected in the Hub world.
         ZoneProgress = 0;
         CompletedZones = new List<Zone>(); // Starts empty
@@ -149,11 +134,13 @@ public static class CurrentRun
             Party.Add(newPartyMember);
             // Add their action card to the master deck:
             MasterDeck.Add(newPartyMember.personalCard);
+            Console.WriteLine("DEBUG: added "+newPartyMember.name+" to party.");
         }
         else
         {
             // Party is full; send them to the bench.
             Bench.Add(newPartyMember);
+            Console.WriteLine("DEBUG: added "+newPartyMember.name+" to bench.");
         }
     }
 
@@ -216,11 +203,13 @@ public static class CurrentRun
             Party.Remove(partyMember);
             // Remove their action card from the master deck:
             MasterDeck.Remove(partyMember.personalCard);
+            Console.WriteLine("DEBUG: removed "+partyMember.name+" from party.");
         }
         else
         {
             // They were on the bench.
             Bench.Remove(partyMember);
+            Console.WriteLine("DEBUG: removed "+partyMember.name+" from bench.");
         }
     }
 
@@ -233,6 +222,19 @@ public static class CurrentRun
         }
         Party[Party.IndexOf(hero1)] = hero2;
         Party[Party.IndexOf(hero2)] = hero1;
+    }
+
+    // upgradeName is the name of the higher level hero the player has selected.
+    // hero will be removed, and the selected higher level hero will take their place.
+    // Works on the party or bench.
+    // 1. Remove the character.
+    // 2. Generate a new level character based on the name.
+    // 3. Add the new level 2 character.
+    public static void UpgradeHero(PlayerCharacter hero, string upgradeName)
+    {
+        RemoveCharacter(hero);
+        PlayerCharacter newCharacter = new PlayerCharacter(upgradeName);
+        AddToParty(newCharacter);
     }
     //===
     //===
@@ -781,12 +783,12 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        Inventory.Add(new MasterSword());
-        Inventory.Add(new ElderWand());
-        Inventory.Add(new ResurrectionStone());
-        Inventory.Add(new HeavyArmor());
-        Inventory.Add(new FortressShield());
-        Inventory.Add(new AscensionBook1());
+        // Inventory.Add(new MasterSword());
+        // Inventory.Add(new ElderWand());
+        // Inventory.Add(new ResurrectionStone());
+        // Inventory.Add(new HeavyArmor());
+        // Inventory.Add(new FortressShield());
+        // Inventory.Add(new AscensionBook1());
     }
 
     // Gets a random item from the specified tier (1-3).
