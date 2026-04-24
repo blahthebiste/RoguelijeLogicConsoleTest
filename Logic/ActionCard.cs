@@ -49,56 +49,58 @@ public class ActionCard
         return newCopy;
     }
 
-    // Use the action
-    public virtual void use(Entity entityToUseAction, Entity? target, Action hoveredAction)
+    // Use the action. Returns false if the action could not be used.
+    public virtual bool use(Entity entityToUseAction, Entity? target, Action hoveredAction)
     {
-        if (!canBeUsedBy(entityToUseAction)) return;
-        else
+        if (canBeUsedBy(entityToUseAction))
         {
             if (numberMatchingActions(entityToUseAction) == 1)
             {
                 Action? actionToUse = autoSelectAction(entityToUseAction);
-                if (actionToUse != null)
+                if (actionToUse != null && actionToUse.use(target, modifier))
                 {
-                    if (actionToUse.use(target, modifier)) CardManager.discardCard(this);
+                    // Action was used.
+                    CardManager.discardCard(this);
+                    return true;
                 }
             }
             else
             {
                 // Need to select specific action, there are multiple (or 0) options.
-                if (actionCanBeUsed(hoveredAction))
+                if (actionCanBeUsed(hoveredAction) && hoveredAction.use(target, modifier))
                 {
-                    if (hoveredAction.use(target, modifier)) CardManager.discardCard(this);
-                }
-                else
-                {
-                    return; // Hovered action is not usable, do nothing.
+                    // Action was used.
+                    CardManager.discardCard(this);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     // Use the action; this version always uses autoselection.
-    public virtual void use(Entity entityToUseAction, Entity? target)
+    public virtual bool use(Entity entityToUseAction, Entity? target)
     {
-        if (!canBeUsedBy(entityToUseAction)) return;
-        else
+        if (canBeUsedBy(entityToUseAction))
         {
             if (numberMatchingActions(entityToUseAction) == 1)
             {
                 Action? actionToUse = autoSelectAction(entityToUseAction);
-                if (actionToUse != null)
+                if (actionToUse != null && actionToUse.use(target, modifier))
                 {
-                    // Good, use the action.
-                    if (actionToUse.use(target, modifier)) CardManager.discardCard(this);
+                    // Action was used.
+                    CardManager.discardCard(this);
+                    return true;
                 }
             }
             else
             {
                 // Invalid number of matching actions.
                 Console.WriteLine("ERROR: cannot use this overload of ActionCard.use; entity does not have exactly 1 matching action");
+                return false;
             }
         }
+        return false;
     }
 
     // Whether this card can be played on that action.

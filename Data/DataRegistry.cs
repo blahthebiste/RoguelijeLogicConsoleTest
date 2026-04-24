@@ -236,7 +236,10 @@ public static class DataRegistry {
                     return new Crouch();
                 case "strafe":
                     return new Strafe();
-                    
+
+                // Personal cards
+                case "engage":
+                    return new Engage();
                 default:
                     Console.WriteLine("ERROR: no card registered under the name "+cardName);
                     return null;
@@ -360,6 +363,8 @@ public static class DataRegistry {
                     return new PrepareRitual();
                 case "recover":
                     return new Recover();
+                case "repose":
+                    return new Repose();
                 case "rest":
                     return new Rest();
                 case "resurrect":

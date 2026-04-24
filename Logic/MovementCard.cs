@@ -29,20 +29,21 @@ public class MovementCard : ActionCard
     }
 
 
-    public override void use(Entity entityToUseAction, Entity? target)
+    public override bool use(Entity entityToUseAction, Entity? target)
     {
         if (canBeUsedBy(entityToUseAction))
         {
             if (executeAction((PlayerCharacter)entityToUseAction))
             {
                 CardManager.discardCard(this);
+                return true;
             }
         }
         else
         {
-            Console.WriteLine("Failed to execute movement '" + this.name + "'.");
+            Console.WriteLine(entityToUseAction.name+" cannot use movement action '" + this.name + "'.");
         }
-
+        return false;
     }
 
     // The meat and potatoes of the action, to be implemented by each card:

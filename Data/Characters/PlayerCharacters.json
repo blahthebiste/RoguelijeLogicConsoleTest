@@ -82,5 +82,19 @@
 			"Backstab",
 			"Pickpocket"
 		]
+	},
+	{
+		"Name": "Swordsman",
+		"Description": "Cuts down enemies with unparalleled ease",
+		"HP": 11,
+		"level":2,
+		"PersonalCard": "Engage",
+		"ActionList": [
+			"Cleave",
+			"TwinSlash",
+			"Parry",
+			"Inflame",
+			"Repose"
+		]
 	}
 ]
