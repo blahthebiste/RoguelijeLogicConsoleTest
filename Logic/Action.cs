@@ -334,10 +334,13 @@ public class Action : Events {
 			// Now calculate the equivalent for the targets team:
 			targetIndex = (int)(targetTeamCenterPosition+ownerDistanceFromCenter); // Let the int cast floor it.
 			// Console.WriteLine("DEBUG: Target index: "+targetIndex+"\n Target team count: "+targetTeamCount+"\n Target team center: "+targetTeamCenterPosition);
-			if(targetIndex < 0 || targetIndex >= Battlefield.PlayerSide.Count)
+			if(targetIndex < 0)
 			{
-				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);
-				return null;
+				targetIndex = 0;
+			}
+			if(targetIndex >= Battlefield.EnemySide.Count)
+			{
+				targetIndex = Battlefield.EnemySide.Count-1;
 			}
 			return Battlefield.PlayerSide[targetIndex];
 		}
@@ -353,10 +356,13 @@ public class Action : Events {
 			// Now calculate the equivalent for the targets team:
 			targetIndex = (int)(targetTeamCenterPosition+ownerDistanceFromCenter); // Let the int cast floor it.
 			// Console.WriteLine("DEBUG: Target index: "+targetIndex+"\n Target team count: "+targetTeamCount+"\n Target team center: "+targetTeamCenterPosition);
-			if(targetIndex < 0 || targetIndex >= Battlefield.EnemySide.Count)
+			if(targetIndex < 0)
 			{
-				Console.WriteLine("ERROR: Target index out of bounds: "+targetIndex);
-				return null;
+				targetIndex = 0;
+			}
+			if(targetIndex >= Battlefield.EnemySide.Count)
+			{
+				targetIndex = Battlefield.EnemySide.Count-1;
 			}
 			return Battlefield.EnemySide[targetIndex];
 		}
