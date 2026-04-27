@@ -4,10 +4,10 @@ public class Skitter : Action
     public Skitter()
     {
         this.name = "Skitter";
-        this.description = "Dodge the next attack.";
         this.actionType = ActionType.DEFEND;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
+        this.description = "Dodge the next attack.";
     }
 
 

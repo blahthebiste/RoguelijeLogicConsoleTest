@@ -2,13 +2,13 @@ public class UsePoisonPotion : Action {
 
     public UsePoisonPotion() {
         this.name = "Use Poison Potion";
-        this.description = "Apply 2 Poison.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 2;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Apply "+magicNumber+" Poison.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

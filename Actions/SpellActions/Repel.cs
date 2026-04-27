@@ -4,7 +4,6 @@ public class Repel : Action
     public Repel()
     {
         this.name = "Repel";
-        this.description = "Generate 16 Block. Stun attackers for 1 turn.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 16;
         this.magicNumber2 = 1;
@@ -12,6 +11,7 @@ public class Repel : Action
         this.uses = 2;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+magicNumber+" Block. Stun attackers for "+magicNumber2+" turn.";
     }
 
 

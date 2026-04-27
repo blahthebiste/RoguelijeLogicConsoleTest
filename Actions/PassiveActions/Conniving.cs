@@ -4,9 +4,9 @@ public class Conniving : Action {
     public Conniving()
     {
         this.name = "Conniving";
-        this.description = "Uses Subtle Poison before turn 1.";
         this.actionType = ActionType.PASSIVE;
         subtlepoisonInstance = new SubtlePoison();
+        this.description = "Uses Subtle Poison before turn 1.";
     }
 
     public override void startOfCombat()

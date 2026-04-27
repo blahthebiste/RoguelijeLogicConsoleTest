@@ -2,13 +2,13 @@ public class Chill : Action {
 
     public Chill() {
         this.name = "Chill";
-        this.description = "Apply 1 Frost to ALL enemies.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Apply "+magicNumber+" Frost to ALL enemies.";
     }
 
     // This will apply 1 frost to the target. Will be run on each enemy.

@@ -3,8 +3,8 @@ public class ReturnDagger : Action {
     public ReturnDagger()
     {
         this.name = "Return Dagger";
-        this.description = "On death, replenish all spell uses to The Dark One.";
         this.actionType = ActionType.PASSIVE;
+        this.description = "On death, replenish all spell uses to The Dark One.";
     }
 
     // Refill all spell uses for Dark One

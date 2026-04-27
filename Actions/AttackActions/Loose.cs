@@ -3,10 +3,10 @@ public class Loose : Action {
     public Loose()
     {
         this.name = "Loose";
-        this.description = "Deal 7 damage to the opposing enemy.";
         this.actionType = ActionType.ATTACK;
         this.damage = 7;
         this.targetting = TargetCategory.OPPOSING; // Targetting is handled automatically
+        this.description = "Deal "+damage+" damage to the opposing enemy.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

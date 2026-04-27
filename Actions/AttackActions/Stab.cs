@@ -2,10 +2,10 @@ public class Stab : Action {
 
     public Stab() {
         this.name = "Stab";
-        this.description = "Deal 5 damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 5;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage.";
     }
 
 

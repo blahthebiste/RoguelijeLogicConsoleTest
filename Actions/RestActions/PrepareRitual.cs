@@ -4,10 +4,10 @@ public class PrepareRitual : Action
     public PrepareRitual()
     {
         this.name = "Prepare Ritual";
-        this.description = "Gain 1 use of a Conjuration Spell if it is missing.";
         this.magicNumber = 1;
         this.actionType = ActionType.REST;
         this.targetting = TargetCategory.SELF;
+        this.description = "Gain "+magicNumber+" use of a Conjuration Spell if it is missing.";
     }
 
     public override bool useOnce(Modifier? modifier)

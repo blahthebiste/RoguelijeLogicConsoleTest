@@ -2,11 +2,11 @@ public class Recover : Action {
 
     public Recover() {
         this.name = "Recover";
-        this.description = "Recover 5 HP. Draw 3 cards.";
         this.actionType = ActionType.REST;
         this.healing = 5;
         this.magicNumber = 3;
         this.targetting = TargetCategory.SELF;
+        this.description = "Recover "+healing+" HP. Draw "+magicNumber+" cards.";
     }
 
 

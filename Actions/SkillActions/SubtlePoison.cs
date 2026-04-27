@@ -2,10 +2,10 @@ public class SubtlePoison : Action {
 
     public SubtlePoison() {
         this.name = "Subtle Poison";
-        this.description = "Apply 2 Poison.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.magicNumber = 2;
+        this.description = "Apply "+magicNumber+" Poison.";
     }
 
 

@@ -4,9 +4,9 @@ public class Focus : Action
     public Focus()
     {
         this.name = "Focus";
-        this.description = "Regain all Spell uses.";
         this.actionType = ActionType.REST;
         this.targetting = TargetCategory.SELF;
+        this.description = "Regain all Spell uses.";
     }
 
     public override bool useOnce(Modifier? modifier)

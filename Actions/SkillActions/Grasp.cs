@@ -2,10 +2,10 @@ public class Grasp : Action {
 
     public Grasp() {
         this.name = "Grasp";
-        this.description = "Stun an enemy whose last action was not an attack.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.magicNumber = 1;
+        this.description = "Stun an enemy whose last action was not an attack.";
     }
 
     public override bool CanTarget(Entity target) {

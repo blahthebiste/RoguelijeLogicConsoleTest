@@ -4,9 +4,9 @@ public class Assertive : Action {
     public Assertive()
     {
         this.name = "Assertive";
-        this.description = "Uses Taunt before turn 1.";
         this.actionType = ActionType.PASSIVE;
         tauntInstance = new Taunt();
+        this.description = "Uses Taunt before turn 1.";
     }
 
     public override void startOfCombat()

@@ -2,13 +2,13 @@ public class DeadlyBrew : Action {
 
     public DeadlyBrew() {
         this.name = "Deadly Brew";
-        this.description = "Apply 2 Poison to ALL enemies.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 2;
+        this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Apply "+magicNumber+" Poison to ALL enemies.";
     }
 
     // This will apply 2 poison to the target. Will be run on each enemy.

@@ -2,13 +2,13 @@ public class IceSpike : Action {
 
     public IceSpike() {
         this.name = "IceSpike";
-        this.description = "Deal 6 damage, plus any Frost on the target.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 6;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+magicNumber+" damage, plus any Frost on the target.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

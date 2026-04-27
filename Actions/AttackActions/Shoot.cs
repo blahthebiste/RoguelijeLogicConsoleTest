@@ -3,11 +3,11 @@ public class Shoot : Action {
     public Shoot()
     {
         this.name = "Shoot";
-        this.description = "Deal 5 damage. Ignores Taunt.";
         this.actionType = ActionType.ATTACK;
         this.damage = 5;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.ignoresTaunt = true;
+        this.description = "Deal "+this.damage+" damage. Ignores Taunt.";
     }
 
 

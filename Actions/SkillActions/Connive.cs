@@ -2,9 +2,9 @@ public class Connive : Action {
 
     public Connive() {
         this.name = "Connive";
-        this.description = "Use another random action.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.NONE;
+        this.description = "Use another random action.";
     }
 
     public override bool useOnce(Modifier? modifier) {

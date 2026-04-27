@@ -2,8 +2,8 @@ public class Rattified : Action {
 
     public Rattified() {
         this.name = "Rattified";
-        this.description = "On death, transform a random Hench-Rat into a Giant Rat.";
         this.actionType = ActionType.PASSIVE;
+        this.description = "On death, transform a random Hench-Rat into a Giant Rat.";
     }
 
     public override void onDeath()

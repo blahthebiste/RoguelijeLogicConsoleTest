@@ -2,12 +2,12 @@ public class Pickpocket : Action {
 
     public Pickpocket() {
         this.name = "Pickpocket";
-        this.description = "Generate a random level 1 item for this combat only, and equip it.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.NONE;
+        this.description = "Generate a random level 1 item for this combat only, and equip it.";
     }
 
     public override bool useOnce(Modifier? modifier) {

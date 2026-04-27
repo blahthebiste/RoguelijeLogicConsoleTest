@@ -2,10 +2,10 @@ public class Strike : Action {
 
     public Strike() {
         this.name = "Strike";
-        this.description = "Deal 6 damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 6;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

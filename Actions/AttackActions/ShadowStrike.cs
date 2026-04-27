@@ -2,11 +2,11 @@ public class ShadowStrike : Action {
 
     public ShadowStrike() {
         this.name = "Shadow Strike";
-        this.description = "Deal 4 damage. Apply 6 Curse.";
         this.actionType = ActionType.ATTACK;
         this.damage = 4;
         this.magicNumber = 6;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage. Apply "+magicNumber+" Curse.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

@@ -2,12 +2,12 @@ public class FrostBreath : Action {
 
     public FrostBreath() {
         this.name = "Frost Breath";
-        this.description = "Deal 6 damage to an enemy and adjacent enemies. Apply Frost equal to unblocked damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 6;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.hitsAbove = true;
         this.hitsBelow = true;
+        this.description = "Deal "+damage+" damage to an enemy and adjacent enemies. Apply Frost equal to unblocked damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

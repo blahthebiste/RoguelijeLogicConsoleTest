@@ -2,13 +2,14 @@ public class Hold : Action {
 
     public Hold() {
         this.name = "Hold";
-        this.description = "Gain 2 Toughness for 2 turns.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 2;
+        this.magicNumber2 = 2;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Gain "+magicNumber+" Toughness for "+magicNumber2+" turns.";
     }
 
     public override bool useOnce(Modifier? modifier) {

@@ -2,10 +2,10 @@ public class Cower : Action {
 
     public Cower() {
         this.name = "Cower";
-        this.description = "Generate 3 Block.";
         this.actionType = ActionType.DEFEND;
         this.block = 3;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+block+" Block.";
     }
 
     public override bool useOnce(Modifier? modifier) {

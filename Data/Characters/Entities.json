@@ -73,7 +73,7 @@
 	{
 		"Name": "Everfull Cauldron",
 		"Description": "The source of the Witch's power.",
-		"HP": 20,
+		"HP": 16,
 		"ActionList": [
 			"Everfull",
 			"SummonedMinion"

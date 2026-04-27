@@ -4,9 +4,9 @@ public class Warding : Action {
     public Warding()
     {
         this.name = "Warding";
-        this.description = "Uses Force Field before turn 1.";
         this.actionType = ActionType.PASSIVE;
         forcefieldInstance = new Forcefield();
+        this.description = "Uses Force Field before turn 1.";
     }
 
     public override void startOfCombat()

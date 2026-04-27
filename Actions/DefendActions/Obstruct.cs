@@ -2,10 +2,10 @@ public class Obstruct : Action {
 
     public Obstruct() {
         this.name = "Obstruct";
-        this.description = "Generate 10 Block.";
         this.actionType = ActionType.DEFEND;
         this.block = 10;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+block+" Block.";
     }
 
 

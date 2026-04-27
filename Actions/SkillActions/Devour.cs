@@ -2,11 +2,11 @@ public class Devour : Action {
 
     public Devour() {
         this.name = "Devour";
-        this.description = "Kill an enemy with 6 HP or less. Recover 6 HP.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.magicNumber = 6;
         this.healing = 6;
+        this.description = "Kill an enemy with "+magicNumber+" HP or less. Recover "+healing+" HP.";
     }
 
     public override bool CanTarget(Entity target) {

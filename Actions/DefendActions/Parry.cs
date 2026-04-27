@@ -2,10 +2,10 @@ public class Parry : Action {
 
     public Parry() {
         this.name = "Parry";
-        this.description = "Generate 4 Block.";
         this.actionType = ActionType.DEFEND;
         this.block = 4;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+block+" Block.";
     }
 
     public override bool useOnce(Modifier? modifier) {

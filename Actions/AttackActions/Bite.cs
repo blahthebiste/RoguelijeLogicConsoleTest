@@ -2,10 +2,10 @@ public class Bite : Action {
 
     public Bite() {
         this.name = "Bite";
-        this.description = "Deal 8 damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 8;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

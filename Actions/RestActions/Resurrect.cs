@@ -2,9 +2,9 @@ public class Resurrect : Action {
 
     public Resurrect() {
         this.name = "Resurrect";
-        this.description = "Resurrect an ally to full HP.";
         this.actionType = ActionType.REST;
         this.targetting = TargetCategory.DEAD_ALLY;
+        this.description = "Resurrect an ally to full HP.";
     }
 
 

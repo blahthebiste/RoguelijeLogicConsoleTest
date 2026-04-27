@@ -2,10 +2,10 @@ public class Infect : Action {
 
     public Infect() {
         this.name = "Infect";
-        this.description = "Deal 3 damage. Apply Poison equal to unblocked damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 3;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage. Apply Poison equal to unblocked damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

@@ -2,10 +2,10 @@ public class Block : Action {
 
     public Block() {
         this.name = "Block";
-        this.description = "Generate 6 Block.";
         this.actionType = ActionType.DEFEND;
         this.block = 6;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+block+" Block.";
     }
 
 

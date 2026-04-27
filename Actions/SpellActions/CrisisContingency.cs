@@ -2,20 +2,21 @@ public class CrisisContingency : Action {
 
     public CrisisContingency() {
         this.name = "Crisis Contingency";
-        this.description = "Resurrect a member of the King's Court. Cannot be used until turn 6.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 3;
+        this.magicNumber = 6;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.DEAD_ALLY;
+        this.description = "Resurrect a member of the King's Court. Cannot be used until turn "+magicNumber+".";
     }
 
     // Cannot use this action before turn 6
     public override bool canUse(Entity? target, Modifier? modifier)
     {
-        if (Battlefield.turnNumber < 6 && this.owner != null)
+        if (Battlefield.turnNumber < this.magicNumber && this.owner != null)
         {
-            Console.WriteLine(this.owner.name + " cannot use " + this.name + " until turn 6!");
+            Console.WriteLine(this.owner.name + " cannot use " + this.name + " until turn "+magicNumber+"!");
             return false;
         }
         return base.canUse(target, modifier);

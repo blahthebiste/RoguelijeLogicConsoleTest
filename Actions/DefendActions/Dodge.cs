@@ -4,10 +4,10 @@ public class Dodge : Action
     public Dodge()
     {
         this.name = "Dodge";
-        this.description = "Dodge the next attack.";
         this.actionType = ActionType.DEFEND;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
+        this.description = "Dodge the next attack.";
     }
 
 

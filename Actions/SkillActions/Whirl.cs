@@ -2,10 +2,10 @@ public class Whirl : Action {
 
     public Whirl() {
         this.name = "Whirl";
-        this.description = "Next attack also hits adjacent targets.";
         this.actionType = ActionType.SKILL;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
+        this.description = "Next attack also hits adjacent targets.";
     }
 
     public override bool useOnce(Modifier? modifier) {

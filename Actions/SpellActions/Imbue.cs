@@ -2,13 +2,13 @@ public class Imbue : Action {
 
     public Imbue() {
         this.name = "Imbue";
-        this.description = "Grant an ally +1 Strength.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ALLY;
+        this.description = "Grant an ally +"+magicNumber+" Strength.";
     }
 
 

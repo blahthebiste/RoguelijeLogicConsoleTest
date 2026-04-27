@@ -2,13 +2,13 @@ public class KillingWord : Action {
 
     public KillingWord() {
         this.name = "Killing Word";
-        this.description = "Kill an enemy with 20 HP or less.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 20;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Kill an enemy with "+magicNumber+" HP or less.";
     }
 
     public override bool CanTarget(Entity target) {

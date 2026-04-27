@@ -2,13 +2,13 @@ public class Restore : Action {
 
     public Restore() {
         this.name = "Restore";
-        this.description = "Restore 6 HP.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 6;
         this.hasLimitedUses = true;
         this.uses = 6;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ANY;
+        this.description = "Restore "+magicNumber+" HP.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

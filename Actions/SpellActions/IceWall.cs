@@ -4,13 +4,13 @@ public class IceWall : Action
     public IceWall()
     {
         this.name = "Ice Wall";
-        this.description = "Generate 18 Block.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 18;
         this.hasLimitedUses = true;
         this.uses = 2;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+magicNumber+" Block.";
     }
 
 

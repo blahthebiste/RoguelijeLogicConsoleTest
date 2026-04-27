@@ -2,12 +2,12 @@ public class ImmortalityPotion : Action {
 
     public ImmortalityPotion() {
         this.name = "Immortality Potion";
-        this.description = "Recover full HP. Can only be used if below half HP.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Recover full HP. Can only be used if below half HP.";
     }
 
     public override bool canUse(Entity? target, Modifier? modifier)

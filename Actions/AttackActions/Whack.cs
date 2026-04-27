@@ -2,10 +2,10 @@ public class Whack : Action {
 
     public Whack() {
         this.name = "Whack";
-        this.description = "Deal 3 damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 3;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

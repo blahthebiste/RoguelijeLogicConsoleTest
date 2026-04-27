@@ -4,7 +4,6 @@ public class MirrorForce : Action
     public MirrorForce()
     {
         this.name = "Mirror Force";
-        this.description = "Generate 12 Block. Reflect attacks for 1 turn.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 12;
         this.magicNumber2 = 1;
@@ -12,6 +11,7 @@ public class MirrorForce : Action
         this.uses = 2;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+magicNumber+" Block. Reflect attacks for "+magicNumber2+" turn.";
     }
 
 

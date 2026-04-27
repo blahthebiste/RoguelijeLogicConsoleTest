@@ -4,10 +4,10 @@ public class Vanish : Action
     public Vanish()
     {
         this.name = "Vanish";
-        this.description = "Dodge all attacks for 1 turn.";
         this.actionType = ActionType.DEFEND;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
+        this.description = "Dodge all attacks for "+magicNumber+" turn.";
     }
 
 

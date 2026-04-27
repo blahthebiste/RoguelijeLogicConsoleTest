@@ -4,13 +4,13 @@ public class EyeOfTheStorm : Action
     public EyeOfTheStorm()
     {
         this.name = "Eye of the Storm";
-        this.description = "Apply 8 Frost to ALL enemies. Can only be used if Chill is out of uses.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 8;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Apply "+magicNumber+" Frost to ALL enemies. Can only be used if Chill is out of uses.";
     }
 
     // This will apply 8 frost to the target. Will be run on each enemy.

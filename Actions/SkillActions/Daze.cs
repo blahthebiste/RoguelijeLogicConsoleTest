@@ -2,10 +2,10 @@ public class Daze : Action {
 
     public Daze() {
         this.name = "Daze";
-        this.description = "Stun an enemy that has not been Dazed.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.magicNumber = 1;
+        this.description = "Stun an enemy that has not been Dazed.";
     }
 
     public override bool CanTarget(Entity target) {

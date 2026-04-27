@@ -2,12 +2,12 @@ public class UseManaPotion : Action {
 
     public UseManaPotion() {
         this.name = "Use Mana Potion";
-        this.description = "Regain all other Spell uses.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Regain all other Spell uses.";
     }
 
     public override bool useOnce(Modifier? modifier) {

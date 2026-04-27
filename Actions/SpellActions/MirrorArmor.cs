@@ -4,7 +4,6 @@ public class MirrorArmor : Action
     public MirrorArmor()
     {
         this.name = "Mirror Armor";
-        this.description = "Gain +2 Toughness. Reflect attacks for 99 turn.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 2;
         this.magicNumber2 = 99;
@@ -12,6 +11,7 @@ public class MirrorArmor : Action
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Gain +"+magicNumber+" Toughness. Reflect attacks for "+magicNumber2+" turn.";
     }
 
 

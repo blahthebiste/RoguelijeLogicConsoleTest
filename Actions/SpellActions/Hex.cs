@@ -2,13 +2,13 @@ public class Hex : Action {
 
     public Hex() {
         this.name = "Hex";
-        this.description = "Apply 10 Curse.";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 10;
+        this.magicNumber = 8;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Apply "+magicNumber+" Curse.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

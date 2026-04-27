@@ -4,13 +4,13 @@ public class Forcefield : Action
     public Forcefield()
     {
         this.name = "Forcefield";
-        this.description = "Generate 25 Block.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 25;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Generate "+magicNumber+" Block.";
     }
 
 

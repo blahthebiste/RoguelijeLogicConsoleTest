@@ -2,9 +2,9 @@ public class Infected : Action {
 
     public Infected() {
         this.name = "Infected";
-        this.description = "On death, apply 3 Poison to the attacker.";
         this.actionType = ActionType.PASSIVE;
         this.magicNumber = 3;
+        this.description = "On death, apply "+this.magicNumber+" Poison to the attacker.";
     }
 
     public override Attack onReceiveAttack(Attack atk)

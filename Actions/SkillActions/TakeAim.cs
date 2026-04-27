@@ -2,10 +2,10 @@ public class TakeAim : Action {
 
     public TakeAim() {
         this.name = "Take Aim";
-        this.description = "Next attack deals double damage.";
         this.actionType = ActionType.SKILL;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
+        this.description = "Next attack deals double damage.";
     }
 
     public override bool useOnce(Modifier? modifier) {

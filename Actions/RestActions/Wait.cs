@@ -2,9 +2,9 @@ public class Wait : Action {
 
     public Wait() {
         this.name = "Wait";
-        this.description = "The King waits patiently for his Court to handle this.";
         this.actionType = ActionType.REST;
         this.targetting = TargetCategory.SELF;
+        this.description = "The King waits patiently for his Court to handle this.";
     }
 
     public override bool useOnce(Modifier? modifier) {

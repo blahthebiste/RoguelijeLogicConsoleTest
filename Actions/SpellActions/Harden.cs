@@ -2,13 +2,13 @@ public class Harden : Action {
 
     public Harden() {
         this.name = "Harden";
-        this.description = "Gain 1 Toughness.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Gain "+magicNumber+" Toughness.";
     }
 
     public override bool useOnce(Modifier? modifier) {

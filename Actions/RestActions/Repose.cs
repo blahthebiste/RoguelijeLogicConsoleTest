@@ -2,10 +2,10 @@ public class Repose : Action {
 
     public Repose() {
         this.name = "Repose";
-        this.description = "Recover 4 HP.";
         this.actionType = ActionType.REST;
         this.healing = 4;
         this.targetting = TargetCategory.SELF;
+        this.description = "Recover "+healing+" HP.";
     }
 
     public override bool useOnce(Modifier? modifier) {

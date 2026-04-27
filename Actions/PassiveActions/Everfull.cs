@@ -3,8 +3,8 @@ public class Everfull : Action {
     public Everfull()
     {
         this.name = "Everfull";
-        this.description = "Witch's spells have unlimited uses.";
         this.actionType = ActionType.PASSIVE;
+        this.description = "Witch's spells have unlimited uses.";
     }
 
     // Refill all spell uses for all allies (witch)

@@ -2,8 +2,8 @@ public class Royal : Action {
 
     public Royal() {
         this.name = "Royal";
-        this.description = "Cannot lose HP while the King's Court are alive.";
         this.actionType = ActionType.PASSIVE;
+        this.description = "Cannot lose HP while the King's Court are alive.";
     }
 
     // Prevent HP loss

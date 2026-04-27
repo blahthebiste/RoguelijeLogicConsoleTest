@@ -2,13 +2,13 @@ public class ConjureGuardian : Action {
 
     public ConjureGuardian() {
         this.name = "Conjure Guardian";
-        this.description = "Summon a Frost Knight. Cannot be used if Frost Knight is alive.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 0;
         this.maxUses = 1;
         this.targetting = TargetCategory.NONE;
+        this.description = "Summon a Frost Knight. Cannot be used if Frost Knight is alive.";
     }
 
     // Requires that there is not already a Frost Knight.

@@ -7,9 +7,9 @@ public class Duel : Action
     public Duel()
     {
         this.name = "Duel";
-        this.description = "Enters a duel with the next hero that acts, locking them into single combat.";
         this.actionType = ActionType.PASSIVE;
         lockedTarget = null;
+        this.description = "Enters a duel with the next hero that acts, locking them into single combat.";
     }
     
     // Triggered every time an enemy acts

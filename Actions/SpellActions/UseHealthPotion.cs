@@ -2,12 +2,12 @@ public class UseHealthPotion : Action {
 
     public UseHealthPotion() {
         this.name = "Use Health Potion";
-        this.description = "Recover full HP.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Recover full HP.";
     }
 
     public override bool useOnce(Modifier? modifier) {

@@ -3,10 +3,10 @@ public class Taunt : Action {
     public Taunt()
     {
         this.name = "Taunt";
-        this.description = "Forces enemies to target me instead of my allies.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SELF;
         this.magicNumber = 1;
+        this.description = "Forces enemies to target me instead of my allies.";
     }
 
 

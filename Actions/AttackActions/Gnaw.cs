@@ -2,11 +2,11 @@ public class Gnaw : Action {
 
     public Gnaw() {
         this.name = "Gnaw";
-        this.description = "Deal 3 damage. Apply 1 Bleed if not blocked.";
         this.actionType = ActionType.ATTACK;
         this.damage = 3;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage. Apply "+magicNumber+" Bleed if not blocked.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

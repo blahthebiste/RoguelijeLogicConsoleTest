@@ -2,7 +2,6 @@ public class RatKing : Action {
 
     public RatKing() {
         this.name = "Rat-King";
-        this.description = "Kill self. Give Giant Rat +7 HP and +1 Strength.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 7;
         this.magicNumber2 = 1;
@@ -10,6 +9,7 @@ public class RatKing : Action {
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ALLY;
+        this.description = "Kill self. Give Giant Rat +"+magicNumber+" HP and +"+magicNumber2+" Strength.";
     }
 
 

@@ -2,10 +2,10 @@ public class Jaws : Action {
 
     public Jaws() {
         this.name = "Jaws";
-        this.description = "Deal 16 damage.";
         this.actionType = ActionType.ATTACK;
         this.damage = 16;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+damage+" damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

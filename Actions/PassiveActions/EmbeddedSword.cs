@@ -3,8 +3,8 @@ public class EmbeddedSword : Action {
     public EmbeddedSword()
     {
         this.name = "Embedded Sword";
-        this.description = "The sword calls to you.";
         this.actionType = ActionType.PASSIVE;
+        this.description = "The sword calls to you.";
     }
 
     // Grant Excalibur (for this combat only)

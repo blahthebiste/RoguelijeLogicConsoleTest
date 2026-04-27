@@ -2,13 +2,13 @@ public class DeepFreeze : Action {
 
     public DeepFreeze() {
         this.name = "Deep Freeze";
-        this.description = "Apply 8 Frost to an enemy.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Apply "+magicNumber+" Frost to an enemy.";
     }
 
     // This will apply 8 frost to the target.

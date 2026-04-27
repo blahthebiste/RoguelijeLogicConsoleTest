@@ -2,13 +2,13 @@ public class ConjureBlade : Action {
 
     public ConjureBlade() {
         this.name = "Conjure Blade";
-        this.description = "Replace Strike with Twin Slash for 3 uses.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 3;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
+        this.description = "Replace Strike with Twin Slash for "+magicNumber+" uses.";
     }
 
     // Can only use if Strike is in action list.

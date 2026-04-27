@@ -2,13 +2,13 @@ public class ConjureDagger : Action {
 
     public ConjureDagger() {
         this.name = "Conjure Dagger";
-        this.description = "Summon 1 Mystical Dagger. Cannot be used if Mystical Dagger is alive.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.NONE;
+        this.description = "Summon "+magicNumber+" Mystical Dagger. Cannot be used if Mystical Dagger is alive.";
     }
 
     // Requires that there is not already a mystical dagger.

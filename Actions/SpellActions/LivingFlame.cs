@@ -2,7 +2,6 @@ public class LivingFlame : Action {
 
     public LivingFlame() {
         this.name = "Living Flame";
-        this.description = "Deal 3 damage to all enemies. Gain 1 Spell Power.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 3; // Base damage
         this.magicNumber2 = 1; // Spell power gain
@@ -10,6 +9,7 @@ public class LivingFlame : Action {
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Deal "+magicNumber+" damage to all enemies. Gain "+magicNumber2+" Spell Power.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

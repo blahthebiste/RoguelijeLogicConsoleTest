@@ -2,13 +2,13 @@ public class Corruption : Action {
 
     public Corruption() {
         this.name = "Corruption";
-        this.description = "Apply 3 Vulnerability to my master.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 3;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ALLY;
+        this.description = "Apply "+magicNumber+" Vulnerability to my master.";
     }
 
 

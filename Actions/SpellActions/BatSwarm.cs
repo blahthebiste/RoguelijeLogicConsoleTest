@@ -2,13 +2,13 @@ public class BatSwarm : Action {
 
     public BatSwarm() {
         this.name = "Bat Swarm";
-        this.description = "Summon 4 Bats.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 4;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.NONE;
+        this.description = "Summon "+magicNumber+" Bats.";
     }
 
     public override bool useOnce(Modifier? modifier)

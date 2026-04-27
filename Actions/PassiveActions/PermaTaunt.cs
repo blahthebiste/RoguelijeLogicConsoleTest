@@ -4,9 +4,9 @@ public class PermaTaunt : Action {
     public PermaTaunt()
     {
         this.name = "Perma-Taunt";
-        this.description = "Always Taunting.";
         this.actionType = ActionType.PASSIVE;
         tauntInstance = new Taunt();
+        this.description = "Always Taunting.";
     }
 
     public override void startOfRound()

@@ -2,12 +2,12 @@ public class RightfulHeir : Action {
 
     public RightfulHeir() {
         this.name = "Rightful Heir";
-        this.description = "Summon all 3 members of the King's Court to fight for you.";
         this.actionType = ActionType.SPELL;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.NONE;
+        this.description = "Summon all 3 members of the King's Court to fight for you.";
     }
 
     public override bool useOnce(Modifier? modifier)

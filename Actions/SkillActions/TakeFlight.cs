@@ -2,9 +2,9 @@ public class TakeFlight : Action {
 
     public TakeFlight() {
         this.name = "Take Flight";
-        this.description = "Start Flying.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SELF;
+        this.description = "Start Flying.";
     }
 
     public override bool useOnce(Modifier? modifier) {

@@ -2,10 +2,10 @@ public class Shift : Action {
 
     public Shift() {
         this.name = "Shift";
-        this.description = "Move 1 space up or down. Generate 3 Block.";
         this.actionType = ActionType.DEFEND;
         this.block = 3;
         this.targetting = TargetCategory.SELF;
+        this.description = "Move 1 space up or down. Generate "+block+" Block.";
     }
 
     public override bool useOnce(Modifier? modifier) {

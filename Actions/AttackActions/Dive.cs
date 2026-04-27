@@ -2,10 +2,10 @@ public class Dive : Action {
 
     public Dive() {
         this.name = "Dive";
-        this.description = "Deal 5 damage to ALL enemies. Stop flying.";
         this.actionType = ActionType.ATTACK;
         this.damage = 5;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Deal "+damage+" damage to ALL enemies. Stop flying.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

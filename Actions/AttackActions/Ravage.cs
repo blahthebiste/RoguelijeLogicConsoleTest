@@ -2,10 +2,10 @@ public class Ravage : Action {
 
     public Ravage() {
         this.name = "Ravage";
-        this.description = "Deal 4 damage to ALL enemies.";
         this.actionType = ActionType.ATTACK;
         this.damage = 4;
         this.targetting = TargetCategory.ALL_ENEMIES;
+        this.description = "Deal "+damage+" damage to ALL enemies.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

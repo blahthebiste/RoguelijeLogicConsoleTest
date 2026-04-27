@@ -4,9 +4,9 @@ public class OnGuard : Action {
     public OnGuard()
     {
         this.name = "On-Guard";
-        this.description = "Uses Parry before turn 1.";
         this.actionType = ActionType.PASSIVE;
         parryInstance = new Parry();
+        this.description = "Uses Parry before turn 1.";
     }
 
     public override void startOfCombat()

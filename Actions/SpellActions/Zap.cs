@@ -2,13 +2,13 @@ public class Zap : Action {
 
     public Zap() {
         this.name = "Zap";
-        this.description = "Deal 9 damage.";
         this.actionType = ActionType.SPELL;
         this.magicNumber = 9;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+magicNumber+" damage.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {

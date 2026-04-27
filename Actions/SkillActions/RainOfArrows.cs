@@ -2,10 +2,10 @@ public class RainOfArrows : Action {
 
     public RainOfArrows() {
         this.name = "Rain Of Arrows";
-        this.description = "Deal 3 damage to ALL enemies.";
         this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.ALL_ENEMIES;
         this.damage = 3;
+        this.description = "Deal "+damage+" damage to ALL enemies.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
