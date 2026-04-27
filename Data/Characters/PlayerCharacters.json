@@ -70,7 +70,7 @@
 	{
 		"Name": "Archer",
 		"Description": "Sets up the perfect shot",
-		"HP": 9,
+		"HP": 10,
 		"Level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [

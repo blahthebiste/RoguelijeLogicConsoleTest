@@ -6,10 +6,10 @@ public class Curse : StatusEffect
     {
         this.amount = amount;
         this.name = "Curse";
-        this.description = "Take this much damage after 3 turns.";
         this.owner = owner;
         this.isDebuff = true;
         countdown = 3;
+        this.description = "Take this much damage after "+countdown+" turns.";
     }
 
     // Count down at the start of every turn

@@ -61,7 +61,7 @@
 	{
 		"Name": "Witch",
 		"Description": "\"Ye'll be stew by dinnertime!\"",
-		"HP": 50,
+		"HP": 40,
 		"ActionList": [
 			"Hex",
 			"BatSwarm",

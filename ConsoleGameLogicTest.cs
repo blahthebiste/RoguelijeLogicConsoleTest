@@ -42,7 +42,7 @@ void commandLoop() {
                 zoneSelection();
                 break;
             case "party":
-                getPartyInfo();
+                getPartyInfo(); // Also shows the bench
                 break;
             case "recommended":
                 setDefaultParty();
@@ -128,6 +128,15 @@ void commandLoop() {
                 }
                 else {
                     attachModifier(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
+                }
+                break;
+            case "move":
+                if(cmd.ToLower().Trim().Split().Length < 3) {
+                    Console.WriteLine("Incorrect syntax -- requires <hero name> and <bench | party> arguments");
+                    continue;
+                }
+                else {
+                    moveHero(cmd.ToLower().Trim().Split()[1],cmd.ToLower().Trim().Split()[2]);
                 }
                 break;
             case "edit":
@@ -436,7 +445,6 @@ void getPartyInfo() {
     }
 }
 
-
 void printCharacterInfoFromName(string heroName) {
     foreach(PlayerCharacter hero in CurrentRun.Party) {
         if(heroName.ToLower() == hero.name.ToLower()) {
@@ -708,11 +716,11 @@ void printInventory() {
     foreach(Item item in CurrentRun.Inventory) {
         if (item is Modifier)
         {
-            Console.WriteLine("\t* [Card Modifier] "+item.ToString());
+            Console.WriteLine("\t* [Card Modifier]\t"+item.ToString());
         }
         else
         {
-            Console.WriteLine("\t*\t" + item.ToString());
+            Console.WriteLine("\t* [Equipment]\t" + item.ToString());
         }
     }
 }
@@ -1038,6 +1046,39 @@ void editMasterDeck() {
     }
 }
 
+// Used to move a hero either in or out of the party/bench.
+void moveHero(string heroName, string benchOrParty)
+{
+    if(benchOrParty.Trim().ToLower() == "bench")
+    {
+        foreach(PlayerCharacter hero in CurrentRun.Party) {
+            if(heroName.ToLower() == hero.name.ToLower()) {
+                Console.WriteLine("Moving "+hero.name+" to the Bench.");
+                CurrentRun.MoveToBench(hero);
+                return;
+            }
+        }
+        Console.WriteLine("Could not find hero of that name in the party.");
+        return;
+    }
+    else if(benchOrParty.Trim().ToLower() == "party")
+    {
+        foreach(PlayerCharacter hero in CurrentRun.Bench) {
+            if(heroName.ToLower() == hero.name.ToLower()) {
+                Console.WriteLine("Moving "+hero.name+" to the PArty.");
+                CurrentRun.MoveToParty(hero);
+                return;
+            }
+        }
+        Console.WriteLine("Could not find hero of that name on the bench.");
+        return;
+    }
+    else
+    {
+        Console.WriteLine("3rd argument must be either \"bench\" or \"party\"");
+        return;
+    }
+}
 
 // Compares two strings.
 // Ignores all whitespace and capitalization.

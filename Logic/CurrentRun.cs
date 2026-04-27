@@ -132,8 +132,6 @@ public static class CurrentRun
         {
             // There is room in the party; add them immediately
             Party.Add(newPartyMember);
-            // Add their action card to the master deck:
-            MasterDeck.Add(newPartyMember.personalCard);
             Console.WriteLine("DEBUG: added "+newPartyMember.name+" to party.");
         }
         else
@@ -154,12 +152,11 @@ public static class CurrentRun
                 // There is room in the party
                 Bench.Remove(partyMember);
                 Party.Add(partyMember);
-                // Add their action card to the master deck:
-                MasterDeck.Add(partyMember.personalCard);
             }
             else
             {
                 // print error; this should never happen
+                Console.WriteLine("ERROR: no room in party!");
             }
         }
         else
@@ -175,8 +172,6 @@ public static class CurrentRun
         {
             // They were in the party. Move them to the bench.
             Party.Remove(partyMember);
-            // Remove their action card from the master deck:
-            MasterDeck.Remove(partyMember.personalCard);
             Bench.Add(partyMember);
         }
         else
@@ -201,8 +196,6 @@ public static class CurrentRun
         {
             // They were in the party.
             Party.Remove(partyMember);
-            // Remove their action card from the master deck:
-            MasterDeck.Remove(partyMember.personalCard);
             Console.WriteLine("DEBUG: removed "+partyMember.name+" from party.");
         }
         else
