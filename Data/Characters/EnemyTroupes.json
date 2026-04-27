@@ -31,8 +31,6 @@
 		"Description": "An immortal agent of chaos, armed with brews and hexes.",
 		"Difficulty": 4,
 		"EnemyList": [
-			"Bat",
-			"Bat",
 			"Witch",
 			"Everfull Cauldron"
 		]

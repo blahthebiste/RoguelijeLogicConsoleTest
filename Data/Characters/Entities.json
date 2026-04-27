@@ -12,7 +12,6 @@
 		"Description": "A vicious denizen of The Blackwood, capable of vanishing into the shadows.",
 		"HP": 30,
 		"ActionList": [
-			"Tough",
 			"Bite",
 			"Vanish",
 			"Ravage",
@@ -41,7 +40,7 @@
 	},
 	{
 		"Name": "Conniving Cutpurse",
-		"Description": "\"I'll be taking that gold now.\"",
+		"Description": "\"I'll be taking those coins now.\"",
 		"HP": 7,
 		"ActionList": [
 			"Conniving",
