@@ -305,6 +305,8 @@ public static class DataRegistry {
                     return new Obstruct();
                 case "parry":
                     return new Parry();
+                case "shift":
+                    return new Shift();
                 case "skitter":
                     return new Skitter();
                 case "vanish":
@@ -325,8 +327,8 @@ public static class DataRegistry {
                     return new Duel();
                 case "embeddedsword":
                     return new EmbeddedSword();
-                case "environment":
-                    return new Environment();
+                case "inanimate":
+                    return new Inanimate();
                 case "everfull":
                     return new Everfull();
                 case "infected":
@@ -357,8 +359,6 @@ public static class DataRegistry {
                     return new Focus();
                 case "idle":
                     return new Idle();
-                case "nock":
-                    return new Nock();
                 case "prepareritual":
                     return new PrepareRitual();
                 case "recover":
@@ -393,10 +393,10 @@ public static class DataRegistry {
                     return new Grasp();
                 case "hook":
                     return new Hook();
+                case "nock":
+                    return new Nock();
                 case "rainofarrows":
                     return new RainOfArrows();
-                case "shift":
-                    return new Shift();
                 case "subtlepoison":
                     return new SubtlePoison();
                 case "takeaim":

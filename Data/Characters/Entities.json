@@ -172,7 +172,7 @@
 		"Name": "Icy Wind",
 		"Description": "The wind howls.",
 		"ActionList": [
-			"Environment",
+			"Inanimate",
 			"Chill",
 			"Idle"
 		]
@@ -181,7 +181,7 @@
 		"Name": "Arcane Blizzard",
 		"Description": "The ice whirls as if possessed.",
 		"ActionList": [
-			"Environment",
+			"Inanimate",
 			"Chill",
 			"Idle",
 			"EyeOfTheStorm"

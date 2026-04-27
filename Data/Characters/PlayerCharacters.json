@@ -75,9 +75,9 @@
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
 			"Loose",
-			"Cower",
-			"Nock",
 			"Shift",
+			"Rest",
+			"Nock",
 			"Favor"
 		],
 		"UpgradeList": [

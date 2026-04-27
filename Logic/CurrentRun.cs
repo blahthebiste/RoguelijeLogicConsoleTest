@@ -468,11 +468,6 @@ public static class CurrentRun
             // Add 8x scavenge Encounter
             EncounterPool.Add(new Scavenge());
         }
-        for (int i = 0; i < 3; i++)
-        {
-            // Add 3x Sanctuary Encounter
-            EncounterPool.Add(new Sanctuary());
-        }
         for (int i = 0; i < 2; i++)
         {
             // Add 2x duplicate Encounter
@@ -878,6 +873,8 @@ public static class CurrentRun
     public static void LoseLives(int numLives)
     {
         Lives -= numLives;
+        // Every time a player character dies, add a Sanctuary into the event pool.
+        EncounterPool.Add(new Sanctuary());
         if (Lives < 1)
         {
             // Game over, man!

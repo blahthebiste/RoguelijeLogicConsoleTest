@@ -411,10 +411,10 @@ public class Action : Events {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
-		// If the target is an environment, return false:
-        if (target.isEnvironment)
+		// If the target is an Inanimate, return false:
+        if (target.isInanimate)
         {
-            Console.WriteLine(target + " cannot be targeted, it is part of the environment.");
+            Console.WriteLine(target + " cannot be targeted, it is part of the Inanimate.");
             return false;
         }
 		switch (targetting)

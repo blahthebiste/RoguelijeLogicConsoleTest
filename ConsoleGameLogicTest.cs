@@ -483,7 +483,7 @@ void printEnemyInfoFromName(string enemyName) {
 
 void printEnemyInfo(Entity enemy) {
     Console.WriteLine(enemy.name);
-    if(!enemy.isEnvironment) Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
+    if(!enemy.isInanimate) Console.WriteLine("HP: "+enemy.currentHP+"/"+enemy.maxHP);
     Console.WriteLine("Actions:");
     foreach(Action action in enemy.ActionList) {
         if (action.hiddenAction)
@@ -626,7 +626,7 @@ void printCombatSituation() {
 string formatEntityInCombat(Entity ent)
 {
     string formattedString;
-    if (ent.isEnvironment)
+    if (ent.isInanimate)
     {   // If the entity is just an enviroment, do not display their HP:
         formattedString = ent.name;
     }
@@ -784,10 +784,10 @@ void playCard(string cmd) {
             Console.WriteLine("No target with the name " + actionTarget + " exists in this battle.");
             return;
         }
-        // If the target is an environment, error:
-        if (target.isEnvironment)
+        // If the target is an Inanimate, error:
+        if (target.isInanimate)
         {
-            Console.WriteLine("Cannot target " + actionTarget + ", it is part of the environment.");
+            Console.WriteLine("Cannot target " + actionTarget + ", it is part of the Inanimate.");
             return;
         }
     }

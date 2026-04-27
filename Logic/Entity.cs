@@ -23,7 +23,7 @@ public class Entity : Events
 
     public bool fleeing = false;
 
-    public bool isEnvironment = false;
+    public bool isInanimate = false;
 
     public Action idle = new Idle();
 
@@ -91,8 +91,8 @@ public class Entity : Events
     }
 
     public bool isAlive()
-    { // Environments are always considered dead
-        return !isEnvironment && currentHP > 0;
+    { // Inanimates are always considered dead
+        return !isInanimate && currentHP > 0;
     }
 
 
