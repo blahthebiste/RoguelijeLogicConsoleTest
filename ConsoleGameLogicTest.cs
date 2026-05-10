@@ -103,6 +103,15 @@ void commandLoop() {
             case "next":
                 nextNode();
                 break;
+            case "use":
+                if(cmd.ToLower().Trim().Split().Length < 2) {
+                    Console.WriteLine("Incorrect syntax -- requires <item> argument");
+                    continue;
+                }
+                else {
+                    CurrentRun.useItem(cmd.ToLower().Trim().Split()[1]);
+                }
+                break;
             case "equip":
                 if(cmd.ToLower().Trim().Split().Length < 3) {
                     Console.WriteLine("Incorrect syntax -- requires <item> and <hero> arguments");
@@ -714,14 +723,7 @@ void printDiscardPile() {
 void printInventory() {
     Console.WriteLine("Inventory ("+CurrentRun.Inventory.Count+" items):");
     foreach(Item item in CurrentRun.Inventory) {
-        if (item is Modifier)
-        {
-            Console.WriteLine("\t* [Card Modifier]\t"+item.ToString());
-        }
-        else
-        {
-            Console.WriteLine("\t* [Equipment]\t" + item.ToString());
-        }
+        Console.WriteLine("\t* ["+item.type+"]\t"+item.ToString());
     }
 }
 
@@ -876,13 +878,8 @@ void unequipItem(string itemName, string heroName) {
     else if(CurrentRun.InARun){
         // Non-combat version: free swapping for all heroes, bench or not
         // First, find the hero:
-        foreach(PlayerCharacter hero in CurrentRun.Party){
-            if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
-                heroToUnequip = hero;
-            }
-        }
-        // Also search the benched heroes:
-        foreach(PlayerCharacter hero in CurrentRun.Bench){
+        var AllHeroes = CurrentRun.Party.Concat(CurrentRun.Bench).ToList();
+        foreach(PlayerCharacter hero in AllHeroes){
             if(hero.name.ToLower().Trim() == heroName.ToLower().Trim()) {
                 heroToUnequip = hero;
             }
@@ -1079,17 +1076,6 @@ void moveHero(string heroName, string benchOrParty)
         return;
     }
 }
-
-// Compares two strings.
-// Ignores all whitespace and capitalization.
-/*
-static bool StringsMatchIgnoreWhitespaceLower(string str1, string str2) {
-    string strippedStr1 = string.Concat(str1.Split(null)); // Split on whitespace, then reform, to remove all whitespace
-    string strippedStr2 = string.Concat(str2.Split(null)); // Split on whitespace, then reform, to remove all whitespace
-    string loweredStr1 = strippedStr1.ToLower();
-    string loweredStr2 = strippedStr2.ToLower();
-    return loweredStr1 == loweredStr2;
-}*/
 
 
 Console.WriteLine("Exited Roguelije game logic test.");

@@ -7,11 +7,18 @@ public class EquipmentItem : Item {
     public bool temporary = false; // Temporary items are removed at the end of combat.
 
     public int? price; // A baseline price the item is usually sold for at shops
+
     public int tier;
     
     // These are only used for items that replace actions
     public Action? oldAction;
+
     int actionIndex = -1;
+
+    public EquipmentItem()
+    {
+        this.type = "Equipment";
+    }
 
         // Useful for printing what would be shown to the player
 	public override string ToString() {
@@ -93,7 +100,99 @@ public class EquipmentItem : Item {
         return false;
     }
 
-    
+
+    // Most equipment items should prompt the user to equip them on use.
+    public override void use()
+    {
+        PlayerCharacter? hero = null;
+        // Prompt for hero to upgrade:
+        while(true) {
+			Console.WriteLine("Choose a hero to equip "+this.name+" to`:");
+             // search for valid heroes among party members and bench:
+            int index = 0;
+            foreach(PlayerCharacter pc in CurrentRun.Party){
+                if(this.numberMatchingActions(pc) == 0)
+                {
+                    Console.WriteLine("DEBUG: "+pc.name+" has no matching actions.");    
+                    continue;
+                }
+                Console.WriteLine("["+(++index)+"] "+pc.name);
+            }
+			Console.Write("\n> ");
+            string? cmd = Console.ReadLine();
+            if(cmd == null) continue;
+            if(cmd.ToLower().Trim() == "exit" || cmd.ToLower().Trim() == "quit" || cmd.ToLower().Trim() == "cancel" || cmd.ToLower().Trim() == "back") {
+                Console.WriteLine("");
+                Console.WriteLine("Cancelling...");
+                return;
+            }
+            if(int.TryParse(cmd.ToLower().Trim(), out int n))
+            {
+                if(n <= index && n > 0) {
+                    // Valid hero selection.
+                    hero = CurrentRun.Party[n-1];
+                    Console.WriteLine("DEBUG: Selected "+hero.name+".");
+                    // Now select action to equip to:
+                    // search for valid actions:
+                    List<Action> validActions = new List<Action>();
+                    foreach(Action act in hero.ActionList){
+                        if(matchesActionType(act))
+                        {
+                            Console.WriteLine("DEBUG: Valid action found: "+act.name);
+                            validActions.Add(act);
+                        }                            
+                    }
+                    if(validActions.Count < 1)
+                    {
+                        Console.WriteLine("Hero "+hero.name+" has no valid actions of type "+slot);
+                        return;
+                    }
+                    if(validActions.Count == 1)
+                    {
+                        // Equip item
+                        Console.WriteLine("DEBUG: only 1 valid action found, auto-equipping: "+validActions[0].name);
+                        Equip(validActions[0]);
+                        return;
+                    }
+                    // Multiple valid options, prompt the player to choose 1:
+                    while(true)
+                    {
+                        Console.WriteLine("Choose an action to equip "+this.name+" to`:");
+                        int i = 0;
+                        for(; i < validActions.Count;)
+                        {
+                            Console.WriteLine("["+(++i)+"] "+validActions[i-1].name);    
+                        }
+                        Console.Write("\n> ");
+                        string? cmd2 = Console.ReadLine();
+                        if(cmd2 == null) continue;
+                        if(cmd2.ToLower().Trim() == "exit" || cmd2.ToLower().Trim() == "quit" || cmd2.ToLower().Trim() == "cancel") {
+                            Console.WriteLine("");
+                            Console.WriteLine("Cancelling...");
+                            return;
+                        }
+                        if(int.TryParse(cmd.ToLower().Trim(), out int actionSelection))
+                        {
+                            if(actionSelection <= i && actionSelection > 0)
+                            {
+                                // Equip item
+                                Equip(validActions[actionSelection-1]);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid number. Must be between 1-"+i+".");
+                                continue;
+                            }
+                        }
+                    }
+                }
+                else {
+                    Console.WriteLine("Invalid number. Must be between 1-"+index+".");
+                    continue;
+                }
+            }
+        }
+    }
     
     // Unequip this item from the specified action.
     // Boolean return code signifies whether the unequip attempt succeeded.
@@ -162,7 +261,7 @@ public class EquipmentItem : Item {
         if(slot == ActionType.ANY) {
             return true;
         }
-        if(type == slot && action.hasEquipmentSlot) {
+        if(type == slot) {
             return true;
         }
         // No need to check for DUAL; Actions can never be DUAL, only ActionCards

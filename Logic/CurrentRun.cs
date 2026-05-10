@@ -12,8 +12,8 @@ public static class CurrentRun
     public static int PartySize;
     public static int MinimumDeckSize;
     public static int DrawPerTurn;
-    public static List<PlayerCharacter> Party; // List of all characters currently in the party.
-    public static List<PlayerCharacter> Bench; // List of all characters NOT currently in the party.
+    public static List<PlayerCharacter> Party; // List of all player characters currently in the party.
+    public static List<PlayerCharacter> Bench; // List of all player characters NOT currently in the party.
     public static List<ActionCard> MasterDeck; // The current deck that the player starts each combat with.
     public static List<ActionCard> CardCollection; // The extra cards that the player collects throughout a run.
     //public static Dictionary<ActionType, > CardOrderDict; // Used for determining what order to show cards in
@@ -281,7 +281,7 @@ public static class CurrentRun
         }
     }
 
-    // Move a character from the bench to the party
+    // Move a card from the collection to the deck
     public static void MoveToMasterDeck(ActionCard card)
     {
         if (CardCollection.Contains(card))
@@ -771,12 +771,14 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        // Inventory.Add(new MasterSword());
-        // Inventory.Add(new ElderWand());
+        Inventory.Add(new MasterSword());
+        Inventory.Add(new ElderWand());
         // Inventory.Add(new ResurrectionStone());
         // Inventory.Add(new HeavyArmor());
         // Inventory.Add(new FortressShield());
-        // Inventory.Add(new AscensionBook1());
+        Inventory.Add(new AscensionBook1());
+        Inventory.Add(new AscensionBook1());
+        Inventory.Add(new AscensionBook1());
     }
 
     // Gets a random item from the specified tier (1-3).
@@ -897,6 +899,21 @@ public static class CurrentRun
         }
     }
 
+    // Uses an item. Works in combat as well.
+    public static void useItem(string itemName)
+    {
+        // Find the item:
+        foreach (Item item in Inventory)
+        {
+            if (item.name.ToLower().Trim().Replace(' ', '_') == itemName.ToLower().Trim() || item.name.ToLower().Trim() == itemName.ToLower().Trim())
+            {
+                // Equippable items will generally prompt the user to choose a hero to equip them to.
+                item.use();
+                return;
+            }
+        }
+    }
+
     // Attempts to equip the specified item to the hero.
     // If multiple action slots are valid options, prompts the user to choose.
     // Errors if the item or hero is not found, or if the hero is exhausted
@@ -945,15 +962,8 @@ public static class CurrentRun
         {
             // Non-combat version: free swapping for all heroes, bench or not
             // First, find the hero:
-            foreach (PlayerCharacter hero in Party)
-            {
-                if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
-                {
-                    heroToEquip = hero;
-                }
-            }
-            // Also search the benched heroes:
-            foreach (PlayerCharacter hero in Bench)
+            var AllHeroes = Party.Concat(Bench).ToList();
+            foreach (PlayerCharacter hero in AllHeroes)
             {
                 if (hero.name.ToLower().Trim() == heroName.ToLower().Trim())
                 {

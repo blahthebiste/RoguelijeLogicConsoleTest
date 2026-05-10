@@ -6,11 +6,12 @@ public class ChaosTome : Item {
     public ChaosTome(int completedZones) {
         this.name = "CHAOS TOME";
         this.description = "The knowledge stored within this tome is incomprehensible to your mortal mind. However, it seems more than capable of comprehending you.";
+        this.type = "Tome";
         this.completedZones = completedZones;
     }
 
     // Consumes the tome; applies the upgrade to the run
-    public void use() {
+    public override void use() {
         switch(completedZones) {
             case 0:
                 // Increase level cap from 1 to 2
