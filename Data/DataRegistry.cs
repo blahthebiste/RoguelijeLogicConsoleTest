@@ -240,6 +240,8 @@ public static class DataRegistry {
                 // Personal cards
                 case "engage":
                     return new Engage();
+                case "sword n' board":
+                    return new SwordnBoard();
                 default:
                     Console.WriteLine("ERROR: no card registered under the name "+cardName);
                     return null;
@@ -297,6 +299,8 @@ public static class DataRegistry {
                 //==========DEFENDS==========
                 case "block":
                     return new Block();
+                case "counter":
+                    return new Counter();
                 case "cower":
                     return new Cower();
                 case "dodge":
@@ -383,8 +387,6 @@ public static class DataRegistry {
                     return new Climb();
                 case "connive":
                     return new Connive();
-                case "counter":
-                    return new Counter();
                 case "daze":
                     return new Daze();
                 case "devour":

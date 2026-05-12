@@ -30,7 +30,7 @@
 			"Harden"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			"Knight"
 		]
 	},
 	{
@@ -113,6 +113,23 @@
 			"Parry",
 			"Inflame",
 			"Repose"
+		],
+		"UpgradeList": [
+			"Swordsman"
+		]
+	},
+	{
+		"Name": "Knight",
+		"Description": "The gold standard for armored defenders",
+		"HP": 15,
+		"Level":2,
+		"PersonalCard": "Sword n' Board",
+		"ActionList": [
+			"Strike",
+			"Block",
+			"Counter",
+			"Rest",
+			"Taunt"
 		],
 		"UpgradeList": [
 			"Swordsman"

@@ -2,7 +2,7 @@ public class Counter : Action {
 
     public Counter() {
         this.name = "Counter";
-        this.actionType = ActionType.SKILL;
+        this.actionType = ActionType.DEFEND;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
         this.description = "Strike all enemies who attack you this turn.";
