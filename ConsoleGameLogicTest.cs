@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Reflection.Metadata;
+
 Console.WriteLine("Initializing console test program for Roguelije game logic...");
 
 string? cmd;
@@ -64,7 +66,7 @@ void commandLoop() {
                     continue;
                 }
                 else {
-                    printCharacterInfoFromName(cmd.ToLower().Trim().Split()[1]);
+                    printCharacterInfoFromNameOrIndex(cmd.ToLower().Trim().Split()[1]);
                 }
                 break;
             case "enemy":
@@ -73,7 +75,7 @@ void commandLoop() {
                     continue;
                 }
                 else {
-                    printEnemyInfoFromName(cmd.ToLower().Trim().Split()[1]);
+                    printEnemyInfoFromNameOrIndex(cmd.ToLower().Trim().Split()[1]);
                 }
                 break;
             case "hand":
@@ -454,17 +456,22 @@ void getPartyInfo() {
     }
 }
 
-void printCharacterInfoFromName(string heroName) {
-    foreach(PlayerCharacter hero in CurrentRun.Party) {
-        if(heroName.ToLower() == hero.name.ToLower()) {
-            printCharacterInfo(hero);
-            return;
-        }
+void printCharacterInfoFromNameOrIndex(string heroNameOrIndex) {
+    Entity? hero = parseHeroFromNameOrIndex(heroNameOrIndex);
+    if(hero != null)
+    {
+        printCharacterInfo(hero);
+        return;
     }
     Console.WriteLine("Could not find hero of that name.");
 }
 
-void printCharacterInfo(PlayerCharacter character) {
+void printCharacterInfo(Entity character) {
+    if(character is not PlayerCharacter)
+    {
+        Console.WriteLine("ERROR: "+character.name+" is not a player character!");
+        return;
+    }
     Console.WriteLine(character.name);
     Console.WriteLine("HP: "+character.currentHP+"/"+character.maxHP);
     Console.WriteLine("Actions:");
@@ -485,15 +492,16 @@ void printCharacterInfo(PlayerCharacter character) {
             Console.WriteLine("\t"+effect.ToString());
         }
     }
-    Console.WriteLine("Personal Card: "+character.personalCard);
+    PlayerCharacter hero = (PlayerCharacter)character;
+    Console.WriteLine("Personal Card: "+hero.personalCard);
 }
 
-void printEnemyInfoFromName(string enemyName) {
-    foreach(Entity enemy in Battlefield.EnemySide) {
-        if(enemyName.ToLower().Replace('_',' ') == enemy.name.ToLower()) {
-            printEnemyInfo(enemy);
-            return;
-        }
+void printEnemyInfoFromNameOrIndex(string enemyNameOrIndex) {
+    Entity? enemy = parseEnemyFromNameOrIndex(enemyNameOrIndex);
+    if(enemy != null)
+    {
+        printEnemyInfo(enemy);
+        return;
     }
     Console.WriteLine("Could not find enemy of that name.");
 }
@@ -727,46 +735,60 @@ void printInventory() {
     }
 }
 
-// The first element of the command is guaranteed to be an integer 10 or lower.
+// The first element of the command is guaranteed to be an integer between 0 and hand-count.
 // Need to parse the second element to determine who is using the card action.
 void playCard(string cmd) {
     if(cmd.ToLower().Trim().Split().Length < 2) {
-        Console.WriteLine("You must include the name of hero that you want to use this action as an argument.");
+        Console.WriteLine("ERROR: You must include the name or index of the hero who will use this action as an argument.");
         Console.WriteLine("Example:    > 2 fighter pengoon");
         return;
     }
-    string whoIsUsingTheAction = cmd.ToLower().Trim().Split()[1];
     Entity? target = null;
-    string? actionTarget;
-    // If the command included a third argument, that is the players intended target for this action.
+
+    // Get card from arg[0]
+    int cardNumber; // The index in the hand where the card is; 1-indexed
+    int.TryParse(cmd.ToLower().Trim().Split()[0], out cardNumber); // No need to check, this is only run if arg 1 is a valid card index
+    ActionCard selectedCard = CardManager.Hand[cardNumber - 1];
+
+    // Get action user from arg[1]
+    string whoIsUsingTheAction = cmd.ToLower().Trim().Split()[1];
+    Entity? heroUsingAction = parseHeroFromNameOrIndex(whoIsUsingTheAction);
+    if(heroUsingAction == null)
+    {
+        // If we got here, no hero matched.
+        Console.WriteLine("No hero with the name "+whoIsUsingTheAction+" exists in this battle.");
+        return;
+    }
+
+    // Got hero who is using the action. Now get the action itself:
+    Action? actionToUse = getAction(selectedCard, heroUsingAction);
+    if(actionToUse == null)
+    {
+        Console.WriteLine("Cancelling card use.");
+        return;
+    }
+
+    // Get action target from arg[2], if it was included.
+    // This arg is optional; many actions do not require specifying a target.
+    // We know the action targetting rules, and can use them to deduce the intended target from an index.
+    // In fact, if the action does not require a target, we can error out immediately if the player tried to supply one.
     if (cmd.ToLower().Trim().Split().Length > 2)
     {
-        actionTarget = cmd.Split()[2].ToLower().Trim().Replace('_', ' ');
-        foreach (PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>())
+        if(!actionToUse.requiresTarget())
         {
-            // Check if target is here, if we were given one.
-            if (hero.name.ToLower().Trim() == actionTarget)
-            {
-                target = hero;
-                break;
-            }
+            Console.WriteLine("ERROR: This action does not require a target.");
+            Console.WriteLine("Example:    > 3 defender");
+            return;
         }
-        if (target == null) // If the target is still null, check enemies
+        // If arg[2] is an int, just use index based targetting
+        if(int.TryParse(cmd.Split()[2].ToLower().Trim(), out int targetIndex))
         {
-            foreach (Entity enemy in Battlefield.EnemySide)
-            {
-                // Check if target is here, if we were given one.
-                if (enemy.name.ToLower().Trim() == actionTarget)
-                {
-                    target = enemy;
-                    break;
-                }
-            }
+            target = deduceActionTargetFromIndex(actionToUse, targetIndex);
         }
-        if (target == null) // If the target is still null, check dead heroes
-        {
-            // Check dead entities, just in case:
-            foreach (Entity hero in Battlefield.DeadHeroes)
+        else // arg[2] is not an int. Search for the target by name.
+        { // We search the player side, enemy side, and dead combatants by name.
+            string actionTarget = cmd.ToLower().Trim().Split()[2].Replace('_',' ');
+            foreach (PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>())
             {
                 // Check if target is here, if we were given one.
                 if (hero.name.ToLower().Trim() == actionTarget)
@@ -775,82 +797,345 @@ void playCard(string cmd) {
                     break;
                 }
             }
-        }
-        if (target == null) // If the target is still null, check dead enemies
-        {
-            foreach (Entity enemy in Battlefield.DeadEnemies)
+            if (target == null) // If the target is still null, check enemies
             {
-                // Check if target is here, if we were given one.
-                if (enemy.name.ToLower().Trim() == actionTarget)
+                foreach (Entity enemy in Battlefield.EnemySide)
                 {
-                    target = enemy;
-                    break;
+                    // Check if target is here, if we were given one.
+                    if (enemy.name.ToLower().Trim() == actionTarget)
+                    {
+                        target = enemy;
+                        break;
+                    }
                 }
             }
-        }
-        // If the target is still null, error:
-        if (target == null)
-        {
-            Console.WriteLine("No target with the name " + actionTarget + " exists in this battle.");
-            return;
-        }
-        // If the target is an Inanimate, error:
-        if (target.isInanimate)
-        {
-            Console.WriteLine("Cannot target " + actionTarget + ", it is part of the Inanimate.");
-            return;
-        }
-    }
-    int cardNumber; // The index in the hand where the card is; 1-indexed
-    int.TryParse(cmd.ToLower().Trim().Split()[0], out cardNumber); // No need to check, this is only run if arg 1 is an int
-    foreach(PlayerCharacter hero in Battlefield.PlayerSide.OfType<PlayerCharacter>()){
-        if(hero.name.ToLower().Trim() == whoIsUsingTheAction) {
-            ActionCard selectedCard = CardManager.Hand[cardNumber - 1];
-    
-            // Found the hero who should use the action.
-            int numMatchingActions = selectedCard.numberMatchingActions(hero);
-            // If the hero has no matching actions, print an error:
-            if(numMatchingActions == 0) {
-                Console.WriteLine("Card '"+selectedCard.name+"' cannot be used by "+hero.name+".");
+            if (target == null) // If the target is still null, check dead heroes
+            {
+                // Check dead entities, just in case:
+                foreach (Entity hero in Battlefield.DeadHeroes)
+                {
+                    // Check if target is here, if we were given one.
+                    if (hero.name.ToLower().Trim() == actionTarget)
+                    {
+                        target = hero;
+                        break;
+                    }
+                }
+            }
+            if (target == null) // If the target is still null, check dead enemies
+            {
+                foreach (Entity enemy in Battlefield.DeadEnemies)
+                {
+                    // Check if target is here, if we were given one.
+                    if (enemy.name.ToLower().Trim() == actionTarget)
+                    {
+                        target = enemy;
+                        break;
+                    }
+                }
+            }
+            // If the target is still null, error:
+            if (target == null)
+            {
+                Console.WriteLine("No target with the name " + actionTarget + " exists in this battle.");
                 return;
             }
-            // If the hero has multiple matching actions, prompt the player to choose one:
-            if(numMatchingActions > 1) {
-                Console.WriteLine(hero.name+" has multiple actions that this card can have them perform.");
-                Console.WriteLine("Select one from the following by entering its number, or type something else to go back:");
+            // If the target is an Inanimate, error:
+            if (target.isInanimate)
+            {
+                Console.WriteLine("Cannot target " + actionTarget + ", it is Inanimate.");
+                return;
+            }   
+        }
+    }   
+    // Time to use the action.
+    if(actionToUse.requiresTarget() && target == null)
+    {
+        Console.WriteLine("ERROR: You must include the name or index of the target of this action as the last argument.");
+        Console.WriteLine("Example:    > 2 fighter pengoon");
+        return;
+    }
+    else // Finally, a valid action use.
+    {
+        if(actionToUse.use(target, selectedCard.modifier))
+        {
+            // If the action was successful, move the played card to the discard pile
+            CardManager.discardCard(selectedCard);
+        }
+    }
+}
+
+// Returns null if nameOrIndex does not match a valid target.
+// We expect that nameOrIndex has already been sanitzed before being passed in.
+Entity? parseHeroFromNameOrIndex(string nameOrIndex)
+{
+    // First, try to parse an integer from the nameOrIndex argument:
+    if(int.TryParse(nameOrIndex, out int targetIndex))
+    {
+        if(targetIndex > 0 && targetIndex <= Battlefield.PlayerSide.Count)
+        {
+            return Battlefield.PlayerSide[targetIndex-1];
+        }
+        else
+        {
+            // invalid index.
+            Console.WriteLine("Player index must be between 1-"+Battlefield.PlayerSide.Count); // TODO: non player friendlies?
+            return null;
+        }
+    }
+    else // If nameOrIndex is not an int, search hero names:
+    {
+        foreach(Entity hero in Battlefield.PlayerSide){
+            if(hero.name.ToLower().Trim() == nameOrIndex) {
+                return hero;
+            }
+        }
+    }
+    Console.WriteLine("No match found for '"+nameOrIndex+"' in hero side.");
+    return null;
+}
+
+// Returns null if nameOrIndex does not match a valid target.
+// We expect that nameOrIndex has already been sanitized before being passed in.
+Entity? parseEnemyFromNameOrIndex(string nameOrIndex)
+{
+     // Looking at enemy list
+    // First, try to parse an integer from the nameOrIndex argument:
+    if(int.TryParse(nameOrIndex, out int targetIndex))
+    {
+        if(targetIndex > 0 && targetIndex <= Battlefield.EnemySide.Count)
+        {
+            return Battlefield.EnemySide[targetIndex-1];
+        }
+        else
+        {
+            // invalid index.
+            Console.WriteLine("Enemy index must be between 1-"+Battlefield.EnemySide.Count);
+            return null;
+        }
+    }
+    else // If nameOrIndex is not an int, search enemy names:
+    {
+        foreach(Entity enemy in Battlefield.EnemySide){
+            if(enemy.name.ToLower().Trim() == nameOrIndex.Replace('_',' ')) {
+                return enemy;
+            }
+        }
+    }
+    Console.WriteLine("No match found for '"+nameOrIndex+"' in enemy side.");
+    return null;
+}
+
+
+// Helper function to get the action about to be used by a hero + card.
+// Returns null if no valid action was found.
+Action? getAction(ActionCard selectedCard, Entity hero)
+{
+    int numMatchingActions = selectedCard.numberMatchingActions(hero);
+    // If the hero has no matching actions, print an error:
+    if(numMatchingActions == 0) {
+        Console.WriteLine("Card '"+selectedCard.name+"' cannot be used by "+hero.name+".");
+        return null;
+    }
+    // If the hero has multiple matching actions, prompt the player to choose one:
+    if(numMatchingActions > 1) {
+        Console.WriteLine(hero.name+" has multiple actions that this card can have them perform.");
+        Console.WriteLine("Select one from the following by entering its number, or type something else to go back:");
+        Console.WriteLine("");
+        List<Action> matchingActions = new List<Action>();
+        // Find all matching actions from the hero's action list:
+        foreach(Action action in hero.ActionList) {
+            if(selectedCard.actionCanBeUsed(action)) {
+                matchingActions.Add(action);
+            }
+        }
+        // Print them out and await selection:
+        for(int i = 0; i < matchingActions.Count; i++) {
+            Console.Write("["+(i+1)+" - "+matchingActions[i].name+"]\t");
+        }
+        Console.Write("\n> ");
+        string? cmd2 = Console.ReadLine();
+        if(cmd2 == null) return null;
+        if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
+            // If they entered a valid number for action selection, return it:
+            if(actionSelection <= matchingActions.Count && actionSelection > 0) {
+                return matchingActions[actionSelection - 1];
+            }
+        }
+        // No valid action selection.
+        return null;
+    }
+    // If the hero has exactly 1 matching action, return it:
+    if(numMatchingActions == 1) {
+        return selectedCard.autoSelectAction(hero)!;
+    }
+    // numMatchingActions is negative, should never happen.
+    if(numMatchingActions < 0)
+    {
+        Console.WriteLine("ERROR: negative matching actions!");
+        return null;
+    }
+    Console.WriteLine("ERROR: WTF is even happening here... Super impossible");
+    return null;
+}
+
+
+// Figure out who the player is trying to target based on the index and action targetting.
+Entity? deduceActionTargetFromIndex(Action actionToUse, int targetIndex) {
+    switch(actionToUse.targetting)
+    {
+        case TargetCategory.NONE:
+        case TargetCategory.SELF:
+        case TargetCategory.ALL_ENEMIES:
+        case TargetCategory.ALL_ALLIES:
+        case TargetCategory.EVERYONE:
+        case TargetCategory.OPPOSING:
+            // In these cases, the player should not have included a target, since the action selects a target automatically.
+            // We could error out, or we could ignore their selection. Lets error out to avoid confusion.
+            Console.WriteLine("ERROR: Action does not require a target.");
+            return null;
+        case TargetCategory.SINGLE_ENEMY:
+            if(targetIndex > 0 && targetIndex <= Battlefield.EnemySide.Count) // Check if index is valid for this group
+            {
+                return Battlefield.EnemySide[targetIndex-1]; // Valid target
+            }
+            else {
+                // invalid index.
+                Console.WriteLine("Enemy index must be between 1-"+Battlefield.EnemySide.Count);
+                return null;
+            }
+        case TargetCategory.DEAD_ENEMY:
+            if(targetIndex > 0 && targetIndex <= Battlefield.DeadEnemies.Count) // Check if index is valid for this group
+            {
+                return Battlefield.DeadEnemies[targetIndex-1]; // Valid target
+            }
+            else {
+                // invalid index.
+                Console.WriteLine("Dead enemy index must be between 1-"+Battlefield.DeadEnemies.Count);
+                return null;
+            }
+        case TargetCategory.SINGLE_ALLY:
+            if(targetIndex > 0 && targetIndex <= Battlefield.PlayerSide.Count) // Check if index is valid for this group
+            {
+                return Battlefield.PlayerSide[targetIndex-1]; // Valid target
+            }
+            else {
+                // invalid index.
+                Console.WriteLine("Hero index must be between 1-"+Battlefield.PlayerSide.Count);
+                return null;
+            }
+        case TargetCategory.DEAD_ALLY:
+            if(targetIndex > 0 && targetIndex <= Battlefield.DeadHeroes.Count) // Check if index is valid for this group
+            {
+                return Battlefield.DeadHeroes[targetIndex-1]; // Valid target
+            }
+            else {
+                // invalid index.
+                Console.WriteLine("Dead hero index must be between 1-"+Battlefield.DeadHeroes.Count);
+                return null;
+            }
+        case TargetCategory.SINGLE_ANY:
+            // Check if index is only valid for 1 side. If not, prompt the player to specify their target.
+            bool indexValidForPlayerSide = false;
+            bool indexValidForEnemySide = false;
+            if(targetIndex > 0 && targetIndex <= Battlefield.PlayerSide.Count) // Check if index is valid for this group
+            { // Valid for Heroes.
+                indexValidForPlayerSide = true;
+            }
+            if(targetIndex > 0 && targetIndex <= Battlefield.EnemySide.Count) // Check if index is valid for this group
+            { // Valid for Enemies.
+                indexValidForEnemySide = true;
+            }
+            // If both are valid, prompt player to choose target
+            if(indexValidForEnemySide && indexValidForPlayerSide)
+            {
+                Console.WriteLine("Which character did you intend to target with "+actionToUse.name+"?");
+                Console.WriteLine("Select one from the following by entering its number, or type something else to cancel:");
                 Console.WriteLine("");
-                List<Action> matchingActions = new List<Action>();
-                // Find all matching actions from the hero's action list:
-                foreach(Action action in hero.ActionList) {
-                    if(selectedCard.actionCanBeUsed(action)) {
-                        matchingActions.Add(action);
-                    }
-                }
                 // Print them out and await selection:
-                for(int i = 0; i < matchingActions.Count; i++) {
-                    Console.Write("["+(i+1)+" - "+matchingActions[i].name+"]\t");
-                }
-                Console.Write("\n> ");
+                Console.WriteLine("[1 - "+Battlefield.PlayerSide[targetIndex].name+"]\t[2 - "+Battlefield.EnemySide[targetIndex].name+"]");
                 string? cmd2 = Console.ReadLine();
-                if(cmd2 == null) return;
-                if(int.TryParse(cmd2.ToLower().Trim(), out int actionSelection)) {
-                    // If they entered a valid number for action selection, perform the action:
-                    if(actionSelection <= matchingActions.Count && actionSelection > 0) {
-                        selectedCard.use(hero, target, matchingActions[actionSelection - 1]);
+                if(cmd2 == null) return null;
+                if(int.TryParse(cmd2.ToLower().Trim(), out int targetSelection)) {
+                    // If they entered a valid number for target selection, return that entity
+                    if(targetSelection == 1) {
+                        return Battlefield.PlayerSide[targetIndex];
+                    }
+                    if(targetSelection == 2) {
+                        return Battlefield.EnemySide[targetIndex];
                     }
                 }
-                // Return afterwards regardless.
-                return;
+                // No valid action selection.
+                return null;
             }
-            // If the hero has exactly 1 matching action, use it:
-            if(numMatchingActions == 1) {
-                selectedCard.use(hero, target);
+            // If only 1 is valid, use it
+            else if(indexValidForPlayerSide)
+            {
+                return Battlefield.PlayerSide[targetIndex];
             }
-            return;
-        }
+            else if(indexValidForEnemySide)
+            {
+                return Battlefield.EnemySide[targetIndex];
+            }
+            else // At this point, neither are valid
+            {
+                // invalid index.
+                Console.WriteLine("No hero or enemy found at index "+targetIndex);
+                return null;
+            }
+        case TargetCategory.DEAD_ANY:
+            // Check if index is only valid for 1 side. If not, prompt the player to specify their target.
+            bool indexValidForDeadHeroes = false;
+            bool indexValidForDeadEnemies = false;
+            if(targetIndex > 0 && targetIndex <= Battlefield.DeadHeroes.Count) // Check if index is valid for this group
+            { // Valid for DeadHeroes.
+                indexValidForDeadHeroes = true;
+            }
+            if(targetIndex > 0 && targetIndex <= Battlefield.DeadEnemies.Count) // Check if index is valid for this group
+            { // Valid for DeadEnemies.
+                indexValidForDeadEnemies = true;
+            }
+            // If both are valid, prompt player to choose target
+            if(indexValidForDeadEnemies && indexValidForDeadHeroes)
+            {
+                Console.WriteLine("Which character did you intend to target with "+actionToUse.name+"?");
+                Console.WriteLine("Select one from the following by entering its number, or type something else to cancel:");
+                Console.WriteLine("");
+                // Print them out and await selection:
+                Console.WriteLine("[1 - "+Battlefield.DeadHeroes[targetIndex].name+"]\t[2 - "+Battlefield.DeadEnemies[targetIndex].name+"]");
+                string? cmd2 = Console.ReadLine();
+                if(cmd2 == null) return null;
+                if(int.TryParse(cmd2.ToLower().Trim(), out int targetSelection)) {
+                    // If they entered a valid number for target selection, return that entity
+                    if(targetSelection == 1) {
+                        return Battlefield.DeadHeroes[targetIndex];
+                    }
+                    if(targetSelection == 2) {
+                        return Battlefield.DeadEnemies[targetIndex];
+                    }
+                }
+                // No valid action selection.
+                return null;
+            }
+            // If only 1 is valid, use it
+            else if(indexValidForDeadHeroes)
+            {
+                return Battlefield.DeadHeroes[targetIndex];
+            }
+            else if(indexValidForDeadEnemies)
+            {
+                return Battlefield.DeadEnemies[targetIndex];
+            }
+            else // At this point, neither are valid
+            {
+                // invalid index.
+                Console.WriteLine("No dead hero or enemy found at index "+targetIndex);
+                return null;
+            }
+        default:
+            Console.WriteLine("ERROR: Action has invalid targetting!");
+            return null;
     }
-    // If we got here, no hero matched.
-    Console.WriteLine("No hero with the name "+whoIsUsingTheAction+" exists in this battle.");
 }
 
 // Attempts to unequip the specified item from the hero.

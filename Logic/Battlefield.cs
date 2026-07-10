@@ -55,7 +55,6 @@ public static class Battlefield
             enemy.startOfCombat();
         }
         turnNumber = 1;
-        Console.WriteLine("Beginning of turn " + turnNumber);
         startRound();
     }
 

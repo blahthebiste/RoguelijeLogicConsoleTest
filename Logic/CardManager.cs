@@ -57,11 +57,11 @@ public static class CardManager {
 		// Search the current draw pile first
 		foreach(ActionCard card in DrawPile)
 		{
-			if(card.actionType == ActionType.ATTACK)
+			if(card.actionType == cardType)
 			{
 				Hand.Add(card);
 				DrawPile.Remove(card);
-				Console.WriteLine("DEBUG: Added "+card.name+" to the hand.");
+				Console.WriteLine("DEBUG: Drew "+card.name+".");
 				return;
 			}
 		}
@@ -69,7 +69,7 @@ public static class CardManager {
 		bool foundMatchInDiscardPile = false;
 		foreach(ActionCard card in DiscardPile)
 		{
-			if(card.actionType == ActionType.ATTACK)
+			if(card.actionType == cardType)
 			{
 				foundMatchInDiscardPile = true;
 				Console.WriteLine("DEBUG: Found matching card, "+card.name+", in discard pile. Reshuffling.");

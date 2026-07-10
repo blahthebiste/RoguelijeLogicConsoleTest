@@ -3,6 +3,11 @@ public class Modifier : Item {
     public int damageMod = 0;
     public int blockMod = 0;
     public int healMod = 0;
+    
+    public Modifier()
+    {
+        this.type = "Modifier";
+    }
 
     public override string ToString()
     {

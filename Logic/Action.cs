@@ -528,9 +528,9 @@ public class Action : Events {
 		}
 	}
 
-	// All target categories require a target to operate on except for single_ally, single_enemy, or single_any. Wait, what?
+	// Some target categories require a target to operate on.
     public bool requiresTarget() {
-        return targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY || targetting == TargetCategory.SINGLE_ANY;
+        return targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY || targetting == TargetCategory.SINGLE_ANY || targetting == TargetCategory.DEAD_ALLY || targetting == TargetCategory.DEAD_ENEMY || targetting == TargetCategory.DEAD_ANY;
     }
 
 	// Helper
