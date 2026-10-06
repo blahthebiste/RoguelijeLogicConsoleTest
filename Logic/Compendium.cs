@@ -41,9 +41,9 @@ public static class Compendium
             DualCards.Add(new DualSpellRest());
 
             // Movement cards
-            MovementCards.Add(new Leap());
-            MovementCards.Add(new Crouch());
-            MovementCards.Add(new Strafe());
+            MovementCards.Add(new LeapCard());
+            MovementCards.Add(new CrouchCard());
+            MovementCards.Add(new ShiftCard());
 
             // Ailment cards
             AilmentCards.Add(new Wound());

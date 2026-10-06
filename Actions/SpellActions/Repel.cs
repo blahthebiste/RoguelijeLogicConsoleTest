@@ -32,6 +32,12 @@ public class Repel : Action
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
+        if (owner!.HasStatusEffect("Surging"))
+        {
+            StatusEffect charge = owner.GetStatusEffect("Surging")!;
+            power *= 2;
+            charge.Decrease(1);
+        }
         if(modifier != null) power += modifier.blockMod;
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
         Console.WriteLine("Generated " + power + " Block.");

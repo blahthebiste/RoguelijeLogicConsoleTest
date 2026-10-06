@@ -41,7 +41,7 @@ public class SummonedMinion : Action {
         }
         // Could not find master, disappear!
         Console.WriteLine(this.owner.name + "'s master is gone!");
-        this.owner.die();
+        this.owner.flee();
         return;
     }
 }

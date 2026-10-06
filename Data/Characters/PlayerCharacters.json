@@ -47,7 +47,7 @@
 			"Restore"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			
 		]
 	},
 	{
@@ -64,7 +64,7 @@
 			"Zap"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			"Channeler"
 		]
 	},
 	{
@@ -75,13 +75,13 @@
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
 			"Loose",
-			"Shift",
-			"Rest",
+			"Cower",
 			"Nock",
+			"Shift",
 			"Favor"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			
 		]
 	},
 	{
@@ -98,7 +98,7 @@
 			"Pickpocket"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			
 		]
 	},
 	{
@@ -115,7 +115,7 @@
 			"Repose"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			
 		]
 	},
 	{
@@ -132,7 +132,24 @@
 			"Taunt"
 		],
 		"UpgradeList": [
-			"Swordsman"
+			
+		]
+	},
+	{
+		"Name": "Channeler",
+		"Description": "Charges up massive lightning storms.",
+		"HP": 99,
+		"Level":2,
+		"PersonalCard": "Channel",
+		"ActionList": [
+			"Whack",
+			"Repose",
+			"Charge",
+			"Lightning",
+			"Surge"
+		],
+		"UpgradeList": [
+			
 		]
 	}
 ]

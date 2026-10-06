@@ -2,10 +2,10 @@ public class Shift : Action {
 
     public Shift() {
         this.name = "Shift";
-        this.actionType = ActionType.DEFEND;
-        this.block = 3;
+        this.actionType = ActionType.SKILL;
         this.targetting = TargetCategory.SELF;
-        this.description = "Move 1 space up or down. Generate "+block+" Block.";
+        this.description = "Move up or down 1 space (free action).";
+        this.freeAction = true;
     }
 
     public override bool useOnce(Modifier? modifier) {
@@ -41,8 +41,6 @@ public class Shift : Action {
             Console.WriteLine(owner.name + " Shifts up!");
             Battlefield.PlayerSide.Remove(owner);
             Battlefield.PlayerSide.Insert(originalIndex - 1, owner);
-            // Generate Block.
-            Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
             return true;     
         }
         // In the case where the owner can ONLY move down, move them down:
@@ -51,8 +49,6 @@ public class Shift : Action {
             Console.WriteLine(owner.name + " Shifts down!");
             Battlefield.PlayerSide.Remove(owner);
             Battlefield.PlayerSide.Insert(originalIndex + 1, owner);
-            // Generate Block.
-            Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
             return true;   
         }
         // In the case where the owner can move either up OR down, let them choose:
@@ -76,8 +72,6 @@ public class Shift : Action {
                     Console.WriteLine(owner.name + " Shifts up!");
                     Battlefield.PlayerSide.Remove(owner);
                     Battlefield.PlayerSide.Insert(originalIndex - 1, owner);
-                    // Generate Block.
-                    Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
                     return true;                    
                 }
                 if (cmd.ToLower().Trim() == "down" || cmd.ToLower().Trim() == "d")
@@ -85,8 +79,6 @@ public class Shift : Action {
                     Console.WriteLine(owner.name + " Shifts down!");
                     Battlefield.PlayerSide.Remove(owner);
                     Battlefield.PlayerSide.Insert(originalIndex + 1, owner);
-                    // Generate Block.
-                    Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
                     return true;
                 }
             }   

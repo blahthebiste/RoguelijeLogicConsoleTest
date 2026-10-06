@@ -231,17 +231,19 @@ public static class DataRegistry {
 
                 // Movement
                 case "leap":
-                    return new Leap();
+                    return new LeapCard();
                 case "crouch":
-                    return new Crouch();
-                case "strafe":
-                    return new Strafe();
+                    return new CrouchCard();
+                case "shift":
+                    return new ShiftCard();
 
                 // Personal cards
                 case "engage":
                     return new Engage();
                 case "sword n' board":
                     return new SwordnBoard();
+                case "channel":
+                    return new Channel();
                 default:
                     Console.WriteLine("ERROR: no card registered under the name "+cardName);
                     return null;
@@ -309,8 +311,6 @@ public static class DataRegistry {
                     return new Obstruct();
                 case "parry":
                     return new Parry();
-                case "shift":
-                    return new Shift();
                 case "skitter":
                     return new Skitter();
                 case "vanish":
@@ -387,6 +387,8 @@ public static class DataRegistry {
                     return new Climb();
                 case "connive":
                     return new Connive();
+                case "crouch":
+                    return new Crouch();
                 case "daze":
                     return new Daze();
                 case "devour":
@@ -395,10 +397,14 @@ public static class DataRegistry {
                     return new Grasp();
                 case "hook":
                     return new Hook();
+                case "leap":
+                    return new Leap();
                 case "nock":
                     return new Nock();
                 case "rainofarrows":
                     return new RainOfArrows();
+                case "shift":
+                    return new Shift();
                 case "subtlepoison":
                     return new SubtlePoison();
                 case "takeaim":
@@ -455,6 +461,8 @@ public static class DataRegistry {
                     return new Inflame();
                 case "killingword":
                     return new KillingWord();
+                case "lightning":
+                    return new Lightning();
                 case "livingflame":
                     return new LivingFlame();
                 case "mirrorarmor":
@@ -471,6 +479,8 @@ public static class DataRegistry {
                     return new RightfulHeir();
                 case "restore":
                     return new Restore();
+                case "surge":
+                    return new Surge();
                 case "usehealthpotion":
                     return new UseHealthPotion();
                 case "usemanapotion":

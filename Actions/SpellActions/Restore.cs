@@ -22,6 +22,12 @@ public class Restore : Action {
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
+        if (owner!.HasStatusEffect("Surging"))
+        {
+            StatusEffect charge = owner.GetStatusEffect("Surging")!;
+            power *= 2;
+            charge.Decrease(1);
+        }
         // Apply healing
         if(modifier != null) power += modifier.healMod;
         target!.ReceiveHealing(power);

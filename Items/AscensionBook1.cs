@@ -14,6 +14,7 @@ public class AscensionBook1 : Item {
     public override void use() {
         PlayerCharacter? hero = null;
         var AllHeroes = CurrentRun.Party.Concat(CurrentRun.Bench).ToList();
+        var validHeroesToLevel = new List<PlayerCharacter>();
         // Prompt for hero to upgrade:
         while(hero == null) {
 			Console.WriteLine("Choose a hero to level up:");
@@ -34,6 +35,7 @@ public class AscensionBook1 : Item {
                 }
                 // Valid hero found. Print them out.
                 Console.WriteLine("["+(++index)+"] "+pc.name);
+                validHeroesToLevel.Add(pc);
             }
 			Console.Write("\n> ");
             string? cmd = Console.ReadLine();
@@ -47,7 +49,7 @@ public class AscensionBook1 : Item {
             {
                 if(n <= index && n > 0) {
                     // Valid hero selection.
-                    hero = AllHeroes[n-1];
+                    hero = validHeroesToLevel[n-1];
                     Console.WriteLine("DEBUG: Selected "+hero.name+".");
                     break;
                 }

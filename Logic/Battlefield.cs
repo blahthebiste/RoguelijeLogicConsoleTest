@@ -1,3 +1,5 @@
+using System.Reflection.Metadata;
+
 public static class Battlefield
 {
 
@@ -7,6 +9,10 @@ public static class Battlefield
 
     // Used to keep track of who is currently taunting. Used for targeting restrictions.
     public static List<Entity> Taunters = new List<Entity>();
+
+
+    // Used to keep track of who is currently dying, and already resolving death.
+    public static List<Entity> DyingEntities = new List<Entity>();
 
     // Used to keep track of how many entities are Inanimates in this combat:
     public static int numInanimateEntities = 0;
@@ -38,6 +44,7 @@ public static class Battlefield
             PlayerSide.Add(hero);
             hero.currentHP = hero.maxHP;
             hero.previousAction = null;
+            
         }
         // Load in enemies:
         foreach (Entity enemy in combat.EnemyTroupe.ToList())
@@ -287,6 +294,7 @@ public static class Battlefield
                 }
                 hero.previousAction = null;
                 hero.exhausted = exhausted;
+                hero.hasDied = false;
                 // Do not wipe their status effects or debuffs?
                 return true;
             }
@@ -314,6 +322,7 @@ public static class Battlefield
                 }
                 enemy.previousAction = null;
                 enemy.exhausted = exhausted;
+                enemy.hasDied = false;
                 // Do not wipe their status effects or debuffs?
                 return true;
             }
@@ -369,23 +378,61 @@ public static class Battlefield
 
     // Entities do not immediately die upon losing all HP; instead, they die at predefined checkpoints,
     // after resolving an action or trigger.
-    // Inanimates are never killed.
+    // Need to handle case where entities dying changes who is dying.
     public static void resolveDeath()
+    {
+        while(checkForDying())
+        {
+            finishThem(); // This can sometimes put new entities below 0 HP, in which case we must check again.
+        }
+    }
+
+    // Helper function for resolveDeath.
+    // Updates the DyingEntities list with all entities below 0 HP.
+    // (Inanimate entities are skipped.)
+    // Returns true if any entities are in the DyingEntities list.
+    public static bool checkForDying()
     {
         for (int i = EnemySide.Count - 1; i >= 0; i--)
         {
+            if(DyingEntities.Contains(EnemySide[i]))
+            {
+                Console.WriteLine("DEBUG: We are already resolving death for "+EnemySide[i].name+"("+i+")");
+                continue;
+            }
             if (!EnemySide[i].isAlive() && !EnemySide[i].isInanimate)
             {
-                EnemySide[i].die();
+                DyingEntities.Add(EnemySide[i]);
             }
         }
         for (int i = PlayerSide.Count - 1; i >= 0; i--)
         {
+            if(DyingEntities.Contains(PlayerSide[i]))
+            {
+                Console.WriteLine("DEBUG: We are already resolving death for "+PlayerSide[i].name+"("+i+")");
+                continue;
+            }
             if (!PlayerSide[i].isAlive() && !PlayerSide[i].isInanimate)
             {
-                PlayerSide[i].die();
+                DyingEntities.Add(PlayerSide[i]);
             }
         }
+        return DyingEntities.Count > 0;
+    }
+
+    // Helper function for resolveDeath.
+    // Triggers death (and associated events) for each entity in the DyingEntities list.
+    public static void finishThem()
+    {
+        for (int i = DyingEntities.Count - 1; i >= 0; i--)
+        {
+            if(CurrentRun.InCombat)
+            {
+                DyingEntities[i].die();
+            }
+        }
+        // Reset list of dying entities
+        DyingEntities.Clear();
     }
 
     // Used mainly for Piety
@@ -463,5 +510,16 @@ public static class Battlefield
     }
 
 
+    public static void TriggerOnActionResolved(Action actionUsed)
+    { // Loop through every entity and trigger their onActionResolved:
+        foreach (Entity ent in PlayerSide)
+        {
+            ent.onActionResolved(actionUsed);
+        }
+        foreach (Entity ent in EnemySide) 
+        {
+            ent.onActionResolved(actionUsed);
+        }        
+    }
 
 }

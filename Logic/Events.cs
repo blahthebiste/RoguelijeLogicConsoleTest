@@ -53,6 +53,12 @@ public class Events
         return actionBeingUsed;
     }
 
+    // Triggered every time ANY entity completes, and fully resolves, an action
+    public virtual void onActionResolved(Action actionUsed)
+    {//
+        
+    }
+
     public virtual Attack onAttack(Attack atk)
     {//
         return atk;

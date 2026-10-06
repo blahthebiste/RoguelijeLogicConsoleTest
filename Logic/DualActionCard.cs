@@ -4,9 +4,8 @@ public abstract class DualActionCard : ActionCard {
     public ActionType actionType2;
 
     // Whether this card can be played on that action.
-    public override bool actionCanBeUsed(Action hoveredAction) {
-        if(hoveredAction.actionType == this.actionType1 || hoveredAction.actionType == this.actionType2) return true;
-        else return base.actionCanBeUsed(hoveredAction);;
+    public override bool MatchesAction(Action hoveredAction) {
+        return hoveredAction.actionType == this.actionType1 || hoveredAction.actionType == this.actionType2;
     }
 
 }

@@ -8,6 +8,9 @@ public class Entity : Events
     public bool playerControlled = false; // Whether the entity requires the player to play action cards to get them to act
     public int currentHP = 1;
     public bool exhausted = false;
+    public bool hasDied = false;
+
+
     public List<Action> ActionList = new List<Action>(); // Equipment is tied to actions.
     public List<Action> ActionListMinusPassives = new List<Action>(); // Used for enemies determining what action to use next
     public List<StatusEffect> EffectList = new List<StatusEffect>(); // All status effects currently on the entity.
@@ -243,7 +246,6 @@ public class Entity : Events
     {
         // Trigger events for death
         onDeath();
-        Console.WriteLine(name + " has been slain!");
         if (Battlefield.PlayerSide.Contains(this))
         {
             Battlefield.DeadHeroes.Add(this);
@@ -261,6 +263,19 @@ public class Entity : Events
         // Does not trigger events for death
         Console.WriteLine(this.name + " has exited combat!");
         Battlefield.RemoveEntity(this);
+    }
+
+
+    public int getIndex()
+    {
+        if(hostile)
+        {
+            return Battlefield.EnemySide.IndexOf(this);
+        }
+        else
+        {
+            return Battlefield.PlayerSide.IndexOf(this);
+        }
     }
 
     //=========================== AI ===========================
@@ -314,11 +329,13 @@ public class Entity : Events
             return;
         }
         getNextAction().use(nextTarget, null); // Null modifier, entities outside of player control don't use cards
+        Battlefield.TriggerOnActionResolved(getNextAction()); // Post-Resolve events for AI actions
         nextActionIndex++;
         if (nextActionIndex >= ActionListMinusPassives.Count)
         {
             nextActionIndex = 0;
         }
+        Thread.Sleep(1000); // Add a delay when an entity finishes its turn.
     }
 
     // Figures out who the given action should target.
@@ -467,6 +484,7 @@ public class Entity : Events
     // Entities are responsible for passing on events to their actions, items, and statuses.
     public override void startOfCombat()
     {
+        hasDied = false; // Reset condition
         foreach (StatusEffect effect in EffectList.ToList())
         {
             effect.startOfCombat();
@@ -600,7 +618,7 @@ public class Entity : Events
         {
             actionBeingUsed = eff.onUseAction(actionBeingUsed);
         }
-        // "Used action" event for all items on the entity
+        // "Used action" event for all actions and items on the entity
         foreach (Action act in ActionList.ToList())
         {
             act.onUseAction(actionBeingUsed);
@@ -625,7 +643,7 @@ public class Entity : Events
         {
             actionBeingUsed = eff.onEnemyUsedAction(actionBeingUsed);
         }
-        // "Used action" event for all items on the entity
+        // "Used action" event for all actions and items on the entity
         foreach (Action act in ActionList.ToList())
         {
             act.onEnemyUsedAction(actionBeingUsed);
@@ -635,6 +653,25 @@ public class Entity : Events
             }
         }
         return actionBeingUsed;
+    }
+
+    // Triggered after any entity acts
+    public override void onActionResolved(Action actionUsed)
+    {
+        // "onActionResolved" event for all status effects on the entity
+        foreach (StatusEffect eff in EffectList.ToList())
+        {
+            eff.onActionResolved(actionUsed);
+        }
+        // "onActionResolved" event for all actions and items on the entity
+        foreach (Action act in ActionList.ToList())
+        {
+            act.onActionResolved(actionUsed);
+            if (act.equippedItem != null)
+            {
+                act.equippedItem.onActionResolved(actionUsed);
+            }
+        }
     }
 
     public override Attack onAttack(Attack atk)
@@ -725,8 +762,8 @@ public class Entity : Events
                 atk.damage -= blockedDamage;
             }
         }
-        Console.WriteLine(name + " was hit for " + atk.damage + " damage.");
         changeHP(-atk.damage);
+        Console.WriteLine(name + "("+this.getIndex()+") was hit for " + atk.damage + " damage. Remaining HP: "+this.currentHP);
         return atk;
     }
 
@@ -766,6 +803,14 @@ public class Entity : Events
 
     public override void onDeath()
     {
+        // Can NEVER trigger more than once, unless the entity has been revived.
+        if(hasDied)
+        {
+            Console.WriteLine("DEBUG: skipping onDeath for "+this.name+"("+getIndex()+") (already triggered)");
+            return;
+        }
+        Console.WriteLine("DEBUG: onDeath for "+this.name+"("+getIndex()+")");  
+        hasDied = true;
         foreach (StatusEffect effect in EffectList.ToList())
         {
             effect.onDeath();
@@ -778,7 +823,8 @@ public class Entity : Events
                 action.equippedItem.onDeath();
             }
         }
-
+        Console.WriteLine(name + "("+getIndex()+") has been slain!");
+        Thread.Sleep(1000); // Add a delay when something dies.
     }
 
     //===

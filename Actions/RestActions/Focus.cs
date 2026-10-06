@@ -19,7 +19,7 @@ public class Focus : Action
         // Restore spell uses.
         foreach (Action action in this.owner.ActionList)
         {
-            if (action.hasLimitedUses)
+            if (action.hasLimitedUses && action.uses < action.maxUses)
             {
                 Console.WriteLine("Regaining uses for " + action.name + " up to " + action.maxUses);
                 action.uses = action.maxUses;

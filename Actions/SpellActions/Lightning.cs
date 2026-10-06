@@ -1,15 +1,14 @@
-public class LivingFlame : Action {
+public class Lightning : Action {
 
-    public LivingFlame() {
-        this.name = "Living Flame";
+    public Lightning() {
+        this.name = "Lightning";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 3; // Base damage
-        this.magicNumber2 = 1; // Spell power gain
+        this.magicNumber = 99;
         this.hasLimitedUses = true;
-        this.uses = 3;
+        this.uses = 2;
         this.maxUses = this.uses;
-        this.targetting = TargetCategory.ALL_ENEMIES;
-        this.description = "Deal "+magicNumber+" damage to all enemies. Gain "+magicNumber2+" Spell Power.";
+        this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+magicNumber+" damage. Excess damage chains to the next enemy.";
     }
 
     public override bool useOnTarget(Entity? target, Modifier? modifier) {
@@ -29,7 +28,9 @@ public class LivingFlame : Action {
             power *= 2;
             charge.Decrease(1);
         }
-        // Deal damage to all enemies.
+        // Apply the overkill effect to the target:
+        target!.AddStatusEffect(new ChainLightning(owner, target));
+        // Deal damage to the target.
         if(modifier != null) power += modifier.damageMod;
         Attack atk = new Attack(power, this.owner!, target!);
         //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
@@ -37,11 +38,4 @@ public class LivingFlame : Action {
         return true;
     }
 
-    public override bool useOnce(Modifier? modifier){
-        if(this.owner != null) {
-            //Console.WriteLine("Drawing 3 cards");
-            this.owner.AddStatusEffect(new SpellPower(magicNumber2, this.owner));
-        }
-        return true;
-    }
 }

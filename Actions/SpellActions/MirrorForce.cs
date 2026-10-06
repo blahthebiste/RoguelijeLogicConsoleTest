@@ -33,6 +33,12 @@ public class MirrorForce : Action
             owner.EffectList.Remove(charge);
         }
         if(modifier != null) power += modifier.blockMod;
+        if (owner!.HasStatusEffect("Surging"))
+        {
+            StatusEffect charge = owner.GetStatusEffect("Surging")!;
+            power *= 2;
+            charge.Decrease(1);
+        }
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
         Console.WriteLine("Generated " + power + " Block.");
         // Generate Block.

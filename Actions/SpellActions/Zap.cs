@@ -22,6 +22,12 @@ public class Zap : Action {
             power += charge.amount;
             owner.EffectList.Remove(charge);
         }
+        if (owner!.HasStatusEffect("Surging"))
+        {
+            StatusEffect charge = owner.GetStatusEffect("Surging")!;
+            power *= 2;
+            charge.Decrease(1);
+        }
         // Deal damage to the target.
         if(modifier != null) power += modifier.damageMod;
         Attack atk = new Attack(power, this.owner!, target!);

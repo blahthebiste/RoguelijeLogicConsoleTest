@@ -8,16 +8,11 @@ public class Engage : ActionCard {
         this.modifier = null;
     }
 
-
-    public override bool use(Entity entityToUseAction, Entity? target, Action hoveredAction)
-    { 
-        if(base.use(entityToUseAction, target, hoveredAction))
-        {
-            // On successful use, draw 2
-            Console.WriteLine("Drawing 2 cards");
-            CardManager.drawCard(2);
-            return true;    
-        }
-        return false;        
+    public override bool AfterUse(Entity entityToUseAction, Entity? target, Action hoveredAction)
+    {
+        // On successful use, draw 2
+        Console.WriteLine("Drawing 2 cards");
+        CardManager.drawCard(2);
+        return base.AfterUse(entityToUseAction, target, hoveredAction);      
     }
 }
