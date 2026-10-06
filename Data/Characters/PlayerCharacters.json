@@ -138,7 +138,7 @@
 	{
 		"Name": "Channeler",
 		"Description": "Charges up massive lightning storms.",
-		"HP": 99,
+		"HP": 9,
 		"Level":2,
 		"PersonalCard": "Channel",
 		"ActionList": [

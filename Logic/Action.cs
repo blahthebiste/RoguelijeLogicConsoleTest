@@ -12,6 +12,7 @@ public class Action : Events {
 	public EquipmentItem? equippedItem;
     public bool hasLimitedUses = false;
     public bool ignoresTaunt = false;
+    public bool ignoresDodge = false;
     public bool hitsAbove = false;
     public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
@@ -458,8 +459,8 @@ public class Action : Events {
 						}
 					}
 				}
-				// Check for invisibility:
-				if (target.HasStatusEffect("Invisibility"))
+				// Check for invisibility: (currently considered a form of dodging)
+				if (!IgnoresDodge() && target.HasStatusEffect("Invisibility"))
 				{
 					// If they are not last on their team, they cannot be targeted
 					if (!target.hostile && Battlefield.PlayerSide.Count > 1)
@@ -541,6 +542,16 @@ public class Action : Events {
 			return ignoresTaunt;
 		}
 		return ignoresTaunt || owner.HasStatusEffect("Flying") || owner.HasStatusEffect("Favored");
+	}
+
+	// Helper
+	public bool IgnoresDodge()
+	{
+		if(owner == null) {
+			Console.WriteLine("ERROR: Action has no owner.");
+			return ignoresDodge;
+		}
+		return ignoresDodge || owner.HasStatusEffect("Favored");
 	}
 
 	//==========================ITEM OPERATIONS=========================

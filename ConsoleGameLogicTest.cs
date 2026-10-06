@@ -253,11 +253,11 @@ void startRun() {
 // Skips the party selection process to start the run immediately
 void setDefaultParty()
 {
-    PlayerCharacter p1 = new PlayerCharacter("Thief");
+    PlayerCharacter p1 = new PlayerCharacter("Archer");
     CurrentRun.Party.Add(p1);
-    PlayerCharacter p2 = new PlayerCharacter("Channeler");
+    PlayerCharacter p2 = new PlayerCharacter("Fighter");
     CurrentRun.Party.Add(p2);
-    PlayerCharacter p3 = new PlayerCharacter("Archer");
+    PlayerCharacter p3 = new PlayerCharacter("Mage");
     CurrentRun.Party.Add(p3);
     zoneSelection();
     depart();

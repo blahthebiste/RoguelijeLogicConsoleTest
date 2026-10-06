@@ -8,7 +8,8 @@ public class Favor : Action {
         this.uses = 6;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
-        this.description = "Your next attack will always find its mark, and pierces through Block.";
+        this.description = "Your next attack will always find its mark, and pierces through Block (free action).";
+        this.freeAction = true;
     }
 
     public override bool useOnce(Modifier? modifier) {

@@ -3,7 +3,7 @@ public class Lightning : Action {
     public Lightning() {
         this.name = "Lightning";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 99;
+        this.magicNumber = 9;
         this.hasLimitedUses = true;
         this.uses = 2;
         this.maxUses = this.uses;

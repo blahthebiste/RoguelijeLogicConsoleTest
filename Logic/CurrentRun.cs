@@ -67,36 +67,21 @@ public static class CurrentRun
         Bench = new List<PlayerCharacter>(); // Starts empty.
         MasterDeck = new List<ActionCard>(); // Populate the default starter deck (2 of each? Or 3?)
         CardCollection = new List<ActionCard>(); // Starts empty
-        // MasterDeck.Add(new BasicAttack());
-        // MasterDeck.Add(new BasicAttack());
-        // MasterDeck.Add(new BasicAttack());
-        // MasterDeck.Add(new BasicDefend());
-        // MasterDeck.Add(new BasicDefend());
-        // MasterDeck.Add(new BasicDefend());
-        // MasterDeck.Add(new BasicSkill());
-        // MasterDeck.Add(new BasicSkill());
-        // MasterDeck.Add(new BasicSkill());
-        // MasterDeck.Add(new BasicSpell());
-        // MasterDeck.Add(new BasicSpell());
-        // MasterDeck.Add(new BasicSpell());
-        // MasterDeck.Add(new BasicRest());
-        // MasterDeck.Add(new BasicRest());
-        // MasterDeck.Add(new BasicRest());
-        MasterDeck.Add(new Engage());
-        MasterDeck.Add(new Engage());
-        MasterDeck.Add(new Engage());
-        MasterDeck.Add(new Engage());
-        MasterDeck.Add(new Engage());
-        MasterDeck.Add(new Channel());
-        MasterDeck.Add(new Channel());
-        MasterDeck.Add(new Channel());
-        MasterDeck.Add(new Channel());
-        MasterDeck.Add(new Channel());
-        MasterDeck.Add(new SwordnBoard());
-        MasterDeck.Add(new SwordnBoard());
-        MasterDeck.Add(new SwordnBoard());
-        MasterDeck.Add(new SwordnBoard());
-        MasterDeck.Add(new SwordnBoard());
+        MasterDeck.Add(new BasicAttack());
+        MasterDeck.Add(new BasicAttack());
+        MasterDeck.Add(new BasicAttack());
+        MasterDeck.Add(new BasicDefend());
+        MasterDeck.Add(new BasicDefend());
+        MasterDeck.Add(new BasicDefend());
+        MasterDeck.Add(new BasicSkill());
+        MasterDeck.Add(new BasicSkill());
+        MasterDeck.Add(new BasicSkill());
+        MasterDeck.Add(new BasicSpell());
+        MasterDeck.Add(new BasicSpell());
+        MasterDeck.Add(new BasicSpell());
+        MasterDeck.Add(new BasicRest());
+        MasterDeck.Add(new BasicRest());
+        MasterDeck.Add(new BasicRest());
 
         Inventory = new List<Item>(); // Starts empty.
         CurrentZone = DataRegistry.GenerateZone(ZoneID.HUB); // Party is selected in the Hub world.
