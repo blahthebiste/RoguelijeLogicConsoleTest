@@ -2,7 +2,7 @@ public class Surging : StatusEffect {
     public Surging(int amount, Entity owner) {
         this.amount = amount;
         this.name = "Surging";
-        this.description = "Doubles damage/block/healing for the next X spell.";
+        this.description = "Doubles damage/block/healing for the next X spells.";
         this.owner = owner;
     }
 

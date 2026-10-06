@@ -39,6 +39,7 @@ public static class DataRegistry {
             "\nChoose starting party",
             "Enter the name of a character to learn more about them.",
             "\n\t* "+CharacterData.getPlayerDataByName("Fighter")!.Name+": "+CharacterData.getPlayerDataByName("Fighter")!.Description,
+            "\n\t* "+CharacterData.getPlayerDataByName("Barbarian")!.Name+": "+CharacterData.getPlayerDataByName("Barbarian")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Defender")!.Name+": "+CharacterData.getPlayerDataByName("Defender")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Thief")!.Name+": "+CharacterData.getPlayerDataByName("Thief")!.Description,
             "\n\t* "+CharacterData.getPlayerDataByName("Archer")!.Name+": "+CharacterData.getPlayerDataByName("Archer")!.Description,
@@ -307,6 +308,8 @@ public static class DataRegistry {
                     return new Cower();
                 case "dodge":
                     return new Dodge();
+                case "intimidate":
+                    return new Intimidate();
                 case "obstruct":
                     return new Obstruct();
                 case "parry":
@@ -333,6 +336,8 @@ public static class DataRegistry {
                     return new EmbeddedSword();
                 case "inanimate":
                     return new Inanimate();
+                case "injured":
+                    return new Injured();
                 case "everfull":
                     return new Everfull();
                 case "infected":
@@ -363,6 +368,10 @@ public static class DataRegistry {
                     return new Focus();
                 case "idle":
                     return new Idle();
+                case "nock":
+                    return new Nock();
+                case "notyet":
+                    return new NotYet();
                 case "prepareritual":
                     return new PrepareRitual();
                 case "recover":
@@ -399,8 +408,6 @@ public static class DataRegistry {
                     return new Hook();
                 case "leap":
                     return new Leap();
-                case "nock":
-                    return new Nock();
                 case "rainofarrows":
                     return new RainOfArrows();
                 case "shift":
@@ -471,6 +478,8 @@ public static class DataRegistry {
                     return new MirrorForce();
                 case "pickpocket":
                     return new Pickpocket();
+                case "rage":
+                    return new Rage();
                 case "ratking":
                     return new RatKing();
                 case "repel":

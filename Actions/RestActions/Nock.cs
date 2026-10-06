@@ -2,7 +2,7 @@ public class Nock : Action {
 
     public Nock() {
         this.name = "Nock";
-        this.actionType = ActionType.SKILL;
+        this.actionType = ActionType.REST;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
         this.description = "Draw an attack card next turn.";

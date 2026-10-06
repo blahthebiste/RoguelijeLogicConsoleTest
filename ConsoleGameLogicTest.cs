@@ -53,6 +53,7 @@ void commandLoop() {
                 tutorial();
                 break;
             case "fighter":
+            case "barbarian":
             case "defender":
             case "healer":
             case "mage":
@@ -255,9 +256,9 @@ void setDefaultParty()
 {
     PlayerCharacter p1 = new PlayerCharacter("Archer");
     CurrentRun.Party.Add(p1);
-    PlayerCharacter p2 = new PlayerCharacter("Fighter");
+    PlayerCharacter p2 = new PlayerCharacter("Barbarian");
     CurrentRun.Party.Add(p2);
-    PlayerCharacter p3 = new PlayerCharacter("Mage");
+    PlayerCharacter p3 = new PlayerCharacter("Healer");
     CurrentRun.Party.Add(p3);
     zoneSelection();
     depart();

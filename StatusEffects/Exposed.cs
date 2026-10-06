@@ -6,19 +6,19 @@ public class Exposed : StatusEffect
     {
         this.amount = amount;
         this.name = "Exposed";
-        this.description = "Take that much extra direct damage for 1 turn.";
+        this.description = "Take double direct damage for that many turns.";
         this.owner = owner;
     }
 
     // Amplify attacks
     public override Attack onReceiveAttack(Attack atk)
     {
-        atk.damage += this.amount;
+        atk.damage *= 2;
         return base.onAttack(atk);
     }
 
-    // Clear at start turn
-    public override void startOfTurn() {
-        this.Remove();
+    // Decrement every turn
+    public override void endOfTurn() {
+        this.Decrease(1);
     }
 }

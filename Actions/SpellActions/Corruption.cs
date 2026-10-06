@@ -3,12 +3,12 @@ public class Corruption : Action {
     public Corruption() {
         this.name = "Corruption";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 3;
+        this.magicNumber = 20;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ALLY;
-        this.description = "Apply "+magicNumber+" Vulnerability to my master.";
+        this.description = "Apply "+magicNumber+" Vulnerable to my master.";
     }
 
 
@@ -56,7 +56,7 @@ public class Corruption : Action {
             return false;
         }
         // Apply Vulnerability
-        target.AddStatusEffect(new Vulnerability(magicNumber, target));
+        target.AddStatusEffect(new Vulnerable(magicNumber, target));
         return true;
     }
 }

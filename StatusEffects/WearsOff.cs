@@ -3,6 +3,7 @@ public class WearsOff : StatusEffect {
     string effToRemove;
     int delay;
 
+    // Default delay of 0 means it will wear off at the next start-of-turn.
     public WearsOff(int amount, Entity owner, string effToRemove, int delay = 0)
     {
         this.amount = amount;

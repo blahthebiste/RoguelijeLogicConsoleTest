@@ -17,6 +17,23 @@
 		]
 	},
 	{
+		"Name": "Barbarian",
+		"Description": "Aggressive attacker with no self-preservation",
+		"HP": 13,
+		"Level":1,
+		"PersonalCard": "Basic Attack",
+		"ActionList": [
+			"Injured",
+			"Strike",
+			"Intimidate",
+			"NotYet",
+			"Rage"
+		],
+		"UpgradeList": [
+			
+		]
+	},
+	{
 		"Name": "Defender",
 		"Description": "Healthy wall that protects weaker allies",
 		"HP": 12,
