@@ -39,7 +39,6 @@ public class LivingFlame : Action {
 
     public override bool useOnce(Modifier? modifier){
         if(this.owner != null) {
-            //Console.WriteLine("Drawing 3 cards");
             this.owner.AddStatusEffect(new SpellPower(magicNumber2, this.owner));
         }
         return true;

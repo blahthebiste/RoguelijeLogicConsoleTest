@@ -417,16 +417,16 @@ public class ActionCard
                     Console.WriteLine("Select one from the following by entering its number, or type something else to cancel:");
                     Console.WriteLine("");
                     // Print them out and await selection:
-                    Console.WriteLine("[1 - "+Battlefield.PlayerSide[targetIndex].name+"]\t[2 - "+Battlefield.EnemySide[targetIndex].name+"]");
+                    Console.WriteLine("[1 - "+Battlefield.PlayerSide[targetIndex-1].name+"]\t[2 - "+Battlefield.EnemySide[targetIndex-1].name+"]");
                     string? cmd2 = Console.ReadLine();
                     if(cmd2 == null) return null;
                     if(int.TryParse(cmd2.ToLower().Trim(), out int targetSelection)) {
                         // If they entered a valid number for target selection, return that entity
                         if(targetSelection == 1) {
-                            return Battlefield.PlayerSide[targetIndex];
+                            return Battlefield.PlayerSide[targetIndex-1];
                         }
                         if(targetSelection == 2) {
-                            return Battlefield.EnemySide[targetIndex];
+                            return Battlefield.EnemySide[targetIndex-1];
                         }
                     }
                     // No valid action selection.

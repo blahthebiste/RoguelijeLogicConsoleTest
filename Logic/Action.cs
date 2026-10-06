@@ -173,7 +173,7 @@ public class Action : Events {
 			}
 		}
 		// Run the action code that does not target anyone
-		if (!requiresTarget() && canUse(null, modifier))
+		if (anySuccess || (!requiresTarget() && canUse(null, modifier)))
 		{
 			anySuccess = useOnce(modifier) || anySuccess;
 		}

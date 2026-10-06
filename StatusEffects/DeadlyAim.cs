@@ -7,11 +7,6 @@ public class DeadlyAim : StatusEffect {
         this.owner = owner;
     }
 
-    // Double damage
-    public override Attack onAttack(Attack atk) {
-        atk.damage *= 2;
-        this.Decrease(1); // Wears down by 1
-        return base.onAttack(atk);
-    }
+    // Actual code is done on a per-action basis
 
 }

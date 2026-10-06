@@ -10,7 +10,7 @@ public class ReflectAttacks : StatusEffect {
     public override Attack onReceiveAttack(Attack atk) {
         // Make an equivalent attack on the attacker:
         Attack reflectedAtk = new Attack(atk.damage, atk.target, atk.source);
-        Battlefield.performAttack(atk);
+        Battlefield.performAttack(reflectedAtk);
         return base.onAttack(atk);
     }
 

@@ -95,10 +95,10 @@
 			"Cower",
 			"Nock",
 			"Shift",
-			"Favor"
+			"TakeAim"
 		],
 		"UpgradeList": [
-			
+			"Ranger"
 		]
 	},
 	{
@@ -147,6 +147,23 @@
 			"Counter",
 			"Rest",
 			"Taunt"
+		],
+		"UpgradeList": [
+			
+		]
+	},
+	{
+		"Name": "Ranger",
+		"Description": "Leads the way.",
+		"HP": 10,
+		"Level":2,
+		"PersonalCard": "Reposition",
+		"ActionList": [
+			"Loose",
+			"Cover",
+			"Coordinate",
+			"TakeAim",
+			"RainOfArrows"
 		],
 		"UpgradeList": [
 			

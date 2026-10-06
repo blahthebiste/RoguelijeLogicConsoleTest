@@ -31,7 +31,6 @@ public class Zap : Action {
         // Deal damage to the target.
         if(modifier != null) power += modifier.damageMod;
         Attack atk = new Attack(power, this.owner!, target!);
-        //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
         target!.onReceiveAttack(atk);
         return true;
     }

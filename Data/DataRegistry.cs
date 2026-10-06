@@ -241,6 +241,8 @@ public static class DataRegistry {
                 // Personal cards
                 case "engage":
                     return new Engage();
+                case "reposition":
+                    return new Reposition();
                 case "sword n' board":
                     return new SwordnBoard();
                 case "channel":
@@ -268,8 +270,6 @@ public static class DataRegistry {
                     return new Cut();
                 case "dive":
                     return new Dive();
-                case "frostbreath":
-                    return new FrostBreath();
                 case "gnaw":
                     return new Gnaw();
                 case "infect":
@@ -304,6 +304,8 @@ public static class DataRegistry {
                     return new Block();
                 case "counter":
                     return new Counter();
+                case "cover":
+                    return new Cover();
                 case "cower":
                     return new Cower();
                 case "dodge":
@@ -364,6 +366,8 @@ public static class DataRegistry {
                 //==========RESTS==========
                 case "breathe":
                     return new Breathe();
+                case "coordinate":
+                    return new Coordinate();
                 case "focus":
                     return new Focus();
                 case "idle":
@@ -416,8 +420,6 @@ public static class DataRegistry {
                     return new SubtlePoison();
                 case "takeaim":
                     return new TakeAim();
-                case "takeflight":
-                    return new TakeFlight();
                 case "taunt":
                     return new Taunt();
                 case "whirl":
@@ -448,6 +450,8 @@ public static class DataRegistry {
                     return new Favor();
                 case "forcefield":
                     return new Forcefield();
+                case "frostbreath":
+                    return new FrostBreath();
                 case "grow":
                     return new Grow();
                 case "harden":
@@ -490,6 +494,8 @@ public static class DataRegistry {
                     return new Restore();
                 case "surge":
                     return new Surge();
+                case "takeflight":
+                    return new TakeFlight();
                 case "usehealthpotion":
                     return new UseHealthPotion();
                 case "usemanapotion":

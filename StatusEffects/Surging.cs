@@ -6,5 +6,5 @@ public class Surging : StatusEffect {
         this.owner = owner;
     }
 
-    // Actual code is done in a spell-by-spell basis?
+    // Actual code is done in a spell-by-spell basis
 }

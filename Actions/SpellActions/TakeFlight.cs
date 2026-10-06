@@ -2,9 +2,12 @@ public class TakeFlight : Action {
 
     public TakeFlight() {
         this.name = "Take Flight";
-        this.actionType = ActionType.SKILL;
+        this.actionType = ActionType.SPELL;
         this.targetting = TargetCategory.SELF;
         this.description = "Start Flying.";
+        this.hasLimitedUses = true;
+        this.uses = 2;
+        this.maxUses = this.uses;
     }
 
     public override bool useOnce(Modifier? modifier) {
