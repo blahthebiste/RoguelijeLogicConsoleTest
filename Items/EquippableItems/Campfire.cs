@@ -33,9 +33,9 @@ public class Campfire : EquipmentItem {
                 // Match the first action that is type rest and targets self:
                 if (act.actionType == ActionType.REST && act.targetting == TargetCategory.SELF)
                 {
-                    act.freeAction = true; // Let the allyes rest without exhausting themself
+                    // act.freeAction = true; // Let the allies rest without exhausting themself
                     Console.WriteLine(ally.name + " rests at the Campfire!");
-                    act.promptUse();
+                    act.promptUse(free: true);
                     act.freeAction = false;
                     break;
                 }

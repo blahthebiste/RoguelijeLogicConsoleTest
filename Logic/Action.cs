@@ -76,7 +76,7 @@ public class Action : Events {
 	// Uses an action directly, for when an action is used without the player playing a card.
 	// Asks the player to select a target if necessary. Returns false if the action was not used.
 	// Also returns false if the action was untargetted, and failed.
-	public virtual bool promptUse() {
+	public virtual bool promptUse(bool free = false) {
 		if(targetting == TargetCategory.SINGLE_ANY || targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY) {
 			// Prompt the player for a target.
 			while(true) {
@@ -112,7 +112,7 @@ public class Action : Events {
 				}
 				// Check if the target is valid:
 				if(this.CanTarget(target)) {
-					if(use(target, null)) {
+					if(use(target, null, free)) {
 						return true;
 					}
 					else {
@@ -128,13 +128,13 @@ public class Action : Events {
 		}
 		else {
 			// Action does not require the player to choose a target; automatically select targets and attempt the action.
-			return use(null, null);
+			return use(null, null, free);
 		}
 	}
 
 	// Manages automatic targeting, action uses, events, etc
 	// Relies on useOnTarget to be implemented by the child class, otherwise the action will fail
-    public bool use(Entity? mainTarget, Modifier? modifier) {
+    public bool use(Entity? mainTarget, Modifier? modifier, bool free = false) {
 		bool anySuccess = false; // Used to track whether the action was ever used successfully
 		targetList = new List<Entity>(); // Reset the target list
 		if(mainTarget == null) {
@@ -185,7 +185,7 @@ public class Action : Events {
 				uses--;
 				Console.WriteLine(uses + " use(s) remaining.");
 			}
-			if (!freeAction)
+			if (!freeAction && !free)
 			{
 				owner!.exhausted = true; // Exhaust owner
 			}

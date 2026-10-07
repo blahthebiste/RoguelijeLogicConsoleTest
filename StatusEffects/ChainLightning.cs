@@ -12,6 +12,7 @@ public class ChainLightning : StatusEffect
         this.owner = owner;
         lightningInstance = new Lightning();
         lightningInstance.owner = origin;
+        this.isDebuff = true;
     }
 
     public override void onDeath()

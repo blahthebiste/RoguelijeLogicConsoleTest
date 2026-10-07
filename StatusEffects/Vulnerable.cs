@@ -8,6 +8,7 @@ public class Vulnerable : StatusEffect
         this.name = "Vulnerable";
         this.description = "Take that much extra direct damage for 1 turn.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Amplify attacks

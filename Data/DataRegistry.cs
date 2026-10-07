@@ -243,6 +243,8 @@ public static class DataRegistry {
                     return new Engage();
                 case "reposition":
                     return new Reposition();
+                case "safe haven":
+                    return new SafeHaven();
                 case "sword n' board":
                     return new SwordnBoard();
                 case "channel":
@@ -376,6 +378,8 @@ public static class DataRegistry {
                     return new Nock();
                 case "notyet":
                     return new NotYet();
+                case "pray":
+                    return new Pray();
                 case "prepareritual":
                     return new PrepareRitual();
                 case "recover":
@@ -482,6 +486,8 @@ public static class DataRegistry {
                     return new MirrorForce();
                 case "pickpocket":
                     return new Pickpocket();
+                case "purify":
+                    return new Purify();
                 case "rage":
                     return new Rage();
                 case "ratking":

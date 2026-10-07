@@ -8,6 +8,7 @@ public class Exposed : StatusEffect
         this.name = "Exposed";
         this.description = "Take double direct damage for that many turns.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Amplify attacks

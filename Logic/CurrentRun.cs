@@ -771,11 +771,7 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        Inventory.Add(new MasterSword());
-        Inventory.Add(new ElderWand());
-        // Inventory.Add(new ResurrectionStone());
-        // Inventory.Add(new HeavyArmor());
-        // Inventory.Add(new FortressShield());
+        Inventory.Add(new Campfire());
         Inventory.Add(new AscensionBook1());
         Inventory.Add(new AscensionBook1());
         Inventory.Add(new AscensionBook1());

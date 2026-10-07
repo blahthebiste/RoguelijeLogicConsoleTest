@@ -19,7 +19,11 @@ public class Rage : Action {
             Console.WriteLine("ERROR: null owner for action '" + this.name + "'.");
             return false;
         }
-        int halfHPThreshold = (int)Math.Round(owner.maxHP/2.0);
+        Console.WriteLine("DEBUG: maxHP = "+owner.maxHP);
+        Console.WriteLine("DEBUG: maxHP/2.0 = "+(owner.maxHP/2.0));
+        Console.WriteLine("DEBUG: rounded = "+Math.Ceiling(owner.maxHP/2.0));
+        int halfHPThreshold = (int)Math.Ceiling(owner.maxHP/2.0);
+        Console.WriteLine("DEBUG: cast to int = "+halfHPThreshold);
         if(owner.currentHP > halfHPThreshold)
         {
             Console.WriteLine("Cannot use Rage! HP must be less than or equal to "+halfHPThreshold);

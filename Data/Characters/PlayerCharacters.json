@@ -64,7 +64,7 @@
 			"Restore"
 		],
 		"UpgradeList": [
-			
+			"Priest"
 		]
 	},
 	{
@@ -181,6 +181,23 @@
 			"Charge",
 			"Lightning",
 			"Surge"
+		],
+		"UpgradeList": [
+			
+		]
+	},
+	{
+		"Name": "Priest",
+		"Description": "Heals, cleanses debuffs, and prays for your salvation.",
+		"HP": 12,
+		"Level":2,
+		"PersonalCard": "Safe Haven",
+		"ActionList": [
+			"Cower",
+			"Pray",
+			"Recover",
+			"Daze",
+			"Purify"
 		],
 		"UpgradeList": [
 			

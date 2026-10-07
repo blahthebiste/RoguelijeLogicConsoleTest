@@ -8,6 +8,7 @@ public class Frost : StatusEffect
         this.name = "Frost";
         this.description = "Decreases attack damage and block until you rest.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Frost saps attack damage

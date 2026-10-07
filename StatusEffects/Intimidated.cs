@@ -8,6 +8,7 @@ public class Intimidated : StatusEffect
         this.name = "Intimidated";
         this.description = "Temporary Strength-down.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Intimidated saps attack damage

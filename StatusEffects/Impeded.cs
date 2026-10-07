@@ -6,6 +6,7 @@ public class Impeded : StatusEffect {
         this.name = "Impeded";
         this.description = "Cannot dodge for that many turns.";
         this.owner = owner;
+        this.isDebuff = true;
     }
 
     // Decrement every turn
