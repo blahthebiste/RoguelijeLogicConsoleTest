@@ -239,16 +239,18 @@ public static class DataRegistry {
                     return new ShiftCard();
 
                 // Personal cards
+                case "channel":
+                    return new Channel();
                 case "engage":
                     return new Engage();
                 case "reposition":
                     return new Reposition();
                 case "safe haven":
                     return new SafeHaven();
+                case "slaughter":
+                    return new Slaughter();
                 case "sword n' board":
                     return new SwordnBoard();
-                case "channel":
-                    return new Channel();
                 default:
                     Console.WriteLine("ERROR: no card registered under the name "+cardName);
                     return null;
@@ -270,6 +272,8 @@ public static class DataRegistry {
                     return new Cleave();
                 case "cut":
                     return new Cut();
+                case "decimate":
+                    return new Decimate();
                 case "dive":
                     return new Dive();
                 case "gnaw":
@@ -310,6 +314,8 @@ public static class DataRegistry {
                     return new Cover();
                 case "cower":
                     return new Cower();
+                case "determination":
+                    return new Determination();
                 case "dodge":
                     return new Dodge();
                 case "intimidate":
@@ -352,6 +358,8 @@ public static class DataRegistry {
                     return new OnGuard();
                 case "permataunt":
                     return new PermaTaunt();
+                case "rampage":
+                    return new Rampage();
                 case "rattified":
                     return new Rattified();
                 case "returndagger":
@@ -432,6 +440,8 @@ public static class DataRegistry {
                 //==========SPELLS==========
                 case "batswarm":
                     return new BatSwarm();
+                case "bloodlust":
+                    return new Bloodlust();
                 case "chill":
                     return new Chill();
                 case "conjureblade":

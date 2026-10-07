@@ -30,7 +30,7 @@
 			"Rage"
 		],
 		"UpgradeList": [
-			
+			"Berserker"
 		]
 	},
 	{
@@ -103,7 +103,7 @@
 	},
 	{
 		"Name": "Thief",
-		"Description": "Stabby, sneaky goblin with bonus items",
+		"Description": "Stabby, sneaky goblin who steals extra gold",
 		"HP": 10,
 		"Level":1,
 		"PersonalCard": "Basic Skill",
@@ -154,7 +154,7 @@
 	},
 	{
 		"Name": "Ranger",
-		"Description": "Leads the way.",
+		"Description": "Leads the way",
 		"HP": 10,
 		"Level":2,
 		"PersonalCard": "Reposition",
@@ -171,7 +171,7 @@
 	},
 	{
 		"Name": "Channeler",
-		"Description": "Charges up massive lightning storms.",
+		"Description": "Charges up massive lightning storms",
 		"HP": 9,
 		"Level":2,
 		"PersonalCard": "Channel",
@@ -188,7 +188,7 @@
 	},
 	{
 		"Name": "Priest",
-		"Description": "Heals, cleanses debuffs, and prays for your salvation.",
+		"Description": "Heals, cleanses debuffs, and prays for your salvation",
 		"HP": 12,
 		"Level":2,
 		"PersonalCard": "Safe Haven",
@@ -198,6 +198,23 @@
 			"Recover",
 			"Daze",
 			"Purify"
+		],
+		"UpgradeList": [
+			
+		]
+	},
+	{
+		"Name": "Berserker",
+		"Description": "Too angry to die",
+		"HP": 14,
+		"Level":2,
+		"PersonalCard": "Slaughter",
+		"ActionList": [
+			"Rampage",
+			"Decimate",
+			"NotYet",
+			"Determination",
+			"Bloodlust"
 		],
 		"UpgradeList": [
 			

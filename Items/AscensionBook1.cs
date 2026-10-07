@@ -50,7 +50,7 @@ public class AscensionBook1 : Item {
                 if(n <= index && n > 0) {
                     // Valid hero selection.
                     hero = validHeroesToLevel[n-1];
-                    Console.WriteLine("DEBUG: Selected "+hero.name+".");
+                    //Console.WriteLine("DEBUG: Selected "+hero.name+".");
                     break;
                 }
                 else {

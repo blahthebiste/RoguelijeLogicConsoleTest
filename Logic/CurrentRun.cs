@@ -323,27 +323,28 @@ public static class CurrentRun
     // When the player wins, give them stuff.
     public static void DistributeCombatRewards()
     {
-        int randomMoneyReward = rng.Next(40, 61);
-        int extraMoneyReward = 0;
+        int minMoneyReward = 40;
+        int maxMoneyReward = 60;
         // Generate rewards based on the ZoneProgress.
         if (ZoneProgress % 10 == 0) // Every 10th stage is a Boss combat
         {
-            extraMoneyReward = rng.Next(40, 61);
+            minMoneyReward += 60;
+            maxMoneyReward += 80;
             GenerateNextChaosTome(); // TODO: make claimable combat reward
         }
         else if (ZoneProgress % 3 == 0) // Every 3rd stage is a MiniBoss combat
         {
-            extraMoneyReward = rng.Next(40, 61);
+            minMoneyReward += 40;
+            maxMoneyReward += 60;
             NextCombatReward.itemRewards.Add(new AscensionBook1());
         }
         else // Normal combat. // Prompt for card draft
         {
             CardDraft draft = new CardDraft();
             draft.execute();
-
         }
         // TODO: lore bonus based on combat difficulty?
-        NextCombatReward.moneyReward = randomMoneyReward + extraMoneyReward;
+        NextCombatReward.moneyReward = rng.Next(minMoneyReward, maxMoneyReward+1);
         Money += NextCombatReward.moneyReward;
         Console.WriteLine("Earned $" + NextCombatReward.moneyReward);
         foreach (Item item in NextCombatReward.itemRewards.ToList())
