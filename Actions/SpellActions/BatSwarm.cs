@@ -11,7 +11,7 @@ public class BatSwarm : Action {
         this.description = "Summon "+magicNumber+" Bats.";
     }
 
-    public override bool useOnce(Modifier? modifier)
+    public override bool useOnce()
     {
         if (this.owner != null)
         {

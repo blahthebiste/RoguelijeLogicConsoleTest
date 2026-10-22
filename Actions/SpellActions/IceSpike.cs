@@ -1,17 +1,17 @@
 public class IceSpike : Action {
 
     public IceSpike() {
-        this.name = "IceSpike";
+        this.name = "Ice Spike";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 6;
+        this.damage = 6;
         this.hasLimitedUses = true;
         this.uses = 3;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
-        this.description = "Deal "+magicNumber+" damage, plus any Frost on the target.";
+        this.description = "Deal "+damage+" damage, plus any Frost on the target.";
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         if (target == null) {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");
             return false;
@@ -20,31 +20,14 @@ public class IceSpike : Action {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
         }
-        int power = magicNumber;
-        if(owner.HasStatusEffect("Spell Power")) {
-            StatusEffect spell_power = owner.GetStatusEffect("Spell Power")!;
-            power += spell_power.amount;
-        }
-        if(owner.HasStatusEffect("Charged")) {
-            StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            power += charge.amount;
-            owner.EffectList.Remove(charge);
-        }
+        int bonusDamage = 0;
         // Ice Spike gets boosted by frost on the target:
         if(target.HasStatusEffect("Frost")) {
             StatusEffect frost = target.GetStatusEffect("Frost")!;
-            power += frost.amount;
-        }
-        if (owner!.HasStatusEffect("Surging"))
-        {
-            StatusEffect charge = owner.GetStatusEffect("Surging")!;
-            power *= 2;
-            charge.Decrease(1);
+            bonusDamage = frost.amount;
         }
         // Deal damage to the target.
-        if (modifier != null) power += modifier.damageMod;
-        Attack atk = new Attack(power, this.owner, target);
-        //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
+        Attack atk = new Attack(damage+bonusDamage, this.owner, target);
         target.onReceiveAttack(atk);
         return true;
     }

@@ -8,13 +8,13 @@ public class Cower : Action {
         this.description = "Generate "+block+" Block.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
         }
         // Generate Block.
-        Battlefield.addBlock(block + (modifier == null? 0 : modifier.blockMod), this.owner);
+        Battlefield.addBlock(properties.block, this.owner);
         return true;
     }
 }

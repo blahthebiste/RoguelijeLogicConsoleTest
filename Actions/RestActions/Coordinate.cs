@@ -8,7 +8,7 @@ public class Coordinate : Action {
         this.description = "Draw "+magicNumber+" cards.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         // Draw 3
         Console.WriteLine("Drew "+magicNumber+" cards.");
         CardManager.drawCard(this.magicNumber);

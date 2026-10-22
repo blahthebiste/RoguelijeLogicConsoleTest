@@ -6,8 +6,6 @@ public class Reposition : ActionCard {
         this.name = this.originalName = "Reposition";
         this.description = this.originalDescription = "Swap places with an ally, then perform a skill action.";
         this.actionType = ActionType.SKILL;
-        this.owner = null;
-        this.modifier = null;
         this.swapAction = new Swap();
     }
 

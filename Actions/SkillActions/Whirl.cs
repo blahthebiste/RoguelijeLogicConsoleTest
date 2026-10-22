@@ -8,7 +8,7 @@ public class Whirl : Action {
         this.description = "Next attack also hits adjacent targets.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

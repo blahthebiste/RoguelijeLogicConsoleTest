@@ -4,8 +4,6 @@ public class SwordnBoard : ActionCard {
         this.name = this.originalName = "Sword n' Board";
         this.description = this.originalDescription = "Perform an attack action and a defend action.";
         this.actionType = ActionType.ATTACK;
-        this.owner = null;
-        this.modifier = null;
     }
 
 

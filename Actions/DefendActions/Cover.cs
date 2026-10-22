@@ -9,7 +9,7 @@ public class Cover : Action {
     }
 
     // Only decrement 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
@@ -19,7 +19,7 @@ public class Cover : Action {
         return true;
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

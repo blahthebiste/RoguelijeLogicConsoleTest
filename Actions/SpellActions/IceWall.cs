@@ -5,43 +5,24 @@ public class IceWall : Action
     {
         this.name = "Ice Wall";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 18;
+        this.block = 18;
         this.hasLimitedUses = true;
         this.uses = 2;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
-        this.description = "Generate "+magicNumber+" Block.";
+        this.description = "Generate "+block+" Block.";
     }
 
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
         }
-        int power = magicNumber;
-        if (owner!.HasStatusEffect("Spell Power"))
-        {
-            StatusEffect spell_power = owner.GetStatusEffect("Spell Power")!;
-            power += spell_power.amount;
-        }
-        if (owner!.HasStatusEffect("Charged"))
-        {
-            StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            power += charge.amount;
-            owner.EffectList.Remove(charge);
-        }
-        if(modifier != null) power += modifier.blockMod;
-        if (owner!.HasStatusEffect("Surging"))
-        {
-            StatusEffect charge = owner.GetStatusEffect("Surging")!;
-            power *= 2;
-            charge.Decrease(1);
-        }
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
-        Console.WriteLine("Generated " + power + " Block.");
+        Console.WriteLine("Generated " + block + " Block.");
         // Generate Block.
-        Battlefield.addBlock(power, this.owner);
+        Battlefield.addBlock(properties.block, this.owner);
         return true;
     }    
 }

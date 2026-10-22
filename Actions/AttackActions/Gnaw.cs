@@ -9,8 +9,7 @@ public class Gnaw : Action {
         this.description = "Deal "+damage+" damage. Apply "+magicNumber+" Bleed if not blocked.";
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        int power = damage;
+    public override bool useOnTarget(Entity? target) {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
@@ -19,12 +18,8 @@ public class Gnaw : Action {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");
             return false;
         }
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            power *= 2;
-        }
         // Deal damage to the target.
-        Attack atk = new Attack(power + (modifier == null? 0 : modifier.damageMod), this.owner!, target, this.hitsAbove, this.hitsBelow);
+        Attack atk = new Attack(properties.damage, this.owner!, target, properties.hitsAbove, properties.hitsBelow);
         int finalDamage = Battlefield.performAttack(atk);
         // Apply bleed:
         if (finalDamage > 0)
@@ -35,12 +30,5 @@ public class Gnaw : Action {
         return true;
     }
     
-    // Decrement buffs after dealing all damage
-    public override bool useOnce(Modifier? modifier){
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            owner!.GetStatusEffect("Deadly Aim")!.Decrease(1);
-        }
-        return true;
-    }
+    
 }

@@ -6,8 +6,6 @@ public class DualAttackSpell : DualActionCard {
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.ATTACK;
         this.actionType2 = ActionType.SPELL;
-        this.owner = null;
-        this.modifier = null;
     }
 
 }

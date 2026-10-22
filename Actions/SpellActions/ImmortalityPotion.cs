@@ -10,7 +10,7 @@ public class ImmortalityPotion : Action {
         this.description = "Recover full HP. Can only be used if below half HP.";
     }
 
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
@@ -21,10 +21,10 @@ public class ImmortalityPotion : Action {
             Console.WriteLine(this.owner.name + " cannot use "+this.name+", HP is not below half!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

@@ -34,6 +34,10 @@ public class PredefinedActionCard : ActionCard
     // In this case, we do not need to figure out which action is being used. It is already defined.
     public override bool Play(Entity entityToUseAction, Entity? target)
     {
+        // Compile modifiers
+        List<Modifier> modifiers = new List<Modifier>(hiddenModifiers);
+        if(modifier != null) modifiers.Add(modifier);
+
         // Step 1: ensure the predefined action has actually been defined
         if(predefinedAction == null)
         {
@@ -58,7 +62,7 @@ public class PredefinedActionCard : ActionCard
         BeforeUse(entityToUseAction, target, predefinedAction);
 
         // Step 5: actually use the action
-        if (predefinedAction.use(target, modifier))
+        if (predefinedAction.use(target, modifiers))
         {
             // Action was used.
             CardManager.discardCard(this);

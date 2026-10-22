@@ -11,7 +11,7 @@ public class Surge : Action {
         this.description = "Next Spell deals double damage/block/healing.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

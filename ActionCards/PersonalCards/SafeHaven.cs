@@ -4,8 +4,6 @@ public class SafeHaven : ActionCard {
         this.name = this.originalName = "Safe Haven";
         this.description = this.originalDescription = "All allies perform a rest action.";
         this.actionType = ActionType.REST;
-        this.owner = null;
-        this.modifier = null;
     }
 
 

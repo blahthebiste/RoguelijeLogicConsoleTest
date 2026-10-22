@@ -10,7 +10,7 @@ public class RightfulHeir : Action {
         this.description = "Summon all 3 members of the King's Court to fight for you.";
     }
 
-    public override bool useOnce(Modifier? modifier)
+    public override bool useOnce()
     {
         if (this.owner != null)
         {

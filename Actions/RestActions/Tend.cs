@@ -8,9 +8,9 @@ public class Tend : Action {
         this.description = "Heal "+healing+" HP.";
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         // Restore HP.
-        target!.ReceiveHealing(healing + (modifier == null? 0 : modifier.healMod));
+        target!.ReceiveHealing(properties.healing);
         return true;
     }
 }

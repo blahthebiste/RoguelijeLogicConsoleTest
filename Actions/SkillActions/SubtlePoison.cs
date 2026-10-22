@@ -9,7 +9,7 @@ public class SubtlePoison : Action {
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         // Apply the Poison status effect
         target!.AddStatusEffect(new Poison(magicNumber, target));
         return true;

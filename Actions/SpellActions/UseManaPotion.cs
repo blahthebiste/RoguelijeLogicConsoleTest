@@ -10,7 +10,7 @@ public class UseManaPotion : Action {
         this.description = "Regain all other Spell uses.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

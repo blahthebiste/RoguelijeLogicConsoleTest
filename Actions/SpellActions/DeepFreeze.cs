@@ -12,7 +12,7 @@ public class DeepFreeze : Action {
     }
 
     // This will apply 8 frost to the target.
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (target == null) {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");

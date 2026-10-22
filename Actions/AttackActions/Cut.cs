@@ -5,10 +5,10 @@ public class Cut : Action {
         this.actionType = ActionType.ATTACK;
         this.damage = 6;
         this.targetting = TargetCategory.SINGLE_ENEMY;
-        this.description = "Deal "+this.damage+" damage. Deals "+this.damage+" more if the target has no Block.";
+        this.description = "Deal "+this.damage+" damage. Hits twice if the target has no Block.";
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
@@ -17,28 +17,21 @@ public class Cut : Action {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");
             return false;
         }
-        int power = this.damage;
+        bool hit_twice = false;
         // Check the battlefield for block:
         if ((target.hostile && Battlefield.enemyBlock == 0) || (!target.hostile && Battlefield.playerBlock == 0))
         {
-            power *= 2;
-        }
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            power *= 2;
+            hit_twice = true;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(power + (modifier == null? 0 : modifier.damageMod), this.owner, target, this.hitsAbove, this.hitsBelow);
-        Battlefield.performAttack(atk);    
+        Attack atk = new Attack(properties.damage, this.owner, target, properties.hitsAbove, properties.hitsBelow);
+        if(hit_twice)
+        {
+            // Second hit
+            Battlefield.performAttack(atk);
+        }
         return true;
     }
     
-    // Decrement buffs after dealing all damage
-    public override bool useOnce(Modifier? modifier){
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            owner!.GetStatusEffect("Deadly Aim")!.Decrease(1);
-        }
-        return true;
-    }
+    
 }

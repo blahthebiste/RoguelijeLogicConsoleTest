@@ -9,7 +9,7 @@ public class Focus : Action
         this.description = "Regain all Spell uses.";
     }
 
-    public override bool useOnce(Modifier? modifier)
+    public override bool useOnce()
     {
         if (this.owner == null)
         {

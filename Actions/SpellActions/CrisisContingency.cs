@@ -12,14 +12,14 @@ public class CrisisContingency : Action {
     }
 
     // Cannot use this action before turn 6
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (Battlefield.turnNumber < this.magicNumber && this.owner != null)
         {
             Console.WriteLine(this.owner.name + " cannot use " + this.name + " until turn "+magicNumber+"!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
     public override bool CanTarget(Entity target)
@@ -31,10 +31,10 @@ public class CrisisContingency : Action {
             return false;    
         }
         // Base version of canUse will handle dead targeting for us
-        return base.canUse(target, null);
+        return base.canUse(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (target == null)
         {

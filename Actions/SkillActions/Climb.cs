@@ -8,7 +8,7 @@ public class Climb : Action {
         this.description = "Draw "+magicNumber+" cards.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         // Draw 2
         Console.WriteLine("Drew "+magicNumber+" cards.");
         CardManager.drawCard(this.magicNumber);

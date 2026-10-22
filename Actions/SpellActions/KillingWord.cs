@@ -19,7 +19,7 @@ public class KillingWord : Action {
         return base.CanTarget(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         // Kill them
         target!.die();
         return true;

@@ -13,7 +13,7 @@ public class Corruption : Action {
 
 
     // Requires an ally, must target master
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -40,10 +40,10 @@ public class Corruption : Action {
             Console.WriteLine(this.name + " must target master!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (this.owner == null)
         {

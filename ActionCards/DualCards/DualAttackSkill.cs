@@ -6,8 +6,6 @@ public class DualAttackSkill : DualActionCard {
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.ATTACK;
         this.actionType2 = ActionType.SKILL;
-        this.owner = null;
-        this.modifier = null;
     }
 
 }

@@ -12,7 +12,7 @@ public class Rage : Action {
     }
 
     // Can only use if at or below half HP
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -25,10 +25,10 @@ public class Rage : Action {
             Console.WriteLine("Cannot use Rage! HP must be less than or equal to "+halfHPThreshold);
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

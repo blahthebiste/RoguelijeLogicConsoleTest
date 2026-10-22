@@ -16,7 +16,7 @@ public class Grasp : Action {
         return base.CanTarget(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         // Apply the Stun status effect
         target!.AddStatusEffect(new Stun(magicNumber, target));
         return true;

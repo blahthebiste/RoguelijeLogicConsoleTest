@@ -62,8 +62,8 @@ public class RampageVictim : StatusEffect
             return;
         }
         // Owners current HP will be the overkill damage.
-        this.decimateInstance.damage = -1*owner.currentHP;
-        this.decimateInstance.useOnTarget(nextTarget, null); // Currently modifiers are not chained.
+        this.decimateInstance.properties.damage = -1*owner.currentHP;
+        this.decimateInstance.useOnTarget(nextTarget); // Currently modifiers are not chained.
         base.onDeath();
     }
 

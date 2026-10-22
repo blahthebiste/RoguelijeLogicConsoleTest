@@ -14,7 +14,7 @@ public class RatKing : Action {
 
 
     // Requires an allied Giant Rat.
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -31,10 +31,10 @@ public class RatKing : Action {
             Console.WriteLine(this.owner.name + " can only use Rat-King on the Giant Rat!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (this.owner == null)
         {

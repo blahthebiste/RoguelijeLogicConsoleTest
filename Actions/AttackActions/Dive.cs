@@ -9,7 +9,7 @@ public class Dive : Action {
     }
 
     // Can only be used while flying.
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
@@ -20,33 +20,24 @@ public class Dive : Action {
             Console.WriteLine(this.owner.name + " needs to be flying to use "+this.name+"!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
-        int power = damage;
+    public override bool useOnTarget(Entity? target) {
         if (target == null) {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");
             return false;
         }
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            power *= 2;
-        }
         // Deal damage to the target.
-        Attack atk = new Attack(power + (modifier == null? 0 : modifier.damageMod), this.owner!, target, this.hitsAbove, this.hitsBelow);
+        Attack atk = new Attack(properties.damage, this.owner!, target, properties.hitsAbove, properties.hitsBelow);
         Battlefield.performAttack(atk);
         return true;
     }
 
-    public override bool useOnce(Modifier? modifier){
+    public override bool useOnce(){
         if (owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
-        }
-        if (owner!.HasStatusEffect("Deadly Aim"))
-        {
-            owner!.GetStatusEffect("Deadly Aim")!.Decrease(1);
         }
         return owner.RemoveStatusEffectByName("Flying");
     }

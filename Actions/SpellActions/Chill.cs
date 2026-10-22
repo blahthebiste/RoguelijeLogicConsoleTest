@@ -12,7 +12,7 @@ public class Chill : Action {
     }
 
     // This will apply 1 frost to the target. Will be run on each enemy.
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         // Not affected by spell power or charged.
         // Apply the frost to the target.

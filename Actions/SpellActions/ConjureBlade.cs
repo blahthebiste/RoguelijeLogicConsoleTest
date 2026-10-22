@@ -12,7 +12,7 @@ public class ConjureBlade : Action {
     }
 
     // Can only use if Strike is in action list.
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -23,14 +23,14 @@ public class ConjureBlade : Action {
         {
             if (act.name == "Strike")
             {
-                return base.canUse(target, modifier);
+                return base.canUse(target);
             }
         }
         Console.WriteLine(this.owner.name+" cannot use " + this.name + ", no Strike action to replace!");
         return false;
     }
 
-    public override bool useOnce(Modifier? modifier)
+    public override bool useOnce()
     {
         if (this.owner == null)
         {

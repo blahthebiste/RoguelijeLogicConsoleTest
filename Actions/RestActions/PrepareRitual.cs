@@ -10,7 +10,7 @@ public class PrepareRitual : Action
         this.description = "Gain "+magicNumber+" use of a Conjuration Spell if it is missing.";
     }
 
-    public override bool useOnce(Modifier? modifier)
+    public override bool useOnce()
     {
         if (this.owner == null)
         {
@@ -30,7 +30,7 @@ public class PrepareRitual : Action
     }
 
     // Requires that there is a valid Conjure spell missing a use.
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -50,7 +50,7 @@ public class PrepareRitual : Action
             Console.WriteLine("No valid spell found for Prepare Ritual.");
             return false;
         }
-        return base.canUse(target, modifier);        
+        return base.canUse(target);        
     }
     
 }

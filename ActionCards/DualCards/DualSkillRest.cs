@@ -6,8 +6,6 @@ public class DualSkillRest : DualActionCard {
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.SKILL;
         this.actionType2 = ActionType.REST;
-        this.owner = null;
-        this.modifier = null;
     }
 
 }

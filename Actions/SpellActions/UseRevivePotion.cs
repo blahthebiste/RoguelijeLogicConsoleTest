@@ -11,7 +11,7 @@ public class UseRevivePotion : Action {
     }
 
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         if (target == null) {
             Console.WriteLine("ERROR: null target for action '"+this+"'.");
             return false;

@@ -17,7 +17,12 @@ public class Action : Events {
 	public Entity? owner; // The entity that is using the action
 
 	public TargetCategory targetting = TargetCategory.NONE;
+
+	// These lists are cleared after the action is used. They can be modified temporarily by anyone.
 	public List<Entity> targetList = new List<Entity>();
+	public List<Modifier> modifierList = new List<Modifier>();
+
+
 	// Negative 1 means unlimited uses.
 	public int uses = -1; // The number of times this action can be used per combat. Usually reserved for spells.
 	public int maxUses = -1; // The most uses the action can gain.
@@ -28,6 +33,8 @@ public class Action : Events {
 	public int magicNumber2 = -1; // Can be used for a variety of things. -1 means unused.
 	public int magicNumber3 = -1; // Can be used for a variety of things. -1 means unused.
 
+	//
+	public ActionProperties properties; // Holds the temporary copies of all previous fields.
 
 	public Action() {
 		name = "MISSING NAME";
@@ -36,8 +43,8 @@ public class Action : Events {
     
     // Whether this action can be used right now.
 	// Most actions should override this, but utilize this base version as well.
-	// Checks uses and valid targets.
-    public virtual bool canUse(Entity? target, Modifier? modifier) {
+	// Checks uses and valid targets. For now, modifiers are not considered.
+    public virtual bool canUse(Entity? target) {
 		if(hasLimitedUses && uses == 0) {
 			Console.WriteLine("No uses left.");
 			return false;
@@ -131,9 +138,16 @@ public class Action : Events {
 
 	// Manages automatic targeting, action uses, events, etc
 	// Relies on useOnTarget to be implemented by the child class, otherwise the action will fail
-    public bool use(Entity? mainTarget, Modifier? modifier, bool free = false) {
+    public bool use(Entity? mainTarget, List<Modifier>? modifiers, bool free = false) {
 		bool anySuccess = false; // Used to track whether the action was ever used successfully
 		targetList = new List<Entity>(); // Reset the target list
+		modifierList = new List<Modifier>(); // Reset the modifier list?
+		properties = new ActionProperties(this); // Reset action properties. Generate new copy using this action
+		properties.freeAction = free || properties.freeAction;
+		// If this action currently has modifiers, apply them to change the properites of the action:
+		if (modifiers != null && modifiers.Count > 0) {
+			ApplyModifiersToProperties(modifiers, owner);
+		}
 		if(mainTarget == null) {
 			setTargets(); // Set starting target list if the target passed in was null
 		}
@@ -145,7 +159,7 @@ public class Action : Events {
 		{
 			foreach (Entity target in targetList)
 			{
-				if (this.canUse(target, modifier))
+				if (this.canUse(target))
 				{
 					if (target == null)
 					{
@@ -155,11 +169,14 @@ public class Action : Events {
 					{
 						Console.WriteLine(owner!.name + " attempting to use " + name + " on " + target!.name + "!");
 					}
-					bool successOnThisTarget = this.useOnTarget(target, modifier);
+					bool successOnThisTarget = this.useOnTarget(target);
 					// Run targeted modifier code:
-					if (successOnThisTarget && modifier != null && target != null)
+					if (successOnThisTarget && modifiers != null && modifiers.Count > 0)
 					{
-						modifier.useOnTarget(this, target);
+						foreach(Modifier modifier in modifiers)
+						{
+							modifier.useOnTarget(this, target);
+						}						
 					} 
 					anySuccess = successOnThisTarget || anySuccess;
 				}
@@ -170,9 +187,9 @@ public class Action : Events {
 			}
 		}
 		// Run the action code that does not target anyone
-		if (anySuccess || (!requiresTarget() && canUse(null, modifier)))
+		if (anySuccess || (!requiresTarget() && canUse(null)))
 		{
-			anySuccess = useOnce(modifier) || anySuccess;
+			anySuccess = useOnce() || anySuccess;
 		}
 		if (anySuccess)
 		{ // Action succeeded (at least in some capacity)
@@ -182,12 +199,18 @@ public class Action : Events {
 				uses--;
 				Console.WriteLine(uses + " use(s) remaining.");
 			}
-			if (!freeAction && !free)
+			if (!properties.freeAction)
 			{
 				owner!.exhausted = true; // Exhaust owner
 			}
 			// Run modifier code:
-			if (modifier != null) modifier.useOnce(this);
+			if (modifiers != null && modifiers.Count > 0)
+			{
+				foreach(Modifier modifier in modifiers)
+				{
+					modifier.useOnce(this);
+				}	
+			}
 			// Run the following event code only after action succeeds
 			if(owner!.hostile)
 			{
@@ -219,13 +242,13 @@ public class Action : Events {
     // The meat and potatoes of the action.
     // Each action should override this, unless it is NONE type targetting.
 	// Modifier often null.
-	public virtual bool useOnTarget(Entity? target, Modifier? modifier) {
+	public virtual bool useOnTarget(Entity? target) {
 		return false;
 	}
 
     // Some parts of an action only trigger once.
     // Actions with NONE targetting should always override this with their main effect.
-	public virtual bool useOnce(Modifier? modifier) {
+	public virtual bool useOnce() {
 		return false;
 	}
 
@@ -531,6 +554,15 @@ public class Action : Events {
         return targetting == TargetCategory.SINGLE_ALLY || targetting == TargetCategory.SINGLE_ENEMY || targetting == TargetCategory.SINGLE_ANY || targetting == TargetCategory.DEAD_ALLY || targetting == TargetCategory.DEAD_ENEMY || targetting == TargetCategory.DEAD_ANY;
     }
 
+	// This should be called just before an action triggers.
+	public void ApplyModifiersToProperties(List<Modifier> modifiers, Entity? actionOwner)
+	{
+		foreach(Modifier mod in modifiers)
+		{
+			mod.modifyProperties(properties, actionOwner);
+		}
+	}
+	
 	// Helper
 	public bool IgnoresTaunt()
 	{
@@ -578,5 +610,57 @@ public class Action : Events {
 		}
     }
 
-	
+	//==========================END ITEM OPERATIONS=========================
+
+	//=========================ACTION LISTS==================================
+	// These just help organize actions into categories, which are referenced by status effects.
+	// For example, Charged and Surging both affect the same list of spell actions.
+	public static List<string> SpellsWithDamageBlockOrHealing = 
+	[
+		"Forcefield",
+		"Frost Breath",
+		"Ice Spike",
+		"Ice Wall",
+		"Lightning",
+		"Living Flame",
+		"Mirror Force",
+		"Purify",
+		"Repel",
+		"Restore",
+		"Zap"
+	];
+
+	public static List<string> AttacksWithDamage = 
+	[
+		"Bash",
+		"Bite",
+		"Cleave",
+		"Cut",
+		"Decimate",
+		"Dive",
+		"Gnaw",
+		"Infect",
+		"Jaws",
+		"Loose",
+		"Ravage",
+		"Shadow Slash",
+		"Shadow Strike",
+		"Shoot",
+		"Snipe",
+		"Stab",
+		"Strike",
+		"Swipe",
+		"Twin Slash",
+		"Whack"
+	];
+
+	public static List<string> DefendsWithBlock = 
+	[
+		"Block",
+		"Cower",
+		"Obstruct",
+		"Parry"
+	];
+
+	public static List<string> AttacksOrDefendsWithDamageOrBlock = AttacksWithDamage.Union(DefendsWithBlock).ToList();
 }

@@ -14,7 +14,7 @@ public class EyeOfTheStorm : Action
     }
 
     // This will apply 8 frost to the target. Will be run on each enemy.
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (target == null)
         {
@@ -28,7 +28,7 @@ public class EyeOfTheStorm : Action
     }
     
     // Can only be used if Chill is at 0 uses
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -43,6 +43,6 @@ public class EyeOfTheStorm : Action
                 return false;
             }
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 }

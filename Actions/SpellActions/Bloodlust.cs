@@ -12,7 +12,7 @@ public class Bloodlust : Action {
         this.description = "Gain "+magicNumber+" Strength and "+magicNumber2+" Bleed. Wears off when you rest.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;

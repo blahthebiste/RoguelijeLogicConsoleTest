@@ -9,7 +9,7 @@ public class NotYet : Action
         this.description = "Recover all missing HP below half.";
     }
     
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
@@ -21,7 +21,7 @@ public class NotYet : Action
         if(missingHPBelowHalf > 0)
         {
             Console.WriteLine("Not... Yet...");
-            this.owner.ReceiveHealing(missingHPBelowHalf + (modifier == null? 0 : modifier.healMod));
+            this.owner.ReceiveHealing(missingHPBelowHalf);
         }
         return true;
     }

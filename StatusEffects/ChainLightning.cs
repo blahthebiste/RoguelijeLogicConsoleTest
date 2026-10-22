@@ -195,8 +195,8 @@ public class ChainLightning : StatusEffect
             return;
         }
         // Owners current HP will be the overkill damage.
-        this.lightningInstance.magicNumber = -1*owner.currentHP;
-        this.lightningInstance.useOnTarget(nextTarget, null); // Currently modifiers are not chained.
+        this.lightningInstance.properties.damage = -1*owner.currentHP;
+        this.lightningInstance.useOnTarget(nextTarget); // Currently modifiers are not chained.
         base.onDeath();
     }
 

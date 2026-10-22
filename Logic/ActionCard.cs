@@ -1,6 +1,4 @@
 // All action cards extend this class.
-using System.Reflection.Metadata;
-
 public class ActionCard
 {
     public ActionType? actionType;
@@ -8,8 +6,9 @@ public class ActionCard
     public String name = "MISSING NAME";
     public String originalDescription = "MISSING DESCRIPTION";
     public String description = "MISSING DESCRIPTION";
-    public Modifier? modifier; // Each card can have 1 modifier.
-    public Entity? owner; // Some cards are tied to specific characters.
+    public Modifier? modifier = null; // Each card can have 1 visible modifier.
+    public List<Modifier> hiddenModifiers = new List<Modifier>(); // Hidden modifiers carry other effects onto the action.
+    public Entity? owner = null; // Some cards are tied to specific characters.
 
     public bool bypassExhausted = false; // Whether this card can be played even on an exhausted entity
     public bool bypassOutOfUses = false; // Whether this card can be played on an action even when out of uses
@@ -18,8 +17,6 @@ public class ActionCard
     public ActionCard()
     {
         actionType = null;
-        modifier = null;
-        owner = null;
     }
 
     // Constructor from data
@@ -102,6 +99,9 @@ public class ActionCard
     // Use the action; this version always uses autoselection.
     public virtual bool Play(Entity entityToUseAction, Entity? target)
     {
+        // Compile modifiers
+        List<Modifier> modifiers = new List<Modifier>(hiddenModifiers);
+        if(modifier != null) modifiers.Add(modifier);
         // Step 1: validate the entity who is using the action.
         if (!CanBeUsedBy(entityToUseAction))
         {
@@ -128,7 +128,7 @@ public class ActionCard
         BeforeUse(entityToUseAction, target, actionToUse);
 
         // Step 5: actually use the action
-        if (actionToUse.use(target, modifier))
+        if (actionToUse.use(target, modifiers))
         {
             // Action was used.
             CardManager.discardCard(this);
@@ -146,6 +146,9 @@ public class ActionCard
     // Overload using target index. TODO!
     public virtual bool Play(Entity entityToUseAction, int targetIndex)
     {
+        // Compile modifiers
+        List<Modifier> modifiers = new List<Modifier>(hiddenModifiers);
+        if(modifier != null) modifiers.Add(modifier);
         // Step 1: validate the entity who is using the action.
         if (!CanBeUsedBy(entityToUseAction))
         {
@@ -186,7 +189,7 @@ public class ActionCard
         BeforeUse(entityToUseAction, target, actionToUse);
 
         // Step 6: actually use the action
-        if (actionToUse.use(target, modifier))
+        if (actionToUse.use(target, modifiers))
         {
             // Action was used.
             CardManager.discardCard(this);
@@ -435,11 +438,11 @@ public class ActionCard
                 // If only 1 is valid, use it
                 else if(indexValidForPlayerSide)
                 {
-                    return Battlefield.PlayerSide[targetIndex];
+                    return Battlefield.PlayerSide[targetIndex-1];
                 }
                 else if(indexValidForEnemySide)
                 {
-                    return Battlefield.EnemySide[targetIndex];
+                    return Battlefield.EnemySide[targetIndex-1];
                 }
                 else // At this point, neither are valid
                 {
@@ -484,11 +487,11 @@ public class ActionCard
                 // If only 1 is valid, use it
                 else if(indexValidForDeadHeroes)
                 {
-                    return Battlefield.DeadHeroes[targetIndex];
+                    return Battlefield.DeadHeroes[targetIndex-1];
                 }
                 else if(indexValidForDeadEnemies)
                 {
-                    return Battlefield.DeadEnemies[targetIndex];
+                    return Battlefield.DeadEnemies[targetIndex-1];
                 }
                 else // At this point, neither are valid
                 {

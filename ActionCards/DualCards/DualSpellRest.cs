@@ -6,8 +6,6 @@ public class DualSpellRest : DualActionCard {
         this.actionType = ActionType.DUAL;
         this.actionType1 = ActionType.SPELL;
         this.actionType2 = ActionType.REST;
-        this.owner = null;
-        this.modifier = null;
     }
 
 }

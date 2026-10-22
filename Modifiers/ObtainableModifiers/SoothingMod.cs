@@ -4,7 +4,10 @@ public class SoothingMod : Modifier {
     {
         this.name = "Soothing";
         this.description = "Increases the healing of the action by 1.";
-        this.healMod = 1;
     }
 
+    public override void modifyProperties(ActionProperties prop, Entity? actionOwner)
+    {
+        prop.healing += 1;
+    }
 }

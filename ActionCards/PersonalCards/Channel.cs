@@ -4,8 +4,6 @@ public class Channel : ActionCard {
         this.name = this.originalName = "Channel";
         this.description = this.originalDescription = "Regain all Spell uses, then perform a spell action.";
         this.actionType = ActionType.SPELL;
-        this.owner = null;
-        this.modifier = null;
         this.bypassOutOfUses = true; // Can play this card even on actions which are out of uses
     }
 

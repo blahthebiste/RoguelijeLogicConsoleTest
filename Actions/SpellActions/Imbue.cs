@@ -13,7 +13,7 @@ public class Imbue : Action {
 
 
     // Requires an ally, cannot target self
-    public override bool canUse(Entity? target, Modifier? modifier)
+    public override bool canUse(Entity? target)
     {
         if (this.owner == null)
         {
@@ -30,10 +30,10 @@ public class Imbue : Action {
             Console.WriteLine(this.name + " cannot target self!");
             return false;
         }
-        return base.canUse(target, modifier);
+        return base.canUse(target);
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier)
+    public override bool useOnTarget(Entity? target)
     {
         if (this.owner == null)
         {

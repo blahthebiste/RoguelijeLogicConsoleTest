@@ -7,7 +7,7 @@ public class Hook : Action {
         this.description = "Return a card to your hand from your discard pile.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         Console.WriteLine(this.description);
         return CardManager.retrieveCard();
     }

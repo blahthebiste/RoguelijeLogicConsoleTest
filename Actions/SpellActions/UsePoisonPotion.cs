@@ -11,7 +11,7 @@ public class UsePoisonPotion : Action {
         this.description = "Apply "+magicNumber+" Poison.";
     }
 
-    public override bool useOnTarget(Entity? target, Modifier? modifier) {
+    public override bool useOnTarget(Entity? target) {
         // Not affected by spell power or charged.
         // Apply the poison to the target.
         target!.AddStatusEffect(new Poison(magicNumber, target));

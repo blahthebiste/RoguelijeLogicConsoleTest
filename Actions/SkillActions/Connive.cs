@@ -7,7 +7,7 @@ public class Connive : Action {
         this.description = "Use another random action.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
@@ -18,7 +18,7 @@ public class Connive : Action {
         foreach (Action act in this.owner.ActionListMinusPassives.ToList())
         {
             // Some actions do not require a target, but still need to be checked for usability:
-            if (!act.requiresTarget() && act.canUse(null, null))
+            if (!act.requiresTarget() && act.canUse(null))
             {
                 possibleActions.Add(act, null);
                 continue;
@@ -51,7 +51,7 @@ public class Connive : Action {
         Console.WriteLine(this.owner.name+" chose "+chosenAction.name+" with Connive.");
         if (!this.owner.playerControlled)
         {
-            chosenAction.use(possibleActions[keyList[0]], modifier);
+            chosenAction.use(possibleActions[keyList[0]], null);
         }
         else
         {

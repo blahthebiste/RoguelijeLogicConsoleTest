@@ -258,7 +258,7 @@ void setDefaultParty()
     CurrentRun.Party.Add(p1);
     PlayerCharacter p2 = new PlayerCharacter("Barbarian");
     CurrentRun.Party.Add(p2);
-    PlayerCharacter p3 = new PlayerCharacter("Healer");
+    PlayerCharacter p3 = new PlayerCharacter("Channeler");
     CurrentRun.Party.Add(p3);
     zoneSelection();
     depart();

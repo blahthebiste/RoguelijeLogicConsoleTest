@@ -296,7 +296,7 @@ public class Entity : Events
         for (int failedActions = 0; failedActions < ActionListMinusPassives.Count; failedActions++)
         {
             // Some actions do not require a target, but still need to be checked for usability:
-            if (!getNextAction().requiresTarget() && getNextAction().canUse(null, null))
+            if (!getNextAction().requiresTarget() && getNextAction().canUse(null))
             {
                 setNextTarget(null);
                 return;
@@ -365,7 +365,7 @@ public class Entity : Events
                     foreach (int targetIndex in targetPriorityList)
                     {
                         // Try each target in order.
-                        if (act.canUse(Battlefield.PlayerSide[targetIndex], null))
+                        if (act.canUse(Battlefield.PlayerSide[targetIndex]))
                         {
                             Console.WriteLine("Action " + act + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
                             return Battlefield.PlayerSide[targetIndex];
@@ -382,7 +382,7 @@ public class Entity : Events
                     foreach (int targetIndex in targetPriorityList)
                     {
                         // Try each target in order.
-                        if (act.canUse(Battlefield.EnemySide[targetIndex], null))
+                        if (act.canUse(Battlefield.EnemySide[targetIndex]))
                         {
                             Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex].name + "!");
                             return Battlefield.EnemySide[targetIndex];
@@ -403,7 +403,7 @@ public class Entity : Events
                     foreach (int targetIndex in targetPriorityList)
                     {
                         // Try each target in order.
-                        if (act.canUse(Battlefield.EnemySide[targetIndex], null))
+                        if (act.canUse(Battlefield.EnemySide[targetIndex]))
                         {
                             Console.WriteLine("Action " + act + " can be used on " + Battlefield.EnemySide[targetIndex].name + "!");
                             return Battlefield.EnemySide[targetIndex];
@@ -420,7 +420,7 @@ public class Entity : Events
                     foreach (int targetIndex in targetPriorityList)
                     {
                         // Try each target in order.
-                        if (act.canUse(Battlefield.PlayerSide[targetIndex], null))
+                        if (act.canUse(Battlefield.PlayerSide[targetIndex]))
                         {
                             Console.WriteLine("Action " + act + " can be used on " + Battlefield.PlayerSide[targetIndex].name + "!");
                             return Battlefield.PlayerSide[targetIndex];

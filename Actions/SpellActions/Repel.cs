@@ -5,46 +5,27 @@ public class Repel : Action
     {
         this.name = "Repel";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 16;
-        this.magicNumber2 = 1;
+        this.block = 16;
+        this.magicNumber = 1;
         this.hasLimitedUses = true;
         this.uses = 2;
         this.maxUses = this.uses;
         this.targetting = TargetCategory.SELF;
-        this.description = "Generate "+magicNumber+" Block. Stun attackers for "+magicNumber2+" turn.";
+        this.description = "Generate "+block+" Block. Stun attackers for "+magicNumber+" turn.";
     }
 
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
         }
-        int power = magicNumber;
-        if (owner!.HasStatusEffect("Spell Power"))
-        {
-            StatusEffect spell_power = owner.GetStatusEffect("Spell Power")!;
-            power += spell_power.amount;
-        }
-        if (owner!.HasStatusEffect("Charged"))
-        {
-            StatusEffect charge = owner.GetStatusEffect("Charged")!;
-            power += charge.amount;
-            owner.EffectList.Remove(charge);
-        }
-        if (owner!.HasStatusEffect("Surging"))
-        {
-            StatusEffect charge = owner.GetStatusEffect("Surging")!;
-            power *= 2;
-            charge.Decrease(1);
-        }
-        if(modifier != null) power += modifier.blockMod;
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
-        Console.WriteLine("Generated " + power + " Block.");
+        Console.WriteLine("Generated " + block + " Block.");
         // Generate Block.
-        Battlefield.addBlock(power, this.owner);
+        Battlefield.addBlock(properties.block, this.owner);
         // Add Reflect status:
-        owner.AddStatusEffect(new Repelling(magicNumber2, owner));
+        owner.AddStatusEffect(new Repelling(magicNumber, owner));
         return true;
     }    
 }

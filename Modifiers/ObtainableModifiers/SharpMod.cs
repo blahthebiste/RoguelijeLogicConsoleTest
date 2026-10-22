@@ -4,7 +4,10 @@ public class SharpMod : Modifier {
     {
         this.name = "Sharp";
         this.description = "Increases the damage done by the action by 1.";
-        this.damageMod = 1;
     }
 
+    public override void modifyProperties(ActionProperties prop, Entity? actionOwner)
+    {
+        prop.damage += 1;
+    }
 }

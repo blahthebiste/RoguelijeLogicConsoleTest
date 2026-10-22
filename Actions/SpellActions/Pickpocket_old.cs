@@ -10,7 +10,7 @@ public class Pickpocket_old : Action {
         this.description = "Generate a random level 1 item for this combat only, and equip it.";
     }
 
-    public override bool useOnce(Modifier? modifier) {
+    public override bool useOnce() {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");
             return false;
