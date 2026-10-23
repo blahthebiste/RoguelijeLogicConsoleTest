@@ -265,6 +265,8 @@ public static class DataRegistry {
             switch(actionName.ToLower().Trim()) {
 
                 //==========ATTACKS==========
+                case "actnatural":
+                    return new ActNatural();
                 case "bash":
                     return new Bash();
                 case "bite":
@@ -331,8 +333,12 @@ public static class DataRegistry {
                     return new Vanish();
 
                 //==========HIDDEN PASSIVES==========
+                case "fleeswhenalone":
+                    return new FleesWhenAlone();
                 case "fleeswhenoutofspells":
                     return new FleesWhenOutOfSpells();
+                case "randomstartingaction":
+                    return new RandomStartingAction();
                 case "summonedminion":
                     return new SummonedMinion();
 

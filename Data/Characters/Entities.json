@@ -87,7 +87,8 @@
 		"ActionList": [
 			"Infected",
 			"Infect",
-			"Grasp"
+			"Grasp",
+			"RandomStartingAction"
 		]
 	},
 	{
@@ -95,9 +96,8 @@
 		"Description": "\"(Act natural!)\"",
 		"HP": 8,
 		"ActionList": [
-			"Infected",
-			"Grasp",
-			"Infect"
+			"ActNatural",
+			"FleesWhenAlone"
 		]
 	},
 	{

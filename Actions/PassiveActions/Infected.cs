@@ -3,7 +3,7 @@ public class Infected : Action {
     public Infected() {
         this.name = "Infected";
         this.actionType = ActionType.PASSIVE;
-        this.magicNumber = 3;
+        this.magicNumber = 2;
         this.description = "On death, apply "+this.magicNumber+" Poison to the attacker.";
     }
 

@@ -335,7 +335,7 @@ public class Entity : Events
         {
             nextActionIndex = 0;
         }
-        Thread.Sleep(1000); // Add a delay when an entity finishes its turn.
+        Thread.Sleep(500); // Add a delay when an entity finishes its turn.
     }
 
     // Figures out who the given action should target.
