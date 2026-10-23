@@ -12,7 +12,7 @@ public class Channel : ActionCard {
         // Restore spell uses.
         foreach (Action action in entityToUseAction.ActionList)
         {
-            if (action.hasLimitedUses && action.uses < action.maxUses)
+            if (action.actionType == ActionType.SPELL && action.hasLimitedUses && action.uses < action.maxUses)
             {
                 Console.WriteLine("Regaining uses for " + action.name + " up to " + action.maxUses);
                 action.uses = action.maxUses;

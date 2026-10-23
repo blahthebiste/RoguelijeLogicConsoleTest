@@ -8,7 +8,7 @@ public class Favored : StatusEffect {
     }
 
     // Ignore taunt with all actions
-    public override ActionProperties ModifyCanTarget(ActionProperties prop)
+    public override ActionProperties ModifyTargetting(ActionProperties prop)
 	{
         prop.ignoresTaunt = true;
 		return prop;

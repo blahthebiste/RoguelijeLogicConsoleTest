@@ -44,7 +44,7 @@ public class Events
     // Triggered any time an action is determining whether its targeting is valid.
     // Should only be implemented by modifiers that affect targeting.
     // Only called by the entity using the action.
-    public virtual ActionProperties ModifyCanTarget(ActionProperties prop)
+    public virtual ActionProperties ModifyTargetting(ActionProperties prop)
 	{
 		return prop;
 	}

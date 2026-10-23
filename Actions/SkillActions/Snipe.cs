@@ -3,8 +3,11 @@ public class Snipe : Action {
     public Snipe()
     {
         this.name = "Snipe";
-        this.actionType = ActionType.ATTACK;
-        this.damage = 7;
+        this.actionType = ActionType.SKILL;
+        this.damage = 10;
+        this.hasLimitedUses = true;
+        this.uses = 4;
+        this.maxUses = this.uses;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.ignoresTaunt = true;
         this.description = "Deal "+this.damage+" damage. Ignores Taunt.";
@@ -23,7 +26,8 @@ public class Snipe : Action {
         }
         // Deal damage to the target.
         Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner, target, properties.hitsAbove, properties.hitsBelow);
-        Battlefield.performAttack(atk);
+        // Not considered a direct attack, so do not trigger onAttack?
+        target!.onReceiveAttack(atk);
         return true;
     }
     

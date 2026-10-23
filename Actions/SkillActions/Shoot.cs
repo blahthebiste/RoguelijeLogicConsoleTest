@@ -1,13 +1,17 @@
-public class Loose : Action {
+public class Shoot : Action {
 
-    public Loose()
+    public Shoot()
     {
-        this.name = "Loose";
-        this.actionType = ActionType.ATTACK;
+        this.name = "Shoot";
+        this.actionType = ActionType.SKILL;
         this.damage = 7;
-        this.targetting = TargetCategory.OPPOSING; // Targetting is handled automatically
-        this.description = "Deal "+damage+" damage to the opposing enemy.";
+        this.hasLimitedUses = true;
+        this.uses = 6;
+        this.maxUses = this.uses;
+        this.targetting = TargetCategory.SINGLE_ENEMY;
+        this.description = "Deal "+this.damage+" damage.";
     }
+
 
     public override bool useOnTarget(Entity? target) {
         if (target == null) {
@@ -16,7 +20,8 @@ public class Loose : Action {
         }
         // Deal damage to the target.
         Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
-        Battlefield.performAttack(atk);
+        // Not considered a direct attack, so do not trigger onAttack?
+        target!.onReceiveAttack(atk);
         return true;
     }
     

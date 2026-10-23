@@ -285,18 +285,12 @@ public static class DataRegistry {
                     return new Infect();
                 case "jaws":
                     return new Jaws();
-                case "loose":
-                    return new Loose();
                 case "ravage":
                     return new Ravage();
                 case "shadowslash":
                     return new ShadowSlash();
                 case "shadowstrike":
                     return new ShadowStrike();
-                case "snipe":
-                    return new Snipe();
-                case "shoot":
-                    return new Shoot();
                 case "stab":
                     return new Stab();
                 case "strike":
@@ -329,6 +323,8 @@ public static class DataRegistry {
                     return new Parry();
                 case "skitter":
                     return new Skitter();
+                case "suppress":
+                    return new Suppress();
                 case "vanish":
                     return new Vanish();
 
@@ -431,10 +427,14 @@ public static class DataRegistry {
                     return new Hook();
                 case "leap":
                     return new Leap();
-                case "rainofarrows":
-                    return new RainOfArrows();
+                case "loose":
+                    return new Loose();
                 case "shift":
                     return new Shift();
+                case "shoot":
+                    return new Shoot();
+                case "snipe":
+                    return new Snipe();
                 case "subtlepoison":
                     return new SubtlePoison();
                 case "takeaim":
@@ -507,6 +507,8 @@ public static class DataRegistry {
                     return new Purify();
                 case "rage":
                     return new Rage();
+                case "rainofarrows":
+                    return new RainOfArrows();
                 case "ratking":
                     return new RatKing();
                 case "repel":

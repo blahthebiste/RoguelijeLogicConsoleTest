@@ -5,7 +5,7 @@ public class Nock : Action {
         this.actionType = ActionType.REST;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
-        this.description = "Draw an attack card next turn.";
+        this.description = "Draw a skill card next turn.";
     }
 
     public override bool useOnce() {
@@ -14,7 +14,7 @@ public class Nock : Action {
             return false;
         }
         // Apply DrawAttackNextTurn status effect
-        this.owner.AddStatusEffect(new DrawAttackNextTurn(magicNumber, this.owner));
+        this.owner.AddStatusEffect(new DrawSkillNextTurn(magicNumber, this.owner));
         return true;
     }
 }

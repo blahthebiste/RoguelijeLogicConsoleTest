@@ -5,7 +5,7 @@ public class TakeAim : Action {
         this.actionType = ActionType.SKILL;
         this.magicNumber = 1;
         this.targetting = TargetCategory.SELF;
-        this.description = "Next attack deals double damage.";
+        this.description = "Next skill deals double damage.";
     }
 
     public override bool useOnce() {

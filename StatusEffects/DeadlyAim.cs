@@ -1,13 +1,12 @@
 public class DeadlyAim : StatusEffect {
 
-    public List<string> AffectedList = Action.AttacksWithDamage;
+    public List<string> AffectedList = Action.SkillsWithDamage;
 
     public DeadlyAim(int amount, Entity owner) {
         this.amount = amount;
         this.name = "Deadly Aim";
-        this.description = "Next X attacks deal double damage.";
+        this.description = "Next X skills deal double damage.";
         this.owner = owner;
-        this.AffectedList.Add("Rain Of Arrows");
     }
 
     // New version: only affect actions within the list. Modifies the action in place until it resolves.

@@ -1,11 +1,12 @@
-public class RainOfArrows : Action {
+public class Loose : Action {
 
-    public RainOfArrows() {
-        this.name = "Rain Of Arrows";
+    public Loose()
+    {
+        this.name = "Loose";
         this.actionType = ActionType.SKILL;
-        this.targetting = TargetCategory.ALL_ENEMIES;
-        this.damage = 3;
-        this.description = "Deal "+damage+" damage to ALL enemies.";
+        this.damage = 7;
+        this.targetting = TargetCategory.OPPOSING; // Targetting is handled automatically
+        this.description = "Deal "+damage+" damage to the opposing enemy.";
     }
 
     public override bool useOnTarget(Entity? target) {
@@ -15,9 +16,10 @@ public class RainOfArrows : Action {
         }
         // Deal damage to the target.
         Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
-        Battlefield.performAttack(atk);
+        // Not considered a direct attack, so do not trigger onAttack?
+        target!.onReceiveAttack(atk);
         return true;
     }
-
+    
     
 }

@@ -86,16 +86,16 @@
 	},
 	{
 		"Name": "Archer",
-		"Description": "Sets up the perfect shot",
+		"Description": "Limited shots. Make them count!",
 		"HP": 10,
 		"Level":1,
 		"PersonalCard": "Basic Skill",
 		"ActionList": [
-			"Loose",
-			"Cower",
+			"Whack",
+			"Suppress",
 			"Nock",
-			"Shift",
-			"TakeAim"
+			"Shoot",
+			"RainOfArrows"
 		],
 		"UpgradeList": [
 			"Ranger"
@@ -159,7 +159,7 @@
 		"Level":2,
 		"PersonalCard": "Reposition",
 		"ActionList": [
-			"Loose",
+			"Shoot",
 			"Cover",
 			"Coordinate",
 			"TakeAim",

@@ -772,10 +772,7 @@ public static class CurrentRun
         Tier3ItemPool.Add("FortressShield");
 
         // For debugging items:
-        Inventory.Add(new Campfire());
-        Inventory.Add(new AscensionBook1());
-        Inventory.Add(new AscensionBook1());
-        Inventory.Add(new AscensionBook1());
+        // Inventory.Add(new Campfire());
     }
 
     // Gets a random item from the specified tier (1-3).

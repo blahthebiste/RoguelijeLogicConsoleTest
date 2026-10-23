@@ -449,14 +449,14 @@ public class Action : Events {
 		// Trigger event to allow modifying targeting:
 		foreach (StatusEffect effect in owner.EffectList.ToList())
         {
-            hypotheticalProperties = effect.ModifyCanTarget(hypotheticalProperties);
+            hypotheticalProperties = effect.ModifyTargetting(hypotheticalProperties);
         }
 		foreach(Action act in owner.ActionList)
 		{
-			hypotheticalProperties = act.ModifyCanTarget(hypotheticalProperties);
+			hypotheticalProperties = act.ModifyTargetting(hypotheticalProperties);
 			if (act.equippedItem != null)
             {
-                hypotheticalProperties = act.equippedItem.ModifyCanTarget(hypotheticalProperties);
+                hypotheticalProperties = act.equippedItem.ModifyTargetting(hypotheticalProperties);
             }
 		}
 		// Anyone who wanted to modify targeting at this point should have done so.
@@ -677,17 +677,22 @@ public class Action : Events {
 		"Gnaw",
 		"Infect",
 		"Jaws",
-		"Loose",
 		"Ravage",
 		"Shadow Slash",
 		"Shadow Strike",
-		"Shoot",
-		"Snipe",
 		"Stab",
 		"Strike",
 		"Swipe",
 		"Twin Slash",
 		"Whack"
+	];
+
+	public static List<string> SkillsWithDamage = 
+	[
+		"Loose",
+		"Rain of Arrows",
+		"Shoot",
+		"Snipe"
 	];
 
 	public static List<string> DefendsWithBlock = 

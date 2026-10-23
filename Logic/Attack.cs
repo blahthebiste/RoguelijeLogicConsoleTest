@@ -6,6 +6,7 @@ public class Attack {
     public bool hitsBelow = false;
     public bool ignoresBlock = false; // Code is in Entity.onReceiveAttack block logic.
     public bool ignoresDodge = false; // Code is in Dodging and Vanished status effects.
+    // No need to check whether it ignores taunt, as that is only relevant for targetting.
     public Entity source;
     public Entity target;
 
@@ -27,5 +28,7 @@ public class Attack {
         hitsAbove = atk.hitsAbove;
         hitsBelow = atk.hitsBelow;
         source = newTarget;
+        ignoresBlock = atk.ignoresBlock;
+        ignoresDodge = atk.ignoresDodge;
     }
 }
