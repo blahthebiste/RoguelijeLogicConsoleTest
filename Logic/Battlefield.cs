@@ -236,6 +236,8 @@ public static class Battlefield
         else
         {
             Console.WriteLine("DEFEAT!");
+            Console.WriteLine("GAME OVER.");
+            Environment.Exit(0); // TODO: Replace ending the application with a kick to main menu
         }
         CurrentRun.ZoneProgress += 1;
         if (CurrentRun.ZoneProgress == 4)

@@ -3,7 +3,7 @@ public class SturdyMod : Modifier {
     public SturdyMod()
     {
         this.name = "Sturdy";
-        this.description = "When played, gain Toughness for a turn.";
+        this.description = "When played, gain +2 Toughness for a turn.";
     }
 
     public override void useOnce(Action act)
@@ -14,8 +14,8 @@ public class SturdyMod : Modifier {
             return;
         }
         Console.WriteLine("Gaining Toughness due to Sturdy modifier!");
-        Toughness toughEff = new Toughness(1, act.owner);
-        WearsOff wearsOffEff = new WearsOff(1, act.owner, toughEff.name);
+        Toughness toughEff = new Toughness(2, act.owner);
+        WearsOff wearsOffEff = new WearsOff(2, act.owner, toughEff.name);
         act.owner.AddStatusEffect(toughEff);
         act.owner.AddStatusEffect(wearsOffEff);
     }

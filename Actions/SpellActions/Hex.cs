@@ -3,7 +3,7 @@ public class Hex : Action {
     public Hex() {
         this.name = "Hex";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 8;
+        this.magicNumber = 6;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;
