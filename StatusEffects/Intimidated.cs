@@ -1,6 +1,7 @@
 public class Intimidated : StatusEffect
 {
 
+    public List<string> AffectedList = Action.AttacksOrDefendsWithDamageOrBlock;
 
     public Intimidated(int amount, Entity owner)
     {
@@ -11,19 +12,18 @@ public class Intimidated : StatusEffect
         this.isDebuff = true;
     }
 
-    // Intimidated saps attack damage
-    public override Attack onAttack(Attack atk)
+    // New version: only affect actions within the list. Modifies the action in place until it resolves.
+    // Just add the proper modifier to the action's modifier list. It will be cleared automatically
+    // after the action resolves.
+    public override Action onUseAction(Action actionBeingUsed)
     {
-        atk.damage -= this.amount;
-        return atk;
-    }
-
-    // ...and block gain.
-    public override int onGainBlock(int block)
-    {
-        block -= this.amount;
-        if (block < 0) block = 0;
-        return block;
+        if(AffectedList.Contains(actionBeingUsed.name))
+        {
+            actionBeingUsed.ApplyModifierToProperties(new IntimidatedMod(this.amount));
+            Console.WriteLine("DEBUG: apply intimidated penalty");
+    
+        }
+        return actionBeingUsed;
     }
     
     // Remove Intimidated when at the start of each round

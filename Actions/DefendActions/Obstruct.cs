@@ -15,7 +15,7 @@ public class Obstruct : Action {
             return false;
         }
         // Generate Block.
-        Battlefield.addBlock(properties.block, this.owner);
+        Battlefield.addBlock((int)(properties.block*properties.blockMult), this.owner);
         return true;
     }
 }

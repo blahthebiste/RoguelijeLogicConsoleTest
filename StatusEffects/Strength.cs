@@ -27,7 +27,7 @@ public class Strength : StatusEffect {
     {
         if(AffectedList.Contains(actionBeingUsed.name))
         {
-            actionBeingUsed.modifierList.Add(new StrengthMod(this.amount));
+            actionBeingUsed.ApplyModifierToProperties(new StrengthMod(this.amount));
             Console.WriteLine("DEBUG: apply str bonus");
         }
         return actionBeingUsed;

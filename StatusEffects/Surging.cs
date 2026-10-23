@@ -9,29 +9,15 @@ public class Surging : StatusEffect {
         this.owner = owner;
     }
 
-    // New version: only affect actions within the list. Modifies the action in place until it resolves.
+     // New version: only affect actions within the list. Modifies the action in place until it resolves.
     public override Action onUseAction(Action actionBeingUsed)
     {
         if(AffectedList.Contains(actionBeingUsed.name))
         {
-            actionBeingUsed.damage *= 2;
-            actionBeingUsed.block *= 2;
-            actionBeingUsed.healing *= 2;
-            Console.WriteLine("DEBUG: apply SURGING bonus");
+            actionBeingUsed.ApplyModifierToProperties(new SurgingMod());
+            Console.WriteLine("DEBUG: apply surging bonus");
+            this.Decrease(1); // Wears down by 1
         }
         return actionBeingUsed;
-    }
-
-    public override void onActionResolved(Action actionUsed)
-    {
-        if(AffectedList.Contains(actionUsed.name) && actionUsed.owner == this.owner)
-        {
-            actionUsed.damage /= 2;
-            actionUsed.block /= 2;
-            actionUsed.healing /= 2;
-            Console.WriteLine(actionUsed.name+" used up "+this.name+".");
-            this.Decrease(amount);
-        }
-        base.onActionResolved(actionUsed);
     }
 }

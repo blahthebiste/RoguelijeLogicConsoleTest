@@ -26,6 +26,7 @@ public class Vanished : StatusEffect
             Console.WriteLine(owner.name+" failed to dodge the attack, because the attack ignores dodge!");
             return base.onAttack(atk);
         }
+        Console.WriteLine(owner.name+" dodged the attack!");
         atk.damage = 0; // TODO: replace with proper dodge mechanic?
         return base.onAttack(atk);
     }

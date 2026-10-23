@@ -24,7 +24,7 @@ public class Cut : Action {
             hit_twice = true;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(properties.damage, this.owner, target, properties.hitsAbove, properties.hitsBelow);
+        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner, target, properties.hitsAbove, properties.hitsBelow);
         if(hit_twice)
         {
             // Second hit

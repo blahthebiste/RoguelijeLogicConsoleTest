@@ -6,18 +6,28 @@ public class Rampage : Action {
         this.description = "Excess attack damage hits another random target.";
     }
 
-    public override Attack onAttack(Attack atk)
+    // public override Attack onAttack(Attack atk)
+    // {
+    //     if (this.owner == null) {
+    //         Console.WriteLine("ERROR: " + this.name + " has null owner!");
+    //         return atk;
+    //     }
+    //     if (atk.target == null) {
+    //         Console.WriteLine("ERROR: attack has null target!");
+    //         return atk;
+    //     }
+    //     // Apply the rampage victim effect to the attack target. It will remove itself.
+    //     atk.target.AddStatusEffect(new RampageVictim(this.owner, atk.target));            
+    //     return atk; 
+    // }
+
+    public override bool useOnTarget(Entity? target)
     {
-        if (this.owner == null) {
-            Console.WriteLine("ERROR: " + this.name + " has null owner!");
-            return atk;
-        }
-        if (atk.target == null) {
-            Console.WriteLine("ERROR: attack has null target!");
-            return atk;
-        }
-        // Apply the rampage victim effect to the attack target. It will remove itself.
-        atk.target.AddStatusEffect(new RampageVictim(this.owner, atk.target));            
-        return atk; 
+        if(target != null)
+        {
+            // Apply the rampage victim effect to the attack target. It will remove itself after any action resolves.
+            target.AddStatusEffect(new RampageVictim(this.owner, target));             
+        }        
+        return base.useOnTarget(target);
     }
 }

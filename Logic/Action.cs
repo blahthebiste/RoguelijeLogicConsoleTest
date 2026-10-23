@@ -10,6 +10,7 @@ public class Action : Events {
     public bool hasLimitedUses = false;
     public bool ignoresTaunt = false;
     public bool ignoresDodge = false;
+    public bool ignoresBlock = false;
     public bool hitsAbove = false;
     public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
@@ -20,32 +21,42 @@ public class Action : Events {
 
 	// These lists are cleared after the action is used. They can be modified temporarily by anyone.
 	public List<Entity> targetList = new List<Entity>();
-	public List<Modifier> modifierList = new List<Modifier>();
+	
+	// This list tracks which modifiers have already been applied, to prevent applying them more than once.
+	// It is reset only after an action resolves.
+	public List<Modifier> appliedModifiers = new List<Modifier>();
+	
 
 
 	// Negative 1 means unlimited uses.
 	public int uses = -1; // The number of times this action can be used per combat. Usually reserved for spells.
 	public int maxUses = -1; // The most uses the action can gain.
 	public int damage = -1; // Some actions deal damage. -1 means they do not.
+	public double damageMult = 1.0; // Used by modifiers at the end
 	public int block = -1; // Some actions gain block. -1 means they do not.
+	public double blockMult = 1.0; // Used by modifiers at the end
 	public int healing = -1; // Some actions restore HP. -1 means they do not.
+	public double healingMult = 1.0; // Used by modifiers at the end
 	public int magicNumber = -1; // Can be used for a variety of things. -1 means unused.
 	public int magicNumber2 = -1; // Can be used for a variety of things. -1 means unused.
 	public int magicNumber3 = -1; // Can be used for a variety of things. -1 means unused.
 
-	//
-	public ActionProperties properties; // Holds the temporary copies of all previous fields.
+	
+	// Holds the temporary copies of all previous fields.
+	// Will be used by any modifiers to modify properties of the action.
+	public ActionProperties properties;
 
 	public Action() {
 		name = "MISSING NAME";
 		description = "MISSING DESCRIPTION";
+		properties = new ActionProperties(this);
 	}
     
     // Whether this action can be used right now.
 	// Most actions should override this, but utilize this base version as well.
 	// Checks uses and valid targets. For now, modifiers are not considered.
     public virtual bool canUse(Entity? target) {
-		if(hasLimitedUses && uses == 0) {
+		if(properties.hasLimitedUses && uses == 0) {
 			Console.WriteLine("No uses left.");
 			return false;
 		}
@@ -141,12 +152,12 @@ public class Action : Events {
     public bool use(Entity? mainTarget, List<Modifier>? modifiers, bool free = false) {
 		bool anySuccess = false; // Used to track whether the action was ever used successfully
 		targetList = new List<Entity>(); // Reset the target list
-		modifierList = new List<Modifier>(); // Reset the modifier list?
+		appliedModifiers = new List<Modifier>(); // Reset the modifier list
 		properties = new ActionProperties(this); // Reset action properties. Generate new copy using this action
 		properties.freeAction = free || properties.freeAction;
 		// If this action currently has modifiers, apply them to change the properites of the action:
 		if (modifiers != null && modifiers.Count > 0) {
-			ApplyModifiersToProperties(modifiers, owner);
+			ApplyModifiersToProperties(modifiers);
 		}
 		if(mainTarget == null) {
 			setTargets(); // Set starting target list if the target passed in was null
@@ -154,7 +165,7 @@ public class Action : Events {
 		else {
 			targetList.Add(mainTarget); // If we were passed a target, just use it
 		}
-		owner!.onUseAction(this); // Trigger event; this can modify the target list
+		owner!.onUseAction(this); // Trigger event; this can modify the target and modifier lists
 		if (targetList != null)
 		{
 			foreach (Entity target in targetList)
@@ -427,11 +438,29 @@ public class Action : Events {
 
 	// Can this action target that entity?
 	// Should be overridden, but the base version has useful basic targeting guidelines.
+	// TODO: allow modifiers to change targetting here
 	public virtual bool CanTarget(Entity target) {
 		if(owner == null) {
             Console.WriteLine("ERROR: no owner for action!");
             return false;
         }
+		// Use a copy of properties for determining targeting
+		ActionProperties hypotheticalProperties = new ActionProperties(this);
+		// Trigger event to allow modifying targeting:
+		foreach (StatusEffect effect in owner.EffectList.ToList())
+        {
+            hypotheticalProperties = effect.ModifyCanTarget(hypotheticalProperties);
+        }
+		foreach(Action act in owner.ActionList)
+		{
+			hypotheticalProperties = act.ModifyCanTarget(hypotheticalProperties);
+			if (act.equippedItem != null)
+            {
+                hypotheticalProperties = act.equippedItem.ModifyCanTarget(hypotheticalProperties);
+            }
+		}
+		// Anyone who wanted to modify targeting at this point should have done so.
+
 		// If the target is an Inanimate, return false:
         if (target.isInanimate)
         {
@@ -463,7 +492,7 @@ public class Action : Events {
 				// If they are on different teams, they can target with this action.
 				bool opposingTeams = owner.hostile != target.hostile;
 				// Check for Taunt as well:
-				if (!IgnoresTaunt() && !Battlefield.Taunters.Contains(target))
+				if (!hypotheticalProperties.ignoresTaunt && !Battlefield.Taunters.Contains(target))
 				{
 					// If the target does not have taunt, need to check if their allies do:
 					if (Battlefield.Taunters.Count > 0)
@@ -480,7 +509,7 @@ public class Action : Events {
 					}
 				}
 				// Check for invisibility: (currently considered a form of dodging)
-				if (!IgnoresDodge() && target.HasStatusEffect("Invisibility"))
+				if (!hypotheticalProperties.ignoresDodge && target.HasStatusEffect("Invisibility"))
 				{
 					// If they are not last on their team, they cannot be targeted
 					if (!target.hostile && Battlefield.PlayerSide.Count > 1)
@@ -555,33 +584,39 @@ public class Action : Events {
     }
 
 	// This should be called just before an action triggers.
-	public void ApplyModifiersToProperties(List<Modifier> modifiers, Entity? actionOwner)
+	// This modifies the ongoing properties. It does not allow any given modifier
+	// to modify the list more than once.
+	public void ApplyModifiersToProperties(List<Modifier> modifiers)
 	{
 		foreach(Modifier mod in modifiers)
 		{
-			mod.modifyProperties(properties, actionOwner);
+			if(!appliedModifiers.Contains(mod))
+			{
+				mod.modifyProperties(properties, this.owner);
+				appliedModifiers.Add(mod);
+			}
+			else
+			{
+				Console.WriteLine("Modifier "+mod.name+" has already been applied.");
+			}
+			
 		}
 	}
 	
-	// Helper
-	public bool IgnoresTaunt()
+	// Same thing but only 1 modifier
+	public void ApplyModifierToProperties(Modifier modifier)
 	{
-		if(owner == null) {
-			Console.WriteLine("ERROR: Action has no owner.");
-			return ignoresTaunt;
+		if(!appliedModifiers.Contains(modifier))
+		{
+			modifier.modifyProperties(properties, this.owner);
+			appliedModifiers.Add(modifier);
 		}
-		return ignoresTaunt || owner.HasStatusEffect("Flying") || owner.HasStatusEffect("Favored");
+		else
+		{
+			Console.WriteLine("Modifier "+modifier.name+" has already been applied.");
+		}
 	}
 
-	// Helper
-	public bool IgnoresDodge()
-	{
-		if(owner == null) {
-			Console.WriteLine("ERROR: Action has no owner.");
-			return ignoresDodge;
-		}
-		return ignoresDodge || owner.HasStatusEffect("Favored");
-	}
 
 	//==========================ITEM OPERATIONS=========================
 	
@@ -613,8 +648,9 @@ public class Action : Events {
 	//==========================END ITEM OPERATIONS=========================
 
 	//=========================ACTION LISTS==================================
-	// These just help organize actions into categories, which are referenced by status effects.
+	// These just help organize actions into categories, which are referenced by status effects/modifiers.
 	// For example, Charged and Surging both affect the same list of spell actions.
+	// These will need to be updated as new actions are added.
 	public static List<string> SpellsWithDamageBlockOrHealing = 
 	[
 		"Forcefield",

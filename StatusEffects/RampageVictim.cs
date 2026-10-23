@@ -2,7 +2,7 @@ public class RampageVictim : StatusEffect
 {
     Decimate decimateInstance;
 
-    public RampageVictim(Entity origin, Entity owner)
+    public RampageVictim(Entity? origin, Entity owner)
     {
         this.amount = 1;
         this.name = "Rampage Victim";

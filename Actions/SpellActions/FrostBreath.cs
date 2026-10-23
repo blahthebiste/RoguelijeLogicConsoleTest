@@ -23,7 +23,7 @@ public class FrostBreath : Action {
             return false;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(properties.damage, this.owner!, target, properties.hitsAbove, properties.hitsBelow);
+        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
         int finalDamage = target!.onReceiveAttack(atk).damage;
         // Apply frost based on final damage:
         if (finalDamage > 0)

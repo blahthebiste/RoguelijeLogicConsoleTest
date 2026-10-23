@@ -13,7 +13,7 @@ public class Restore : Action {
 
     public override bool useOnTarget(Entity? target) {
         // Apply healing
-        target!.ReceiveHealing(properties.healing);
+        target!.ReceiveHealing((int)(properties.healing*properties.healingMult));
         return true;
     }
 }

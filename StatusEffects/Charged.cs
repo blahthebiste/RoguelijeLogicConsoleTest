@@ -10,28 +10,16 @@ public class Charged : StatusEffect {
     }
 
     // New version: only affect actions within the list. Modifies the action in place until it resolves.
+    // Just add the proper modifier to the action's modifier list. It will be cleared automatically
+    // after the action resolves.
     public override Action onUseAction(Action actionBeingUsed)
     {
         if(AffectedList.Contains(actionBeingUsed.name))
         {
-            actionBeingUsed.damage += this.amount;
-            actionBeingUsed.block += this.amount;
-            actionBeingUsed.healing += this.amount;
+            actionBeingUsed.ApplyModifierToProperties(new ChargedMod(this.amount));
             Console.WriteLine("DEBUG: apply charged bonus");
+            owner.RemoveStatusEffectByName(this.name);
         }
         return actionBeingUsed;
-    }
-
-    public override void onActionResolved(Action actionUsed)
-    {
-        if(AffectedList.Contains(actionUsed.name) && actionUsed.owner == this.owner)
-        {
-            actionUsed.damage -= this.amount;
-            actionUsed.block -= this.amount;
-            actionUsed.healing -= this.amount;
-            Console.WriteLine(actionUsed.name+" used up "+this.name+".");
-            this.Decrease(amount);
-        }
-        base.onActionResolved(actionUsed);
     }
 }

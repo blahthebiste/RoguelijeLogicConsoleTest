@@ -16,7 +16,7 @@ public class Breathe : Action
             return false;
         }
         // Restore HP.
-        this.owner.ReceiveHealing(properties.healing);
+        this.owner.ReceiveHealing((int)(properties.healing*properties.healingMult));
         return true;
     }
 }

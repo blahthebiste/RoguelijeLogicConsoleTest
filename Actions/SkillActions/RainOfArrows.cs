@@ -14,7 +14,7 @@ public class RainOfArrows : Action {
             return false;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(properties.damage, this.owner!, target, properties.hitsAbove, properties.hitsBelow);
+        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
         Battlefield.performAttack(atk);
         return true;
     }

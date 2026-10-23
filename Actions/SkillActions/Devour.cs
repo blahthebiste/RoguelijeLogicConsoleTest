@@ -21,7 +21,7 @@ public class Devour : Action {
         // Kill them
         target!.die();
         // Restore HP
-        owner!.ReceiveHealing(properties.healing);
+        owner!.ReceiveHealing((int)(properties.healing*properties.healingMult));
         return true;
     }
 }

@@ -8,7 +8,7 @@ public class DeadlyAimMod : Modifier {
 
     public override void modifyProperties(ActionProperties prop, Entity? actionOwner)
     {
-        prop.damage *= 2;
+        prop.damageMult *= 2;
     }
 
 }

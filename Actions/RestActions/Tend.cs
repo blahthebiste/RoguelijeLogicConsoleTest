@@ -10,7 +10,7 @@ public class Tend : Action {
 
     public override bool useOnTarget(Entity? target) {
         // Restore HP.
-        target!.ReceiveHealing(properties.healing);
+        target!.ReceiveHealing((int)(properties.healing*properties.healingMult));
         return true;
     }
 }

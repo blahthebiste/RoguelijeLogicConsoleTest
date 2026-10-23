@@ -6,6 +6,7 @@ public class SpellPowerMod : Modifier {
     {
         this.name = "SpellPowerMod";
         this.description = "Used by the Spell Power status effect.";
+        this.amount = amount;
     }
 
     public override void modifyProperties(ActionProperties prop, Entity? actionOwner)

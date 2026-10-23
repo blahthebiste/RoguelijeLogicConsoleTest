@@ -13,7 +13,7 @@ public class Zap : Action {
 
     public override bool useOnTarget(Entity? target) {
         // Deal damage to the target.
-        Attack atk = new Attack(properties.damage, this.owner!, target!);
+        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target!);
         target!.onReceiveAttack(atk);
         return true;
     }

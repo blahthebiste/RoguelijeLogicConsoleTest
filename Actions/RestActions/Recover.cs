@@ -17,7 +17,7 @@ public class Recover : Action {
             return false;
         }
         // Restore HP.
-        this.owner.ReceiveHealing(properties.healing);
+        this.owner.ReceiveHealing((int)(properties.healing*properties.healingMult));
         // Draw cards.
         Console.WriteLine("Drawing 3 cards");
         CardManager.drawCard(3);

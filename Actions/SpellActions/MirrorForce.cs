@@ -23,7 +23,7 @@ public class MirrorForce : Action
         // Generate Block. (Don't trigger onGainBlock since this is a spell? Too late)
         Console.WriteLine("Generated " + block + " Block.");
         // Generate Block.
-        Battlefield.addBlock(properties.block, this.owner);
+        Battlefield.addBlock((int)(properties.block*properties.blockMult), this.owner);
         // Add Reflect status:
         owner.AddStatusEffect(new ReflectAttacks(magicNumber, owner));
         return true;

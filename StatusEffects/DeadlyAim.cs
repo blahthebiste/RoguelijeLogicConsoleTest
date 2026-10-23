@@ -15,20 +15,11 @@ public class DeadlyAim : StatusEffect {
     {
         if(AffectedList.Contains(actionBeingUsed.name))
         {
-            actionBeingUsed.damage *= 2;
-            Console.WriteLine("DEBUG: apply DeadlyAim bonus");
+            actionBeingUsed.ApplyModifierToProperties(new DeadlyAimMod());
+            Console.WriteLine("DEBUG: apply deadly aim bonus");
+            this.Decrease(1); // Wears down by 1
         }
         return actionBeingUsed;
     }
 
-    public override void onActionResolved(Action actionUsed)
-    {
-        if(AffectedList.Contains(actionUsed.name) && actionUsed.owner == this.owner)
-        {
-            actionUsed.damage /= 2;
-            Console.WriteLine(actionUsed.name+" used up "+this.name+".");
-            this.Decrease(amount);
-        }
-        base.onActionResolved(actionUsed);
-    }
 }

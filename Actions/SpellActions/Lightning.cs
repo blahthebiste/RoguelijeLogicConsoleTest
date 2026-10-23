@@ -20,7 +20,7 @@ public class Lightning : Action {
         // Apply the overkill effect to the target:
         target!.AddStatusEffect(new ChainLightning(owner, target));
         // Deal damage to the target.
-        Attack atk = new Attack(properties.damage, this.owner!, target!);
+        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target!);
         //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
         target!.onReceiveAttack(atk);
         return true;

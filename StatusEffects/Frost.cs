@@ -1,7 +1,7 @@
 public class Frost : StatusEffect
 {
 
-
+    public List<string> AffectedList = Action.AttacksOrDefendsWithDamageOrBlock;
     public Frost(int amount, Entity owner)
     {
         this.amount = amount;
@@ -11,26 +11,24 @@ public class Frost : StatusEffect
         this.isDebuff = true;
     }
 
-    // Frost saps attack damage
-    public override Attack onAttack(Attack atk)
+    // New version: only affect actions within the list. Modifies the action in place until it resolves.
+    // Just add the proper modifier to the action's modifier list. It will be cleared automatically
+    // after the action resolves.
+    public override Action onUseAction(Action actionBeingUsed)
     {
-        atk.damage -= this.amount;
-        return atk;
-    }
-
-    // ...and block gain.
-    public override int onGainBlock(int block)
-    {
-        block -= this.amount;
-        if (block < 0) block = 0;
-        return block;
-    }
+        if(AffectedList.Contains(actionBeingUsed.name))
+        {
+            actionBeingUsed.ApplyModifierToProperties(new FrostMod(this.amount));
+            Console.WriteLine("DEBUG: apply frost penalty");
     
-    // Remove frost when resting
-    public override Action onUseAction(Action actionBeingUsed) {
-        if(owner != null && actionBeingUsed.actionType == ActionType.REST) {
+        }
+        // Remove frost when resting:
+        if(actionBeingUsed.actionType == ActionType.REST) {
             owner.RemoveStatusEffectByName(this.name);
         }
         return actionBeingUsed;
     }
+    
+    
+   
 }

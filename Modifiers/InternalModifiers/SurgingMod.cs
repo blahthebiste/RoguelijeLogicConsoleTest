@@ -8,7 +8,8 @@ public class SurgingMod : Modifier {
 
     public override void modifyProperties(ActionProperties prop, Entity? actionOwner)
     {
-        prop.damage *= 2;
+        prop.damageMult *= 2;
+        Console.WriteLine("[surging] New damageMult: "+prop.damageMult);
     }
 
 }

@@ -8,7 +8,12 @@ public class Flying : StatusEffect {
         this.owner = owner;
     }
 
-    // Ignore taunt with all actions -- logic in Action.cs
+    // Ignore taunt with all actions
+    public override ActionProperties ModifyCanTarget(ActionProperties prop)
+	{
+        prop.ignoresTaunt = true;
+		return prop;
+	}
     
     // Apply Dodging effect each turn
     public override void endOfTurn() {
