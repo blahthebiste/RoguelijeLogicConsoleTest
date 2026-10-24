@@ -39,7 +39,7 @@ public class InvisibilityCloak : EquipmentItem {
         }
         base.onUnequip();
         if(CurrentRun.InCombat) {
-            // Remove 99 Toughness:
+            // Remove 99 Invis:
             this.getOwner()!.AddStatusEffect(new Invisibility(-99, this.getOwner()!));
         }
     }

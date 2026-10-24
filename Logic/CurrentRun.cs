@@ -856,6 +856,9 @@ public static class CurrentRun
             ModifierPool.Add(new SoothingMod());
             ModifierPool.Add(new SturdyMod());
         }
+        // Add 1x each rare modifier
+        ModifierPool.Add(new PiercingMod());
+        ModifierPool.Add(new HomingMod());
 
         Console.WriteLine("Populated Modifier pool.");
     }

@@ -9,7 +9,7 @@ public class Flying : StatusEffect {
     }
 
     // Ignore taunt with all actions
-    public override ActionProperties ModifyTargetting(ActionProperties prop)
+    public override ActionProperties ModifyActionProperties(ActionProperties prop)
 	{
         prop.ignoresTaunt = true;
 		return prop;

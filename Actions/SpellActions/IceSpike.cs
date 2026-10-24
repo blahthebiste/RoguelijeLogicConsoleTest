@@ -27,7 +27,8 @@ public class IceSpike : Action {
             bonusDamage = frost.amount;
         }
         // Deal damage to the target.
-        Attack atk = new Attack(damage+bonusDamage, this.owner, target);
+        properties.damage += bonusDamage;
+        Attack atk = new Attack(properties, this.owner!, target);
         target.onReceiveAttack(atk);
         return true;
     }

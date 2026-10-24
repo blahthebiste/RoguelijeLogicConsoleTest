@@ -13,6 +13,11 @@ public class Toughness : StatusEffect {
             Console.WriteLine("ERROR: no owner for action!");
             return atk;
         }
+        if(atk.ignoresToughness)
+        {
+            Console.WriteLine("Toughness could not reduce this attack!");
+            return atk;            
+        }
         atk.damage -= this.amount;
         if(this.owner != null && this.owner.previousAction != null) {
             if(this.owner.previousAction.actionType == ActionType.DEFEND) {

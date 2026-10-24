@@ -11,6 +11,7 @@ public class Action : Events {
     public bool ignoresTaunt = false;
     public bool ignoresDodge = false;
     public bool ignoresBlock = false;
+    public bool ignoresToughness = false;
     public bool hitsAbove = false;
     public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
@@ -56,7 +57,9 @@ public class Action : Events {
 	// Most actions should override this, but utilize this base version as well.
 	// Checks uses and valid targets. For now, modifiers are not considered.
     public virtual bool canUse(Entity? target) {
-		if(properties.hasLimitedUses && uses == 0) {
+		// Use a copy of properties for determining targeting
+		ActionProperties hypotheticalProperties = ApplyPassiveProperties(properties);
+		if(hypotheticalProperties.hasLimitedUses && uses == 0) {
 			Console.WriteLine("No uses left.");
 			return false;
 		}
@@ -153,11 +156,13 @@ public class Action : Events {
 		bool anySuccess = false; // Used to track whether the action was ever used successfully
 		targetList = new List<Entity>(); // Reset the target list
 		appliedModifiers = new List<Modifier>(); // Reset the modifier list
-		properties = new ActionProperties(this); // Reset action properties. Generate new copy using this action
+		// Use a copy of properties for determining targeting
+		properties = new ActionProperties(this);
+		properties = ApplyPassiveProperties(properties); // Reset action properties. Generate new copy using this action
 		properties.freeAction = free || properties.freeAction;
 		// If this action currently has modifiers, apply them to change the properites of the action:
 		if (modifiers != null && modifiers.Count > 0) {
-			ApplyModifiersToProperties(modifiers);
+			properties = ApplyModifiersToProperties(properties, modifiers);
 		}
 		if(mainTarget == null) {
 			setTargets(); // Set starting target list if the target passed in was null
@@ -267,6 +272,8 @@ public class Action : Events {
 	// Gets a target list based on the current targeting type of the action
 	// List will be empty for target categories that cannot get a list automatically.
 	public List<Entity> getTargets(TargetCategory category) {
+		// Use a copy of properties for determining targeting
+		ActionProperties hypotheticalProperties = ApplyPassiveProperties();
 		if(owner == null) {
 			Console.WriteLine("ERROR: Action has no owner.");
 			return new List<Entity>();
@@ -276,7 +283,7 @@ public class Action : Events {
 			return new List<Entity>();
 		}
 		List<Entity> targets = new List<Entity>();
-		switch(category) {
+		switch(hypotheticalProperties.targetting) {
 			case TargetCategory.NONE:
 				Console.WriteLine("Action target category is NONE.");
 				return targets;
@@ -445,21 +452,7 @@ public class Action : Events {
             return false;
         }
 		// Use a copy of properties for determining targeting
-		ActionProperties hypotheticalProperties = new ActionProperties(this);
-		// Trigger event to allow modifying targeting:
-		foreach (StatusEffect effect in owner.EffectList.ToList())
-        {
-            hypotheticalProperties = effect.ModifyTargetting(hypotheticalProperties);
-        }
-		foreach(Action act in owner.ActionList)
-		{
-			hypotheticalProperties = act.ModifyTargetting(hypotheticalProperties);
-			if (act.equippedItem != null)
-            {
-                hypotheticalProperties = act.equippedItem.ModifyTargetting(hypotheticalProperties);
-            }
-		}
-		// Anyone who wanted to modify targeting at this point should have done so.
+		ActionProperties hypotheticalProperties = ApplyPassiveProperties(properties);
 
 		// If the target is an Inanimate, return false:
         if (target.isInanimate)
@@ -586,35 +579,69 @@ public class Action : Events {
 	// This should be called just before an action triggers.
 	// This modifies the ongoing properties. It does not allow any given modifier
 	// to modify the list more than once.
-	public void ApplyModifiersToProperties(List<Modifier> modifiers)
+	public ActionProperties ApplyModifiersToProperties(ActionProperties prop, List<Modifier> modifiers)
 	{
 		foreach(Modifier mod in modifiers)
 		{
 			if(!appliedModifiers.Contains(mod))
 			{
-				mod.modifyProperties(properties, this.owner);
+				mod.modifyProperties(prop, this.owner);
 				appliedModifiers.Add(mod);
 			}
 			else
 			{
 				Console.WriteLine("Modifier "+mod.name+" has already been applied.");
 			}
-			
 		}
+		return prop;
 	}
 	
 	// Same thing but only 1 modifier
-	public void ApplyModifierToProperties(Modifier modifier)
+	public ActionProperties ApplyModifierToProperties(ActionProperties prop, Modifier modifier)
 	{
 		if(!appliedModifiers.Contains(modifier))
 		{
-			modifier.modifyProperties(properties, this.owner);
+			modifier.modifyProperties(prop, this.owner);
 			appliedModifiers.Add(modifier);
 		}
 		else
 		{
 			Console.WriteLine("Modifier "+modifier.name+" has already been applied.");
 		}
+		return prop;
+	}
+
+	// Same thing but targets current properties of the action
+	public void ApplyModifierToProperties(Modifier modifier)
+	{
+		this.properties = ApplyModifierToProperties(this.properties, modifier);
+	}
+
+
+
+	// Applies all modifications from the owner's passive actions and status effects.
+	public ActionProperties ApplyPassiveProperties(ActionProperties prop)
+	{
+		if(owner == null)
+		{
+			Console.WriteLine("ERROR: Could not apply passive modifiers. Owner for "+name+" is null!");
+			return prop;
+		}
+		// Trigger event to allow modifying targeting:
+		foreach (StatusEffect effect in owner.EffectList.ToList())
+        {
+            prop = effect.ModifyActionProperties(prop);
+        }
+		foreach(Action act in owner.ActionList)
+		{
+			prop = act.ModifyActionProperties(prop);
+			if (act.equippedItem != null)
+            {
+                prop = act.equippedItem.ModifyActionProperties(prop);
+            }
+		}
+		// Anyone who wanted to modify targeting at this point should have done so.
+		return prop;
 	}
 
 

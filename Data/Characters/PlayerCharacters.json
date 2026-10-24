@@ -161,9 +161,9 @@
 		"ActionList": [
 			"Shoot",
 			"Cover",
-			"Coordinate",
-			"TakeAim",
-			"RainOfArrows"
+			"Tend",
+			"SwapArrows",
+			"???"
 		],
 		"UpgradeList": [
 			

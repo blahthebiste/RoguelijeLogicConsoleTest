@@ -14,6 +14,8 @@ public class Covered : StatusEffect {
         // Origin entity makes an attack on the attacker:
         Attack responseAtk = new Attack(amount, origin, atk.source);
         Battlefield.performAttack(responseAtk);
+        // Resolve death so that the attacker dies before their attack can go off?
+        Battlefield.resolveDeath();
         return base.onAttack(atk);
     }
 

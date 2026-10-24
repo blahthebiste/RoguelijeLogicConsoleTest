@@ -9,7 +9,7 @@ public class Surging : StatusEffect {
         this.owner = owner;
     }
 
-     // New version: only affect actions within the list. Modifies the action in place until it resolves.
+    // New version: only affect actions within the list. Modifies the action in place until it resolves.
     public override Action onUseAction(Action actionBeingUsed)
     {
         if(AffectedList.Contains(actionBeingUsed.name))

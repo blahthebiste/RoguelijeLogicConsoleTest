@@ -9,6 +9,7 @@ public class ActionProperties
     public bool ignoresTaunt = false;
     public bool ignoresDodge = false;
     public bool ignoresBlock = false;
+    public bool ignoresToughness = false;
     public bool hitsAbove = false;
     public bool hitsBelow = false;
     public bool freeAction = false; // The action does not exhaust the entity using it
@@ -31,6 +32,7 @@ public class ActionProperties
         this.ignoresTaunt = action.ignoresTaunt;
         this.ignoresDodge = action.ignoresDodge;
         this.ignoresBlock = action.ignoresBlock;
+        this.ignoresToughness = action.ignoresToughness;
         this.hitsAbove = action.hitsAbove;
         this.hitsBelow = action.hitsBelow;
         this.freeAction = action.freeAction;

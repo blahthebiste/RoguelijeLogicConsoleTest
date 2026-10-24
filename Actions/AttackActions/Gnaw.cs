@@ -19,7 +19,7 @@ public class Gnaw : Action {
             return false;
         }
         // Deal damage to the target.
-        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
+        Attack atk = new Attack(properties, this.owner!, target);
         int finalDamage = Battlefield.performAttack(atk);
         // Apply bleed:
         if (finalDamage > 0)

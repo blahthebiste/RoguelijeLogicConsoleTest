@@ -19,7 +19,7 @@ public class Infect : Action {
             return false;
         }
         // Deal damage to the target.
-        Attack atk = new Attack((int)(properties.damage*properties.damageMult), this.owner!, target, properties.hitsAbove, properties.hitsBelow);
+        Attack atk = new Attack(properties, this.owner!, target);
         int finalDamage = Battlefield.performAttack(atk);
         // Apply poison based on final damage:
         if (finalDamage > 0)
