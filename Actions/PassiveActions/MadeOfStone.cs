@@ -10,7 +10,7 @@ public class MadeOfStone : Action {
     // Prevent HP loss
     public override int onHPChange(int HPdelta)
     {
-        if(HPdelta > magicNumber) return magicNumber;
+        if(HPdelta < -magicNumber) return -magicNumber;
         return HPdelta;
     }
 }

@@ -237,6 +237,7 @@ public static class Battlefield
         {
             Console.WriteLine("DEFEAT!");
             Console.WriteLine("GAME OVER.");
+            CurrentRun.LoseLives(1);
             Environment.Exit(0); // TODO: Replace ending the application with a kick to main menu
         }
         CurrentRun.ZoneProgress += 1;
@@ -338,7 +339,7 @@ public static class Battlefield
         if (PlayerSide.Contains(entity))
         {
             PlayerSide.Remove(entity);
-            CurrentRun.LoseLives(1);
+            //CurrentRun.LoseLives(1);
             if (noMoreHeroes())
             {
                 endCombat(false);

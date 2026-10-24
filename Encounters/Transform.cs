@@ -2,7 +2,7 @@ public class Transform : Encounter {
 
     public Transform() {
         this.name = "Transform";
-        this.description = "Transform a card in your collection into a random one of the same type.";
+        this.description = "Transform a card in your collection into a random higher tier card.";
     }
 
     // This function contains the bulk of the Encounter code, where the player actually goes through it.
@@ -64,23 +64,19 @@ public class Transform : Encounter {
                         }
                         if (cmd2.ToLower().Trim() == "y" || cmd2.ToLower().Trim() == "yes")
                         { // Do Transformation.
-                            ActionType? type = selectedCard.actionType;
-                            if (type == null) {
-                                Console.WriteLine("ERROR: null ActionType for card '"+selectedCard.name+"'!");
-                                return;
-                            }
-                            ActionCard newCard = Compendium.Cards.GetRandomCardOfType((ActionType)type, selectedCard);
                             if (CurrentRun.CardCollection.Contains(selectedCard))
                             {
                                 CurrentRun.CardCollection.Remove(selectedCard);
-                                CurrentRun.CardCollection.Add(newCard);
                             }
-                            if (CurrentRun.MasterDeck.Contains(selectedCard))
+                            else if (CurrentRun.MasterDeck.Contains(selectedCard))
                             {
-                                CurrentRun.MasterDeck.Remove(selectedCard);  
-                                CurrentRun.MasterDeck.Add(newCard);  
+                                CurrentRun.MasterDeck.Remove(selectedCard);
                             }
-                            Console.WriteLine("Added " + newCard.name + " to collection.");
+                            else
+                            {
+                                Console.WriteLine("ERROR: could not find card " + selectedCard.name + " to transform.");
+                            }
+                            CurrentRun.DraftComplexCard();
                             return;                            
                         }
                     }

@@ -299,13 +299,13 @@ void nextNode(){
         return;
     }
     // Determine if the next node is an Encounter or combat:
-    if(!CurrentRun.LastEncounterWasEncounter) {
+    if(CurrentRun.EncountersSinceCombat < 2) {
         Console.WriteLine("Which Encounter would you like to go to next?");
         // Present multiple options, let player choose 1
         CurrentRun.GenerateEncounters();
     }
     else if(CurrentRun.NextCombatEncounter == null) {
-        // Player has already done an Encounter, but has not yet selected combat
+        // Player has already done 2 Encounters, but has not yet selected combat
         CurrentRun.GenerateNextCombat();
     }
     else {

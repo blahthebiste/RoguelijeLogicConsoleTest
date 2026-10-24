@@ -556,7 +556,7 @@ public class Entity : Events
             // Check hero side for Piety, leave peacefully if HP < max piety
             foreach (Entity hero in Battlefield.PlayerSide)
             {
-                if (hero != null && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= currentHP)
+                if (hero != null && !hero.isInanimate && hero.HasStatusEffect("Piety") && hero.GetStatusEffect("Piety")!.amount >= currentHP)
                 {
                     Console.WriteLine(hero.name + " is too pious! " + name + " leaves combat peacefully.");
                     fleeing = true;
@@ -569,7 +569,7 @@ public class Entity : Events
             // Check enemy side for Piety, leave peacefully if HP < max piety
             foreach (Entity enemy in Battlefield.EnemySide)
             {
-                if (enemy != null && enemy.HasStatusEffect("Piety") && enemy.GetStatusEffect("Piety")!.amount >= currentHP)
+                if (enemy != null && !enemy.isInanimate && enemy.HasStatusEffect("Piety") && enemy.GetStatusEffect("Piety")!.amount >= currentHP)
                 {
                     Console.WriteLine(enemy.name + " is too pious! " + name + " leaves combat peacefully.");
                     fleeing = true;

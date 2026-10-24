@@ -3,7 +3,7 @@ public class Cut : Action {
     public Cut() {
         this.name = "Cut";
         this.actionType = ActionType.ATTACK;
-        this.damage = 6;
+        this.damage = 5;
         this.targetting = TargetCategory.SINGLE_ENEMY;
         this.description = "Deal "+this.damage+" damage. Hits twice if the target has no Block.";
     }

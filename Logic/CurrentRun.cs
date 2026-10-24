@@ -23,7 +23,7 @@ public static class CurrentRun
     public static List<Zone> CompletedZones;
     public static bool InARun;
     public static bool InCombat;
-    public static bool LastEncounterWasEncounter; // Signifies whether the player has completed their Encounter yet.
+    public static int EncountersSinceCombat; // Signifies whether the player has completed their Encounter yet.
 
     public static List<string> Tier1ItemPool;
     public static List<string> Tier2ItemPool;
@@ -89,7 +89,7 @@ public static class CurrentRun
         CompletedZones = new List<Zone>(); // Starts empty
         InARun = false;
         InCombat = false;
-        LastEncounterWasEncounter = true; // Starts true so that the player goes to combat first
+        EncountersSinceCombat = 0; // Starts true so that the player goes to combat first
         Tier1ItemPool = new List<string>();
         Tier2ItemPool = new List<string>();
         Tier3ItemPool = new List<string>();
@@ -441,6 +441,21 @@ public static class CurrentRun
         }
     }
 
+    // Grabs a random complex card from the complex pool
+    public static void DraftComplexCard()
+    {
+        ActionCard card = ComplexCardPool[0];
+        CardCollection.Add(card); // Draft the new card
+        Console.WriteLine("Added one '" + card.name + "' card to your collection.");
+        ComplexCardPool.RemoveAt(0);
+        // If ComplexCardPool is exhausted, add a Wound
+        if (ComplexCardPool.Count == 0)
+        {
+            ComplexCardPool.Add(new Wound());
+        }
+    }
+
+
     // TODO: fill out
     public static void PopulateEncounterPool()
     {
@@ -545,7 +560,7 @@ public static class CurrentRun
         EncounterPool.Remove(chosenEncounter);
         Console.WriteLine("Entering " + chosenEncounter.name + "...\n");
         chosenEncounter.execute();
-        LastEncounterWasEncounter = true;
+        EncountersSinceCombat += 1;
     }
     //===
     //===
@@ -696,7 +711,7 @@ public static class CurrentRun
             return;
         }
         Console.WriteLine("Entering combat...");
-        LastEncounterWasEncounter = false;
+        EncountersSinceCombat = 0;
         InCombat = true;
         Battlefield.LoadCombat(NextCombatEncounter);
         CardManager.beginCombat();
@@ -862,7 +877,7 @@ public static class CurrentRun
     public static void LoseLives(int numLives)
     {
         Lives -= numLives;
-        // Every time a player character dies, add a Sanctuary into the event pool.
+        // Every time the party is wiped, add a Sanctuary into the event pool.
         EncounterPool.Add(new Sanctuary());
         if (Lives < 1)
         {

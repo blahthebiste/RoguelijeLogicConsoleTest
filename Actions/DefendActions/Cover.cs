@@ -8,17 +8,6 @@ public class Cover : Action {
         this.description = "Select an ally. Deal "+magicNumber+" damage to all enemies who attack them this turn.";
     }
 
-    // Only decrement 
-    public override bool useOnce() {
-        if (this.owner == null) {
-            Console.WriteLine("ERROR: null owner for action '"+this+"'.");
-            return false;
-        }
-        // Apply the Dodge status effect
-        this.owner.AddStatusEffect(new Dodging(magicNumber, this.owner));
-        return true;
-    }
-
     public override bool useOnTarget(Entity? target) {
         if (this.owner == null) {
             Console.WriteLine("ERROR: null owner for action '"+this+"'.");

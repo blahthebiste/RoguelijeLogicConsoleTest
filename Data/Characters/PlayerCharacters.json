@@ -93,7 +93,7 @@
 		"ActionList": [
 			"Whack",
 			"Suppress",
-			"Nock",
+			"Rest",
 			"Shoot",
 			"RainOfArrows"
 		],
@@ -155,7 +155,7 @@
 	{
 		"Name": "Ranger",
 		"Description": "Leads the way",
-		"HP": 10,
+		"HP": 11,
 		"Level":2,
 		"PersonalCard": "Reposition",
 		"ActionList": [

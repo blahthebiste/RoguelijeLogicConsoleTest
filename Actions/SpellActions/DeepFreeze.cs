@@ -3,7 +3,7 @@ public class DeepFreeze : Action {
     public DeepFreeze() {
         this.name = "Deep Freeze";
         this.actionType = ActionType.SPELL;
-        this.magicNumber = 1;
+        this.magicNumber = 8;
         this.hasLimitedUses = true;
         this.uses = 1;
         this.maxUses = this.uses;

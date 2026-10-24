@@ -30,7 +30,7 @@ public class AscensionBook1 : Item {
                 // Then check that their upgrade list is not empty:
                 if(pc.UpgradeList == null || pc.UpgradeList.Count < 1)
                 {
-                    Console.WriteLine("DEBUG: Cannot level up "+pc.name+"; the have no valid characters to level up into!");
+                    Console.WriteLine("DEBUG: Cannot level up "+pc.name+"; they have no valid characters to level up into!");
                     continue;
                 }
                 // Valid hero found. Print them out.
