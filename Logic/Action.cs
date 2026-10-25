@@ -273,7 +273,7 @@ public class Action : Events {
 	// List will be empty for target categories that cannot get a list automatically.
 	public List<Entity> getTargets(TargetCategory category) {
 		// Use a copy of properties for determining targeting
-		ActionProperties hypotheticalProperties = ApplyPassiveProperties();
+		ActionProperties hypotheticalProperties = ApplyPassiveProperties(properties);
 		if(owner == null) {
 			Console.WriteLine("ERROR: Action has no owner.");
 			return new List<Entity>();

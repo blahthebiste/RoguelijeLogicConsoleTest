@@ -14,7 +14,7 @@ public class LivingFlame : Action {
 
     public override bool useOnTarget(Entity? target) {
         // Deal damage to all enemies.
-        Attack atk = new Attack(properties, this.owner!, target);
+        Attack atk = new Attack(properties, this.owner!, target!);
         //atk = owner.onAttack(atk); // Don't trigger onAttack for the owner, since it is a spell?
         target!.onReceiveAttack(atk);
         return true;

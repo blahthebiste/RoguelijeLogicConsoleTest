@@ -241,6 +241,8 @@ public static class DataRegistry {
                 // Personal cards
                 case "channel":
                     return new Channel();
+                case "coordinate":
+                    return new Coordinate();
                 case "engage":
                     return new Engage();
                 case "reposition":
@@ -379,8 +381,6 @@ public static class DataRegistry {
                 //==========RESTS==========
                 case "breathe":
                     return new Breathe();
-                case "coordinate":
-                    return new Coordinate();
                 case "focus":
                     return new Focus();
                 case "idle":
@@ -493,6 +493,8 @@ public static class DataRegistry {
                     return new Inflame();
                 case "killingword":
                     return new KillingWord();
+                case "leadership":
+                    return new Leadership();
                 case "lightning":
                     return new Lightning();
                 case "livingflame":

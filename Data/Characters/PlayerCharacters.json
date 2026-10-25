@@ -155,15 +155,15 @@
 	{
 		"Name": "Ranger",
 		"Description": "Leads the way",
-		"HP": 11,
+		"HP": 12,
 		"Level":2,
-		"PersonalCard": "Reposition",
+		"PersonalCard": "Coordinate",
 		"ActionList": [
 			"Shoot",
 			"Cover",
 			"Tend",
 			"SwapArrows",
-			"???"
+			"Leadership"
 		],
 		"UpgradeList": [
 			

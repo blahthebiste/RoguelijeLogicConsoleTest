@@ -1,6 +1,6 @@
-public class Coordinate : Action {
+public class Coordinate_old : Action {
 
-    public Coordinate() {
+    public Coordinate_old() {
         this.name = "Coordinate";
         this.actionType = ActionType.REST;
         this.magicNumber = 3;
